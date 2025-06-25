@@ -1,16 +1,10 @@
-# game
+### Padrão de commits
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* feat: nova funcionalidade
+* fix: correção de bug
+* docs: alteração de documentação
+* style: formatação (espaços, ponto e vírgula etc)
+* refactor: refatoração de código
+* test: adição ou modificação de testes
+* chore: tarefas sem impacto direto no código (como atualizar dependências)
+* build, ci, perf: relacionados a build, CI/CD ou performance
