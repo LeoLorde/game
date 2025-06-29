@@ -1,48 +1,20 @@
 import 'package:flutter/material.dart';
-
-enum Elemento {
-  fogo,
-  agua,
-  terra,
-  ar,
-  nulo
+import 'presentation/screens/tela_inicial.dart';
+void main()
+{
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false, 
+      home: TelaInicial(),
+    ),);
 }
 
-enum Raridade{
-  comum,
-  incomum,
-  rara,
-  epica,
-  lendaria,
-  nulo
-}
+/*
+Creature jonnas = Creature(1000, 500, Elemento.agua, Raridade.rara);
+Creature kleber = Creature(2000, 350, Elemento.ar, Raridade.epica);
 
-class personagem {
-  int vida;
-  int ataque;
-  Elemento elemento;
-  Raridade raridade;
-
-  int atk1(personagem alvo, personagem elemento){
-  int dano = ataque * 100;
-  alvo.vida -= dano;
-  return dano;
-  }
-
-  int atk2(personagem alvo) {
-  int dano = ataque * 1000;
-  alvo.vida -= dano;
-  return dano;
-  }
-
-  personagem(this.vida, this.ataque, this.elemento, this.raridade);
-}
-
-personagem jonnas = personagem(1000, 500, Elemento.agua, Raridade.rara);
-personagem kleber = personagem(2000, 350, Elemento.ar, Raridade.epica);
-
-personagem jogador = personagem(0, 0, Elemento.nulo, Raridade.nulo);
-personagem inimigo = personagem(0, 0, Elemento.nulo, Raridade.nulo);
+Creature jogador = Creature(0, 0, Elemento.nulo, Raridade.nulo);
+Creature inimigo = Creature(0, 0, Elemento.nulo, Raridade.nulo);
 
 int luta() {
   if ((jogador.elemento == Elemento.agua &&
@@ -129,7 +101,7 @@ class _MyAppState extends State<MyApp> {
                         SizedBox(width: 4),
                         ElevatedButton(
                           onPressed: () { setState(() {
-                            jogador.atk1(inimigo, inimigo.elemento as personagem);
+                            jogador.atk1(inimigo, inimigo.elemento as Creature);
                           });
                           },
                           child: Text("Ataque 1"),
@@ -199,7 +171,7 @@ class _MyAppState extends State<MyApp> {
                         SizedBox(width: 4),
                         ElevatedButton(
                           onPressed: () {setState(() {
-                            inimigo.atk1(jogador, jogador.elemento as personagem);
+                            inimigo.atk1(jogador, jogador.elemento as Creature);
                           });
                           },
                           child: Text("Ataque 1"),
@@ -238,3 +210,4 @@ class _MyAppState extends State<MyApp> {
     );
   }
 }
+*/
