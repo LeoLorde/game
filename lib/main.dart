@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/* 1-fogo; 2-agua; 3-terra */
 enum Elemento {
   fogo,
   agua,
@@ -9,23 +8,36 @@ enum Elemento {
   nulo
 }
 
+enum Raridade{
+  comum,
+  incomum,
+  rara,
+  epica,
+  lendaria,
+  nulo
+}
+
 class personagem {
   int vida;
   int ataque;
   Elemento elemento;
+  Raridade raridade;
 
   int atk1() {
-    return ataque * 50;
+    return ataque = ataque*100;
+  }
+  int atk2() {
+    return ataque = ataque*1000;
   }
 
-  personagem(this.vida, this.ataque, this.elemento);
+  personagem(this.vida, this.ataque, this.elemento, this.raridade);
 }
 
-personagem jonnas = personagem(1000, 500, Elemento.agua);
-personagem kleber = personagem(2000, 350, Elemento.ar);
+personagem jonnas = personagem(1000, 500, Elemento.agua, Raridade.rara);
+personagem kleber = personagem(2000, 350, Elemento.ar, Raridade.epica);
 
-personagem jogador = personagem(0, 0, Elemento.nulo);
-personagem inimigo = personagem(0, 0, Elemento.nulo);
+personagem jogador = personagem(0, 0, Elemento.nulo, Raridade.nulo);
+personagem inimigo = personagem(0, 0, Elemento.nulo, Raridade.nulo);
 
 int luta() {
   if ((jogador.elemento == Elemento.agua &&
@@ -72,64 +84,7 @@ class _MyAppState extends State<MyApp> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              /// INIMIGO
-              Card(
-                elevation: 4,
-                margin: EdgeInsets.all(8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Image.network(
-                      'https://media.istockphoto.com/id/1370669162/pt/foto/scary-monster-on-white-background-closeup-of-hand-halloween-character.jpg?s=612x612&w=is&k=20&c=W8mdKZOSGm6UZU5cFD172q0QozyCsKrYLdvY3DfouIk=',
-                      width: 150,
-                      height: 150,
-                      fit: BoxFit.cover,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(12),
-                      child: Column(
-                        children: [
-                          Text('Nome: Dragão Verde', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                          SizedBox(height: 8),
-                          Text('Vida: ${inimigo.vida}'),
-                          Text('Ataque: ${inimigo.ataque}'),
-                          Text('Elemento: ${inimigo.elemento.name}'),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                luta_pelo_inimigo();
-                              });
-                            },
-                            child: Text("Atacar")),
-                        ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                inimigo.vida += 100;
-                              });
-                            },
-                            child: Text("Curar")),
-                        ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                inimigo.ataque = kleber.ataque;
-                                inimigo.vida = kleber.vida;
-                                inimigo.elemento = kleber.elemento;
-                              });
-                            },
-                            child: Text("Escolher")),
-                      ],
-                    )
-                  ],
-                ),
-              ),
 
-              /// JOGADOR
               Card(
                 elevation: 4,
                 margin: EdgeInsets.all(8),
@@ -146,11 +101,12 @@ class _MyAppState extends State<MyApp> {
                       padding: EdgeInsets.all(12),
                       child: Column(
                         children: [
-                          Text('Nome: Fera Sombria', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          Text('Jogador: Fera Sombria', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                           SizedBox(height: 8),
                           Text('Vida: ${jogador.vida}'),
                           Text('Ataque: ${jogador.ataque}'),
                           Text('Elemento: ${jogador.elemento.name}'),
+                          Text('Raridade: ${jogador.raridade.name}'),
                         ],
                       ),
                     ),
@@ -158,33 +114,118 @@ class _MyAppState extends State<MyApp> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                luta();
-                              });
-                            },
-                            child: Text("Atacar")),
+                          onPressed: () {
+                            setState(() {
+                              luta();
+                            });
+                          },
+                          child: Text("Atacar"),
+                        ),
+                        SizedBox(width: 4),
                         ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                jogador.vida += 100;
-                              });
-                            },
-                            child: Text("Curar")),
+                          onPressed: () { setState(() {
+                            jogador.ataque = jogador.atk1();
+                          });
+                          },
+                          child: Text("Ataque 1"),
+                        ),
+                        SizedBox(width: 4),
                         ElevatedButton(
-                            onPressed: () {
-                              setState(() {
-                                jogador.ataque = jonnas.ataque;
-                                jogador.vida = jonnas.vida;
-                                jogador.elemento = jonnas.elemento;
-                              });
-                            },
-                            child: Text("Escolher")),
+                          onPressed: () {setState(() {
+                            jogador.ataque = jogador.atk2();
+                          });
+                          },
+                          child: Text("Ataque 2"),
+                        ),
+                        SizedBox(width: 4),
                       ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          jogador.ataque = jonnas.ataque;
+                          jogador.vida = jonnas.vida;
+                          jogador.elemento = jonnas.elemento;
+                          jogador.raridade = jonnas.raridade;
+                        });
+                      },
+                      child: Text("Escolher/restaurar"),
                     )
                   ],
                 ),
               ),
+
+              Card(
+                elevation: 4,
+                margin: EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.network(
+                      'https://media.istockphoto.com/id/1370669162/pt/foto/scary-monster-on-white-background-closeup-of-hand-halloween-character.jpg?s=612x612&w=is&k=20&c=W8mdKZOSGm6UZU5cFD172q0QozyCsKrYLdvY3DfouIk=',
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Text('Inimigo: Dragão Verde', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 8),
+                          Text('Vida: ${inimigo.vida}'),
+                          Text('Ataque: ${inimigo.ataque}'),
+                          Text('Elemento: ${inimigo.elemento.name}'),
+                          Text('Raridade: ${inimigo.raridade.name}'),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              luta_pelo_inimigo();
+                            });
+                          },
+                          child: Text("Atacar"),
+                        ),
+                        SizedBox(width: 4),
+                        ElevatedButton(
+                          onPressed: () {setState(() {
+                            inimigo.ataque = inimigo.atk1();
+                          });
+                          },
+                          child: Text("Ataque 1"),
+                        ),
+                        SizedBox(width: 4),
+                        ElevatedButton(
+                          onPressed: () {setState(() {
+                            inimigo.ataque = inimigo.atk2();
+                          });  
+                          },
+                          child: Text("Ataque 2"),
+                        ),
+                        SizedBox(width: 4),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          inimigo.ataque = kleber.ataque;
+                          inimigo.vida = kleber.vida;
+                          inimigo.elemento = kleber.elemento;
+                          inimigo.raridade = kleber.raridade;
+                        });
+                      },
+                      child: Text("Escolher/restaurar"),
+                    )
+                  ],
+                ),
+              ),
+
+              
             ],
           ),
         ),
