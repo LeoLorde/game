@@ -23,11 +23,16 @@ class personagem {
   Elemento elemento;
   Raridade raridade;
 
-  int atk1() {
-    return ataque = ataque*100;
+  int atk1(personagem alvo, personagem elemento){
+  int dano = ataque * 100;
+  alvo.vida -= dano;
+  return dano;
   }
-  int atk2() {
-    return ataque = ataque*1000;
+
+  int atk2(personagem alvo) {
+  int dano = ataque * 1000;
+  alvo.vida -= dano;
+  return dano;
   }
 
   personagem(this.vida, this.ataque, this.elemento, this.raridade);
@@ -119,12 +124,12 @@ class _MyAppState extends State<MyApp> {
                               luta();
                             });
                           },
-                          child: Text("Atacar"),
+                          child: Text("Ataque"),
                         ),
                         SizedBox(width: 4),
                         ElevatedButton(
                           onPressed: () { setState(() {
-                            jogador.ataque = jogador.atk1();
+                            jogador.atk1(inimigo, inimigo.elemento as personagem);
                           });
                           },
                           child: Text("Ataque 1"),
@@ -132,7 +137,7 @@ class _MyAppState extends State<MyApp> {
                         SizedBox(width: 4),
                         ElevatedButton(
                           onPressed: () {setState(() {
-                            jogador.ataque = jogador.atk2();
+                            jogador.atk2(inimigo);
                           });
                           },
                           child: Text("Ataque 2"),
@@ -189,12 +194,12 @@ class _MyAppState extends State<MyApp> {
                               luta_pelo_inimigo();
                             });
                           },
-                          child: Text("Atacar"),
+                          child: Text("Ataque"),
                         ),
                         SizedBox(width: 4),
                         ElevatedButton(
                           onPressed: () {setState(() {
-                            inimigo.ataque = inimigo.atk1();
+                            inimigo.atk1(jogador, jogador.elemento as personagem);
                           });
                           },
                           child: Text("Ataque 1"),
@@ -202,7 +207,7 @@ class _MyAppState extends State<MyApp> {
                         SizedBox(width: 4),
                         ElevatedButton(
                           onPressed: () {setState(() {
-                            inimigo.ataque = inimigo.atk2();
+                            inimigo.atk2(jogador);
                           });  
                           },
                           child: Text("Ataque 2"),
