@@ -5,8 +5,8 @@ import './attack_model.dart';
 class Creature {
   int vida;
   int ataque;
-  List<Elemento> elementos;
-  List<Attack> ataques;
+  List<Elemento> elementos; // Permite Vários Elementos
+  List<Attack> ataques; // Permite Vários Ataques
   Raridade raridade;
 
   Creature(this.vida, this.ataque, this.elementos, this.raridade, this.ataques);
