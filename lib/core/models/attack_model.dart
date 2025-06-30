@@ -2,10 +2,11 @@ import 'creature_model.dart';
 import '../enums/elemento_enum.dart';
 
 class Attack {
+  String name;
   int base_damage; 
   Elemento elemento;
   
-  Attack(this.base_damage, this.elemento);
+  Attack(this.name, this.base_damage, this.elemento);
 
   // Cria um Map com os Multiplicadores de Dano de CADA ELEMENTO
   static final Map<Elemento, Map<Elemento, double>> _multiplicadores = {
@@ -58,8 +59,27 @@ class Attack {
   return total;
 }
 
-  int CalcDamage(Creature creature_) {
+  // Calcula o Dano Total  
+  int calcDamage(Creature creature_) {
     double mult = GetDamageMultiplier(creature_); // Multiplica o Dano Base com o Elemental
     return (base_damage * mult).round(); // Arredonda para Inteiro
-}
+  }
+
+  // Transforma em Dicionário (Útil para usar com JSON)
+  Map<String, dynamic> toMap() {
+      return {
+        'name': name,
+        'base_damage': base_damage,
+        'elemento': elemento.index, // Salva o Enum como Inteiro
+      };
+    }
+
+  // A Partir de um Map transformar em um Attack (Quando receber do SQFlite)
+  factory Attack.fromMap(Map<String, dynamic> map) {
+    return Attack(
+      map['name'] as String,
+      map['base_damage'] as int,
+      Elemento.values[map['elemento'] as int], // Converte Inteiro para Enum
+    );
+  }
 }
