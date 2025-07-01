@@ -13,7 +13,7 @@ import '../enums/elemento_enum.dart';
 Attack ataque_ = Attack(
     "Chama Ardente",
     25,
-    Elemento.fogo
+    [Elemento.fogo, Elemento.fogo]
 );
 ```
 
