@@ -2,7 +2,7 @@
 
 Esta pasta contém os testes automatizados do projeto. Eles garantem o funcionamento correto dos modelos, classes e funcionalidades principais do jogo.
 
-## Como rodar os testes
+## Como rodar os testes ##
 
 Todos os testes (mesmo em diferentes arquivos) serão rodados quando executar o seguinte comando:
 
