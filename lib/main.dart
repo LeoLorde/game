@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'presentation/screens/tela_inicial.dart';
-void main()
-{
-  runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false, 
-      home: TelaInicial(),
-    ),);
+
+void main() {
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: TelaInicial()));
 }
 
 /*

@@ -1,7 +1,1 @@
-enum Elemento {
-  fogo,
-  agua,
-  terra,
-  ar,
-  nulo
-}
+enum Elemento { fogo, agua, terra, ar, nulo, planta }
