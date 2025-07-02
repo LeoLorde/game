@@ -14,24 +14,33 @@ class Creature {
   String spriteFile; // Caminho do Sprite: /creature1.png
   final String filePath = "assets/sprites";
 
-  Creature(this.vida, this.level, this.xp, this.elementos, this.raridade, this.ataques, this.spriteFile);
+  Creature(
+    this.vida,
+    this.level,
+    this.xp,
+    this.elementos,
+    this.raridade,
+    this.ataques,
+    this.spriteFile,
+  );
 
   // Retorna o CAMINHO COMPLETO do Sprite
-  String getCompletePath() 
-  {
+  String getCompletePath() {
     return filePath + spriteFile;
   }
 
   // Transforma em um Dicionário (Facilita para uso em JSON)
-  Map<String, dynamic> ToMap() { 
-  return {
-    'vida': vida,
-    'level': level,
-    'xp': xp,
-    'elementos': elementos.map((e) => e.index).toList(), // Salvar Enums como Índice
-    'raridade': raridade.index,
-    'ataques': ataques.map((a) => a.toMap()).toList(),  // Usa o toMap do Attack Model
-    'spriteFile': spriteFile,
+  Map<String, dynamic> ToMap() {
+    return {
+      'vida': vida,
+      'level': level,
+      'xp': xp,
+      'elementos':
+          elementos.map((e) => e.index).toList(), // Salvar Enums como Índice
+      'raridade': raridade.index,
+      'ataques':
+          ataques.map((a) => a.toMap()).toList(), // Usa o toMap do Attack Model
+      'spriteFile': spriteFile,
     };
   }
 
