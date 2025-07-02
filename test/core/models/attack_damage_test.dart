@@ -67,5 +67,17 @@ test("Teste de Ataque da Terra contra o Fogo", () {
     expect(danoCalculado, equals(valorEsperado),
         reason: "Dano da Terra contra a Criatura de Fogo está incorreto");
 });
+  test("Teste com Criatura de Vários Elementos", () {
+    final alvo = water_creature;
+    final ataqueNeutro = Attack("Pedrada", 10, [Elemento.terra]);
+
+    double multiplicadorMedio = alvo.elementos
+        .map((elemento) => ElementMap.multiplicadores[ataqueNeutro.elementos[0]]?[elemento] ?? 1.0) // Cria uma Lista com o Multiplicador de CADA ELEMENTO
+        .reduce((a, b) => a + b) / alvo.elementos.length; // Transforma essa lista em um único valor (uma soma), e em seguida divide pela quantidade deles
+
+    final dano = ataqueNeutro.calcDamage(alvo);
+    expect(dano, equals(10 * multiplicadorMedio), reason: "A iteração está incorreta");
+  });
+
 });
   }
