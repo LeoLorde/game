@@ -1,6 +1,8 @@
 import '../enums/elemento_enum.dart';
 import '../enums/raridade_enum.dart';
 import './attack_model.dart';
+import 'dart:convert';
+
 
 class Creature {
   int vida;
@@ -35,25 +37,24 @@ class Creature {
       'vida': vida,
       'level': level,
       'xp': xp,
-      'elementos':
-          elementos.map((e) => e.index).toList(), // Salvar Enums como Índice
+      'elementos': elementos.map((e) => e.index).toList(), // lista de ints direta
       'raridade': raridade.index,
-      'ataques':
-          ataques.map((a) => a.toMap()).toList(), // Usa o toMap do Attack Model
+      'ataques': ataques.map((a) => a.toMap()).toList(),  // lista de mapas diretos
       'spriteFile': spriteFile,
     };
   }
 
-  // Cria um objeto Creature a partir de um Map (ex: vindo do banco ou JSON)
   factory Creature.fromMap(Map<String, dynamic> map) {
     return Creature(
-      map['vida'],
-      map['level'],
-      map['xp'],
-      (map['elementos'] as List).map((i) => Elemento.values[i]).toList(),
-      Raridade.values[map['raridade']],
-      (map['ataques'] as List).map((a) => Attack.fromMap(a)).toList(),
-      map['spriteFile'],
+      map['vida'] as int,
+      map['level'] as int,
+      (map['xp'] as num).toDouble(),
+      (map['elementos'] as List<dynamic>).map((i) => Elemento.values[i as int]).toList(),
+      Raridade.values[map['raridade'] as int],
+      (map['ataques'] as List<dynamic>)
+          .map((a) => Attack.fromMap(a as Map<String, dynamic>))
+          .toList(),
+      map['spriteFile'] as String,
     );
   }
 }

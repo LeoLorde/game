@@ -55,7 +55,6 @@ class AppDatabase {
       spriteFile TEXT
     );
 ''';
-    throw UnimplementedError(); // (Erro de Não Implementado Ainda)
   }
 
   // Fecha o Banco de Dados

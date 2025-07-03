@@ -1,6 +1,8 @@
 import 'creature_model.dart';
 import '../enums/elemento_enum.dart';
 import '../classes/element_map.dart';
+import 'dart:convert';
+
 class Attack {
   String name;
   int base_damage; 
@@ -29,19 +31,19 @@ class Attack {
 
   // Transforma em Dicionário (Útil para usar com JSON)
   Map<String, dynamic> toMap() {
-      return {
-        'name': name,
-        'base_damage': base_damage,
-        'elementos': elementos.map((e) => e.index).toList(), // Salva como Lista de Indexes
-      };
-    }
+    return {
+      'name': name,
+      'base_damage': base_damage,
+      'elementos': elementos.map((e) => e.index).toList(), // lista direta de inteiros
+    };
+  }
 
-  // A Partir de um Map transformar em um Attack (Quando receber do SQFlite)
   factory Attack.fromMap(Map<String, dynamic> map) {
     return Attack(
       map['name'] as String,
       map['base_damage'] as int,
-      (map['elementos'] as List).map((i) => Elemento.values[i]).toList(),
+      (map['elementos'] as List<dynamic>).map((i) => Elemento.values[i as int]).toList(),
     );
   }
 }
+
