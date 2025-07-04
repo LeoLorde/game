@@ -38,5 +38,15 @@ void main() {
       expect(attackRestaurado.elementos, equals(originalAttack.elementos),
         reason: "Os elementos estão diferentes do original");
     });
+
+    test("Verificar se um Ataque com 0 Elementos vai ser Serializado corretamente", (){
+      Attack ataque = Attack("Ataque Merda", 5, []);
+      final attack_map = ataque.toMap();
+      final restaured = Attack.fromMap(attack_map);
+      
+      expect(ataque.elementos, equals(restaured.elementos),
+        reason: "Ataque com 0 Elementos estão sendo Serializado Incorretamente"
+        );
+    });
   });
 }

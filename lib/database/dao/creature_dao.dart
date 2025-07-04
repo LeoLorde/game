@@ -19,6 +19,7 @@ Future<void> insertCreature(Creature creature) async {
     'raridade': creature.raridade.index,
     'ataques': jsonEncode(creature.ataques.map((a) => a.toMap()).toList()), // Mesma coisa
     'spriteFile': creature.spriteFile,
+    'name':creature.name
   };
 
   await db.insert(
@@ -46,6 +47,7 @@ Future<List<Creature>> onLoad() async {
       Raridade.values[map['raridade'] as int],
       ataquesJson.map((a) => Attack.fromMap(a as Map<String, dynamic>)).toList(),
       map['spriteFile'] as String,
+      map['name'] as String
     );
   }).toList();
 }

@@ -15,6 +15,7 @@ class Creature {
 
   String spriteFile; // Caminho do Sprite: /creature1.png
   final String filePath = "assets/sprites";
+  String name;
 
   Creature(
     this.vida,
@@ -24,6 +25,7 @@ class Creature {
     this.raridade,
     this.ataques,
     this.spriteFile,
+    this.name
   );
 
   // Retorna o CAMINHO COMPLETO do Sprite
@@ -41,6 +43,7 @@ class Creature {
       'raridade': raridade.index,
       'ataques': ataques.map((a) => a.toMap()).toList(),  // lista de mapas diretos
       'spriteFile': spriteFile,
+      'name':name
     };
   }
 
@@ -55,6 +58,7 @@ class Creature {
           .map((a) => Attack.fromMap(a as Map<String, dynamic>))
           .toList(),
       map['spriteFile'] as String,
+      map['name'] as String
     );
   }
 }

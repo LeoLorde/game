@@ -56,5 +56,24 @@ void main(){
       expect(criatura_restaurada.ataques[0].toMap(), equals(nova_criatura.ataques[0].toMap()),
         reason: "Os ataques estão diferentes do original");
     });
+
+    test("Verificar se o Creature com 0 Ataques será Serializado Corretamente", (){
+      final Creature nova_criatura = Creature(
+        30,
+        1,
+        0,
+        [Elemento.agua, Elemento.ar],
+        Raridade.epica,
+        [], // Sem nenhum ataque
+        "Null"
+      );
+
+      final creature_map = nova_criatura.ToMap();
+      final Creature restaured = Creature.fromMap(creature_map);
+
+      expect(nova_criatura.ataques, equals(restaured.ataques), 
+        reason: "Criatura com 0 Ataques está sendo Serializada com fromMap() incorretamente"
+      );
+    });
   });
 }
