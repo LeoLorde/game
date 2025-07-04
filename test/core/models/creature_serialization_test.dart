@@ -18,7 +18,8 @@ void main(){
         [Elemento.agua, Elemento.ar],
         Raridade.epica,
         [teste],
-        "Null"
+        "Null",
+        "Criatura Teste"
       );
 
       // Serializa com toMap
@@ -41,6 +42,7 @@ void main(){
       expect(map['elementos'], equals([Elemento.agua.index, Elemento.ar.index]),
         reason: "Index dos Enums dos Elementos estão Incorretos");
 
+      expect(map['name'], equals("Criatura Teste"));
       // Desserializa com fromMap
       final criatura_restaurada = Creature.fromMap(map);
 
@@ -55,6 +57,7 @@ void main(){
         reason: "As raridades estão diferentes do original");
       expect(criatura_restaurada.ataques[0].toMap(), equals(nova_criatura.ataques[0].toMap()),
         reason: "Os ataques estão diferentes do original");
+      expect(criatura_restaurada.name, equals(nova_criatura.name));
     });
 
     test("Verificar se o Creature com 0 Ataques será Serializado Corretamente", (){
@@ -65,7 +68,8 @@ void main(){
         [Elemento.agua, Elemento.ar],
         Raridade.epica,
         [], // Sem nenhum ataque
-        "Null"
+        "Null",
+        "Criatura Teste"
       );
 
       final creature_map = nova_criatura.ToMap();

@@ -15,7 +15,8 @@ void main()
         [Elemento.terra],
         Raridade.comum,
         [Attack("Nome Placeholder", 5, [Elemento.terra])],
-        "/bintilin.png"
+        "/bintilin.png",
+        "Nome da Criatura sla"
       );
 
       final String path = criatura.getCompletePath();

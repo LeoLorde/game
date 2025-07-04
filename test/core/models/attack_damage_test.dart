@@ -20,7 +20,8 @@ void main()
         Attack("Cuspe de Fogo", 15, [Elemento.fogo]),
         Attack("Ataque de Lava", 25, [Elemento.fogo])
       ],
-      "Null"
+      "Null",
+      "Criatura de Fogo"
     );
 
   // Cria uma Criatura de Água
@@ -34,7 +35,8 @@ void main()
         Attack("Jato de Água", 15, [Elemento.agua]),
         Attack("Espinhos de Terra", 35, [Elemento.terra])  
       ],
-      "Null"
+      "Null",
+      "Criatura de Água"
     );
   
   // Fazendo o Teste de Cálculo de Dano

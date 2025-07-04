@@ -52,7 +52,8 @@ class AppDatabase {
       elementos TEXT,
       raridade INTEGER,
       ataques TEXT,
-      spriteFile TEXT
+      spriteFile TEXT,
+      name TEXT
     );
 ''';
   }

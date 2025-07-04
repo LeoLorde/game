@@ -31,7 +31,8 @@ void main() {
           elementos TEXT,
           raridade INTEGER,
           ataques TEXT,
-          spriteFile TEXT
+          spriteFile TEXT,
+          name TEXT
         )
       ''');
     });
@@ -49,6 +50,7 @@ void main() {
           Attack('Jato de Água', 15, [Elemento.agua]),
         ],
         'fire_sprite.png',
+        "nome"
       );
 
       // Insere e carrega
@@ -68,6 +70,7 @@ void main() {
       expect(loaded.ataques[0].name, 'Chama Mística', reason: "Ataque 1 (name) Incorreto");
       expect(loaded.ataques[1].base_damage, 15, reason: "Ataque 2 (base_damage) Incorreto");
       expect(loaded.spriteFile, 'fire_sprite.png', reason: "SpriteFile Incorreto");
+      expect(loaded.name, 'nome', reason: "Nome Incorreto");
     });
   });
 }
