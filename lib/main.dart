@@ -1,122 +1,213 @@
 import 'package:flutter/material.dart';
+import 'presentation/screens/tela_principal.dart';
+import 'package:flame/flame.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Flame.device.fullScreen();
+
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: TelaPrincipal()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/*
+Creature jonnas = Creature(1000, 500, Elemento.agua, Raridade.rara);
+Creature kleber = Creature(2000, 350, Elemento.ar, Raridade.epica);
 
-  // This widget is the root of your application.
+Creature jogador = Creature(0, 0, Elemento.nulo, Raridade.nulo);
+Creature inimigo = Creature(0, 0, Elemento.nulo, Raridade.nulo);
+
+int luta() {
+  if ((jogador.elemento == Elemento.agua &&
+          (inimigo.elemento == Elemento.fogo || inimigo.elemento == Elemento.terra)) ||
+      (jogador.elemento == Elemento.terra &&
+          (inimigo.elemento == Elemento.fogo || inimigo.elemento == Elemento.ar)) ||
+      (jogador.elemento == Elemento.ar && inimigo.elemento == Elemento.fogo)) {
+    inimigo.vida -= jogador.ataque * 3;
+  } else {
+    inimigo.vida -= jogador.ataque;
+  }
+  return 0;
+}
+
+int luta_pelo_inimigo() {
+  if ((inimigo.elemento == Elemento.agua &&
+          (jogador.elemento == Elemento.fogo || jogador.elemento == Elemento.terra)) ||
+      (inimigo.elemento == Elemento.terra &&
+          (jogador.elemento == Elemento.fogo || jogador.elemento == Elemento.ar)) ||
+      (inimigo.elemento == Elemento.ar && jogador.elemento == Elemento.fogo)) {
+    jogador.vida -= inimigo.ataque * 3;
+  } else {
+    jogador.vida -= inimigo.ataque;
+  }
+  return 0;
+}
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        body: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+              Card(
+                elevation: 4,
+                margin: EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.network(
+                      'https://imgs.search.brave.com/eCPAhLhNg0GffX6Tax37TlF_LRSdac_GQ5g6Da7EgwE/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zbS5p/Z24uY29tL3QvaWdu/X2JyL3NjcmVlbnNo/b3QvZGVmYXVsdC9t/aW5pYXR1cmEtZG8t/eW91dHViZS1wZW50/ZWFkb3MtY2FiZWxv/cy1jYWNoZWFkb3Mt/bWFycm9tX2NyOG0u/NjQwLnBuZw',
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Text('Jogador: Fera Sombria', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 8),
+                          Text('Vida: ${jogador.vida}'),
+                          Text('Ataque: ${jogador.ataque}'),
+                          Text('Elemento: ${jogador.elemento.name}'),
+                          Text('Raridade: ${jogador.raridade.name}'),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              luta();
+                            });
+                          },
+                          child: Text("Ataque"),
+                        ),
+                        SizedBox(width: 4),
+                        ElevatedButton(
+                          onPressed: () { setState(() {
+                            jogador.atk1(inimigo, inimigo.elemento as Creature);
+                          });
+                          },
+                          child: Text("Ataque 1"),
+                        ),
+                        SizedBox(width: 4),
+                        ElevatedButton(
+                          onPressed: () {setState(() {
+                            jogador.atk2(inimigo);
+                          });
+                          },
+                          child: Text("Ataque 2"),
+                        ),
+                        SizedBox(width: 4),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          jogador.ataque = jonnas.ataque;
+                          jogador.vida = jonnas.vida;
+                          jogador.elemento = jonnas.elemento;
+                          jogador.raridade = jonnas.raridade;
+                        });
+                      },
+                      child: Text("Escolher/restaurar"),
+                    )
+                  ],
+                ),
+              ),
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+              Card(
+                elevation: 4,
+                margin: EdgeInsets.all(8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.network(
+                      'https://media.istockphoto.com/id/1370669162/pt/foto/scary-monster-on-white-background-closeup-of-hand-halloween-character.jpg?s=612x612&w=is&k=20&c=W8mdKZOSGm6UZU5cFD172q0QozyCsKrYLdvY3DfouIk=',
+                      width: 150,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Column(
+                        children: [
+                          Text('Inimigo: Dragão Verde', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          SizedBox(height: 8),
+                          Text('Vida: ${inimigo.vida}'),
+                          Text('Ataque: ${inimigo.ataque}'),
+                          Text('Elemento: ${inimigo.elemento.name}'),
+                          Text('Raridade: ${inimigo.raridade.name}'),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              luta_pelo_inimigo();
+                            });
+                          },
+                          child: Text("Ataque"),
+                        ),
+                        SizedBox(width: 4),
+                        ElevatedButton(
+                          onPressed: () {setState(() {
+                            inimigo.atk1(jogador, jogador.elemento as Creature);
+                          });
+                          },
+                          child: Text("Ataque 1"),
+                        ),
+                        SizedBox(width: 4),
+                        ElevatedButton(
+                          onPressed: () {setState(() {
+                            inimigo.atk2(jogador);
+                          });  
+                          },
+                          child: Text("Ataque 2"),
+                        ),
+                        SizedBox(width: 4),
+                      ],
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          inimigo.ataque = kleber.ataque;
+                          inimigo.vida = kleber.vida;
+                          inimigo.elemento = kleber.elemento;
+                          inimigo.raridade = kleber.raridade;
+                        });
+                      },
+                      child: Text("Escolher/restaurar"),
+                    )
+                  ],
+                ),
+              ),
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+              
+            ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+*/
