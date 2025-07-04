@@ -4,11 +4,16 @@ import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/creature_model.dart';
 
-class ColecaoScreen extends StatelessWidget {
+class ColecaoScreen extends StatefulWidget {
   final List<Creature> criaturas;
 
   ColecaoScreen({super.key, required this.criaturas});
 
+  @override
+  State<ColecaoScreen> createState() => _ColecaoScreenState();
+}
+
+class _ColecaoScreenState extends State<ColecaoScreen> {
   Color corPorRaridade(Raridade raridade) {
     switch (raridade) {
       case Raridade.comum:
@@ -57,9 +62,9 @@ class ColecaoScreen extends StatelessWidget {
                 crossAxisSpacing: 8,
                 mainAxisSpacing: 8,
               ),
-              itemCount: criaturas.length,
+              itemCount: widget.criaturas.length,
               itemBuilder: (context, index) {
-                final creature = criaturas[index];
+                final creature = widget.criaturas[index];
                 return GestureDetector(
                   onTap: () {
                     Navigator.push(

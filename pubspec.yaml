@@ -8,8 +8,10 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  google_fonts: ^6.1.0
   flutter:
     sdk: flutter
+  flame: ^1.30.0
 
   cupertino_icons: ^1.0.8
   sqflite: ^2.4.1

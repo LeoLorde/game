@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
-import 'presentation/screens/tela_inicial.dart';
+import 'package:game/presentation/screens/tela_colecao.dart';
+import 'presentation/screens/tela_principal.dart';
+import 'package:flame/flame.dart';
 
-void main() {
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: TelaInicial()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Flame.device.fullScreen();
+
+  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: TelaPrincipal()));
 }
 
 /*
