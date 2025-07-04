@@ -7,45 +7,67 @@ class TelaLoja extends StatefulWidget {
 }
 
 class _TelaLojaState extends State<TelaLoja> {
-  Widget buildCard(String imageUrl, String preco, Color cor) {
+  Widget buildCard(String imageUrl, String precoCarta, Color cor) {
     return Container(
       width: 120,
       height: 170,
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: Colors.black, width: 2),
+        ),
         color: cor,
         child: Column(
           children: [
-            Expanded(child: Image.network(imageUrl, fit: BoxFit.contain)),
+            Expanded(child: Image.asset(imageUrl, fit: BoxFit.contain)),
             const SizedBox(height: 4),
             Text(
-              preco,
+              precoCarta,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
             ),
+            SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
-  Widget buildSimpleCard(String imageUrl, Color cor) {
+  Widget buildSimpleCard(String imageUrl, String precoBau, Color cor) {
     return SizedBox(
       width: 120,
       height: 170,
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: Colors.black, width: 2),
+        ),
         color: cor,
-        child: Image.network(imageUrl, fit: BoxFit.contain),
+        child: Column(
+          children: [
+            Expanded(child: Image.network(imageUrl, fit: BoxFit.contain)),
+            const SizedBox(height: 7),
+            Text(
+              precoBau,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            SizedBox(height: 10),
+          ],
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    const imageUrl =
-        'https://www.pokemon.com/static-assets/content-assets/cms2/img/pokedex/full/151.png';
+    const imageUrl = 'assets/sprites/bintilin.png';
     const iconUrl = 'https://cdn-icons-png.flaticon.com/512/9317/9317142.png';
     const bannerUrl =
         'https://images.vexels.com/media/users/3/137099/isolated/preview/0e0ef8c04e05e38562aeba6544c59e29-banner-de-fita-de-doodle-ondulado.png';
@@ -81,8 +103,8 @@ class _TelaLojaState extends State<TelaLoja> {
             children: List.generate(3, (col) {
               return Column(
                 children: [
-                  buildCard(imageUrl, '2.000', cores[col % cores.length]),
-                  buildCard(imageUrl, '2.000', cores[(col + 1) % cores.length]),
+                  buildCard(imageUrl, '5.000', cores[col % cores.length]),
+                  buildCard(imageUrl, '5.000', cores[(col + 1) % cores.length]),
                 ],
               );
             }),
@@ -99,7 +121,9 @@ class _TelaLojaState extends State<TelaLoja> {
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [for (var cor in cores) buildSimpleCard(iconUrl, cor)],
+            children: [
+              for (var cor in cores) buildSimpleCard(iconUrl, '2.000', cor),
+            ],
           ),
         ],
       ),
