@@ -58,6 +58,14 @@ class AppDatabase {
 ''';
   }
 
+  Future<void> clearDatabase(List<String> tables) async {
+    final db = await getDatabase();
+
+    for (var table in tables) {
+      await db.delete(table);
+    }
+  }
+
   // Fecha o Banco de Dados
   Future<void> close() async {
     if (_database != null) {
