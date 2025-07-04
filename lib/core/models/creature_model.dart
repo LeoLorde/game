@@ -1,8 +1,6 @@
 import '../enums/elemento_enum.dart';
 import '../enums/raridade_enum.dart';
 import './attack_model.dart';
-import 'dart:convert';
-
 
 class Creature {
   int vida;
@@ -25,7 +23,7 @@ class Creature {
     this.raridade,
     this.ataques,
     this.spriteFile,
-    this.name
+    this.name,
   );
 
   // Retorna o CAMINHO COMPLETO do Sprite
@@ -39,11 +37,13 @@ class Creature {
       'vida': vida,
       'level': level,
       'xp': xp,
-      'elementos': elementos.map((e) => e.index).toList(), // lista de ints direta
+      'elementos':
+          elementos.map((e) => e.index).toList(), // lista de ints direta
       'raridade': raridade.index,
-      'ataques': ataques.map((a) => a.toMap()).toList(),  // lista de mapas diretos
+      'ataques':
+          ataques.map((a) => a.toMap()).toList(), // lista de mapas diretos
       'spriteFile': spriteFile,
-      'name':name
+      'name': name,
     };
   }
 
@@ -52,13 +52,15 @@ class Creature {
       map['vida'] as int,
       map['level'] as int,
       (map['xp'] as num).toDouble(),
-      (map['elementos'] as List<dynamic>).map((i) => Elemento.values[i as int]).toList(),
+      (map['elementos'] as List<dynamic>)
+          .map((i) => Elemento.values[i as int])
+          .toList(),
       Raridade.values[map['raridade'] as int],
       (map['ataques'] as List<dynamic>)
           .map((a) => Attack.fromMap(a as Map<String, dynamic>))
           .toList(),
       map['spriteFile'] as String,
-      map['name'] as String
+      map['name'] as String,
     );
   }
 }

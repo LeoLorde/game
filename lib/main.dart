@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:game/presentation/screens/tela_colecao.dart';
 import 'presentation/screens/tela_principal.dart';
 import 'package:flame/flame.dart';
 

@@ -43,7 +43,7 @@ class AppDatabase {
   Future<void> _onCreate(Database db, int version) async {
     // Cria a Tabela de Criaturas (Creatures)
     // COLOCAR TODAS AS TABELAS AQUI
-    '''
+    await db.execute('''
     CREATE TABLE creatures (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       vida INTEGER,
@@ -55,7 +55,17 @@ class AppDatabase {
       spriteFile TEXT,
       name TEXT
     );
-''';
+''');
+    await db.execute('''
+      CREATE TABLE collection_cards (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        creatureId INTEGER,
+        level INTEGER,
+        xp REAL,
+        vida INTEGER,
+        FOREIGN KEY (creatureId) REFERENCES creatures(id)
+      );
+    ''');
   }
 
   Future<void> clearDatabase(List<String> tables) async {
