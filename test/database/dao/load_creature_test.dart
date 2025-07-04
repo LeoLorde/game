@@ -9,7 +9,6 @@ import 'package:game/database/app_database.dart';
 
 import 'package:sqflite/sqflite.dart';
 
-// Importe suas funções reais aqui se estiverem em arquivos separados
 import 'package:game/database/dao/creature_dao.dart'; // onde estão insertCreature() e onLoad()
 
 void main() {

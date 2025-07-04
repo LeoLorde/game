@@ -51,3 +51,34 @@ Future<List<Creature>> onLoad() async {
     );
   }).toList();
 }
+
+// Função para pegar a PRIMEIRA criatura inserida com o nome selecionado
+Future<Creature?> getCreatureByName(String name) async {
+  final db = await AppDatabase.instance.getDatabase(); // Aguarda o db
+  // Faz a requisição pro Banco de Dados
+  final List<Map<String, dynamic>> maps = await db.query(
+    'creatures', 
+    where: 'name = ?',
+    whereArgs: [name],
+    limit: 1,
+  );
+
+  // Caso não achar nada, retorne nulo
+  if (maps.isEmpty) return null;
+
+  final map = maps.first; // Caso achar, pegue o primeiro Map (Dados da Criatura)
+  final elementosJson = jsonDecode(map['elementos'] as String) as List<dynamic>; // Decoda o JSON das Listas
+  final ataquesJson = jsonDecode(map['ataques'] as String) as List<dynamic>; // Decoda o JSON dos Ataques
+
+  // Retorna a Criatura encontrada  
+  return Creature(
+    map['vida'] as int,
+    map['level'] as int,
+    (map['xp'] as num).toDouble(),
+    elementosJson.map((i) => Elemento.values[i as int]).toList(),
+    Raridade.values[map['raridade'] as int],
+    ataquesJson.map((a) => Attack.fromMap(a as Map<String, dynamic>)).toList(),
+    map['spriteFile'] as String,
+    map['name'] as String,
+  );
+}
