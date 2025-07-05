@@ -3,6 +3,7 @@ import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/creature_model.dart';
+import 'package:game/presentation/screens/tela_loja.dart';
 
 class ColecaoScreen extends StatefulWidget {
   final List<Creature> criaturas;
@@ -29,83 +30,139 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
     }
   }
 
+  Widget buildComposicaoCard(
+    String imageUrl,
+    int level,
+    Color cor,
+    String nome,
+  ) {
+    return SizedBox(
+      width: 120,
+      height: 170,
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: Colors.black, width: 2),
+        ),
+        color: cor,
+        child: Column(
+          children: [
+            Text(
+              nome,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+            Expanded(child: Image.asset('$img')),
+            const SizedBox(height: 7),
+            Text(
+              'Nv. ${level}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+            SizedBox(height: 10),
+          ],
+        ),
+      ),
+    );
+  }
+
+  final img = 'assets/sprites/bintilin.png';
+
+  final cores = [
+    const Color.fromARGB(255, 42, 134, 24),
+    const Color.fromARGB(255, 55, 94, 131),
+    const Color.fromARGB(255, 134, 68, 24),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text("Coleção de Criaturas"),
-      ),
-      body: Column(
+      backgroundColor: const Color.fromARGB(255, 41, 94, 67),
+      body: ListView(
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            color: Colors.teal.shade100,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                Text("TAaa", style: TextStyle(fontWeight: FontWeight.bold)),
-                Text("Nível: 10"),
-                Text("Cristais: 10000000"),
-                Text("Amuletos: 1000000"),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(
-            child: GridView.builder(
-              padding: const EdgeInsets.all(8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.75,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
+          Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 100,
+                  horizontal: 15,
+                ),
+                color: Colors.blueGrey,
+                child: Row(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        for (var cor in cores)
+                          buildComposicaoCard(img, 24, cor, 'BINTILIN'),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              itemCount: widget.criaturas.length,
-              itemBuilder: (context, index) {
-                final creature = widget.criaturas[index];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder:
-                            (context) =>
-                                DetalheCriaturaScreen(creature: creature),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 200,
+                child: GridView.builder(
+                  padding: const EdgeInsets.all(8),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 0.75,
+                    crossAxisSpacing: 8,
+                    mainAxisSpacing: 8,
+                  ),
+                  itemCount: widget.criaturas.length,
+                  itemBuilder: (context, index) {
+                    final creature = widget.criaturas[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (context) =>
+                                    DetalheCriaturaScreen(creature: creature),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: corPorRaridade(creature.raridade),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: Image.asset(creature.getCompletePath()),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '"NOME DO BICHO"',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'Nv. ${creature.level}',
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: corPorRaridade(creature.raridade),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Image.asset(creature.getCompletePath()),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '"NOME DO BICHO"',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        Text(
-                          'Nv. ${creature.level}',
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

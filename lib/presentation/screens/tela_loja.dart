@@ -36,7 +36,7 @@ class _TelaLojaState extends State<TelaLoja> {
     );
   }
 
-  Widget buildSimpleCard(String imageUrl, String precoBau, Color cor) {
+  Widget buildBauCard(String imageUrl, String precoBau, Color cor) {
     return SizedBox(
       width: 120,
       height: 170,
@@ -122,7 +122,7 @@ class _TelaLojaState extends State<TelaLoja> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              for (var cor in cores) buildSimpleCard(iconUrl, '2.000', cor),
+              for (var cor in cores) buildBauCard(iconUrl, '2.000', cor),
             ],
           ),
         ],

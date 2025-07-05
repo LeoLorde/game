@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:game/core/enums/elemento_enum.dart';
+import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
+import 'package:game/core/models/attack_model.dart';
 import 'package:game/presentation/screens/tela_colecao.dart';
 import 'package:game/presentation/screens/tela_loja.dart';
 import 'package:game/presentation/screens/tela_inicial.dart';
@@ -97,7 +100,38 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) => setState(() => _paginaAtual = index),
-        children: const [TelaLoja(), TelaInicial(), TelaLoja()],
+        children: [
+          ColecaoScreen(
+            criaturas: [
+              Creature(
+                1500, // vida
+                10, // level
+                200.0, // xp
+                [Elemento.fogo], // elementos
+                Raridade.lendaria, // raridade
+                [
+                  Attack("Chama Infernal", 120, [Elemento.fogo]),
+                ], // ataques
+                "dragao.png", // spriteFile
+                "Dragão Flamejante", // name
+              ),
+              Creature(
+                1000,
+                8,
+                150.0,
+                [Elemento.terra],
+                Raridade.rara,
+                [
+                  Attack("Soco de Pedra", 90, [Elemento.terra]),
+                ],
+                "golem.png",
+                "Golem de Pedra",
+              ),
+            ],
+          ),
+          TelaInicial(),
+          TelaLoja(),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaAtual,
