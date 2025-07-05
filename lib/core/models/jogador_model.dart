@@ -4,6 +4,8 @@ class Jogador {
   int cristais;
   int level;
   int amuletos;
+  int cartas;
+  int? xp;
 
   Jogador({
     this.id,
@@ -11,30 +13,32 @@ class Jogador {
     required this.cristais,
     required this.level,
     required this.amuletos,
+    required this.cartas,
+    this.xp,
   });
 
-  // Convertendo para Map (para inserir no banco)
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      'nome': nickName,
-      'experiencia': cristais,
-      'nivel': level,
+    final map = <String, dynamic>{
+      'id': id,
+      'nickName': nickName,
+      'cristais': cristais,
+      'level': level,
       'amuletos': amuletos,
+      'cartas': cartas,
+      'xp': xp,
     };
-    if (id != null) {
-      map['id'] = id;
-    }
     return map;
   }
 
-  // Convertendo de Map (vindo do banco)
   factory Jogador.fromMap(Map<String, dynamic> map) {
     return Jogador(
       id: map['id'],
-      nickName: map['nome'],
-      cristais: map['experiencia'],
-      level: map['nivel'],
+      nickName: map['nickName'],
+      cristais: map['cristais'],
+      level: map['level'],
       amuletos: map['amuletos'],
+      cartas: map['cartas'],
+      xp: map['xp'],
     );
   }
 }

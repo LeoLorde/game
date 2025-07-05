@@ -72,7 +72,9 @@ class AppDatabase {
         nickName TEXT NOT NULL,
         cristais INTEGER NOT NULL,
         level INTEGER NOT NULL,
-        amuletos INTEGER NOT NULL
+        amuletos INTEGER NOT NULL,
+        cartas INTEGER NOT NULL
+        xp INTEGER DEFAULT 0
       );
     ''');
   }
