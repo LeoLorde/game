@@ -66,6 +66,15 @@ class AppDatabase {
         FOREIGN KEY (creatureId) REFERENCES creatures(id)
       );
     ''');
+    await db.execute('''
+      CREATE TABLE jogador (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nickName TEXT NOT NULL,
+        cristais INTEGER NOT NULL,
+        level INTEGER NOT NULL,
+        amuletos INTEGER NOT NULL
+      );
+    ''');
   }
 
   Future<void> clearDatabase(List<String> tables) async {
