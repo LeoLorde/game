@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:game/core/enums/dimension_enum.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
@@ -31,7 +32,8 @@ void main() {
           raridade INTEGER,
           ataques TEXT,
           spriteFile TEXT,
-          name TEXT
+          name TEXT,
+          dimension INTEGER
         )
       ''');
     });
@@ -49,7 +51,8 @@ void main() {
           Attack('Jato de Água', 15, [Elemento.agua]),
         ],
         'fire_sprite.png',
-        "nome"
+        "nome",
+        DimensionEnum.cu
       );
 
       // Insere e carrega
@@ -70,6 +73,7 @@ void main() {
       expect(loaded.ataques[1].base_damage, 15, reason: "Ataque 2 (base_damage) Incorreto");
       expect(loaded.spriteFile, 'fire_sprite.png', reason: "SpriteFile Incorreto");
       expect(loaded.name, 'nome', reason: "Nome Incorreto");
+      expect(loaded.dimension, DimensionEnum.cu, reason: "Dimensão Incorreta");
     });
   });
 }

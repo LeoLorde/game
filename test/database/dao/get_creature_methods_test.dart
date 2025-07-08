@@ -6,7 +6,7 @@ import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/database/app_database.dart';
-
+import 'package:game/core/enums/dimension_enum.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'package:game/database/dao/creature_dao.dart'; // onde estão insertCreature() e onLoad()
@@ -31,7 +31,8 @@ void main() {
           raridade INTEGER,
           ataques TEXT,
           spriteFile TEXT,
-          name TEXT
+          name TEXT,
+          dimension INTEGER
         )
       ''');
     });
@@ -45,7 +46,7 @@ void main() {
         Raridade.epica,
         [Attack("Ataque 1", 5, [Elemento.ar])],
         "Null",
-        "Criatura Teste");
+        "Criatura Teste", DimensionEnum.cu);
 
         await insertCreature(criatura); // Insere para Teste
         final Creature? criatura_do_banco = await getCreatureByName("Criatura Teste"); // Pega a Criatura
@@ -57,6 +58,7 @@ void main() {
           reason: "Criatura com Nome Incorreto"); // Verifica se o Nome Está Correto (o ! garante que o Creature NÃO É NULO)
         expect(criatura_do_banco.raridade, equals(Raridade.epica),
           reason: "Criatura com Dados Incorretos"); // Verifica a Raridade (Por Precaução)
+        expect(criatura_do_banco.dimension, equals(DimensionEnum.cu));
       });
 
       test("getCreatureByName Test 2 - Various Creatures", () async {
@@ -68,7 +70,7 @@ void main() {
           Raridade.epica,
           [Attack("Ataque 1", 5, [Elemento.ar])],
           "Null",
-          "Criatura Teste");
+          "Criatura Teste", DimensionEnum.cu);
 
         final Creature criatura_2 = criatura;
         criatura_2.level = 15; // Cria uma segunda criatura com nível diferente
@@ -81,6 +83,7 @@ void main() {
           reason: "Criatura Não Encontrada"); // Verifica se não é nula
         expect(criatura_do_banco!.level, equals(criatura.level),
           reason: "Criatura INCORRETA Encontrada"); // Verifica se o Level está idêntico à criatura 1
+        expect(criatura_do_banco.dimension, equals(DimensionEnum.cu));
       });
   });
 }

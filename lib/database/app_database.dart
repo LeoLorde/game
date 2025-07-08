@@ -47,7 +47,8 @@ class AppDatabase {
       raridade INTEGER,
       ataques TEXT,
       spriteFile TEXT,
-      name TEXT
+      name TEXT,
+      dimension INTEGER
     );
 ''');
     await db.execute('''

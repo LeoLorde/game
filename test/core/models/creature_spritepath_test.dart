@@ -1,3 +1,4 @@
+import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/enums/elemento_enum.dart';
@@ -16,7 +17,8 @@ void main()
         Raridade.comum,
         [Attack("Nome Placeholder", 5, [Elemento.terra])],
         "/bintilin.png",
-        "Nome da Criatura sla"
+        "Nome da Criatura sla",
+        DimensionEnum.cu
       );
 
       final String path = criatura.getCompletePath();

@@ -1,3 +1,4 @@
+import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/models/attack_model.dart';
 
 import 'package:game/core/models/creature_model.dart';
@@ -19,7 +20,8 @@ void main(){
         Raridade.epica,
         [teste],
         "Null",
-        "Criatura Teste"
+        "Criatura Teste",
+        DimensionEnum.cu
       );
 
       // Serializa com toMap
@@ -69,7 +71,8 @@ void main(){
         Raridade.epica,
         [], // Sem nenhum ataque
         "Null",
-        "Criatura Teste"
+        "Criatura Teste",
+        DimensionEnum.cu
       );
 
       final creature_map = nova_criatura.ToMap();

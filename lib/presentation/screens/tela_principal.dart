@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
@@ -114,6 +115,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 ], // ataques
                 "dragao.png", // spriteFile
                 "Dragão Flamejante", // name
+                DimensionEnum.cu
               ),
               Creature(
                 1000,
@@ -126,6 +128,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 ],
                 "golem.png",
                 "Golem de Pedra",
+                DimensionEnum.cu
               ),
             ],
           ),

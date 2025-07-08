@@ -1,6 +1,7 @@
 import '../enums/elemento_enum.dart';
 import '../enums/raridade_enum.dart';
 import './attack_model.dart';
+import '../enums/dimension_enum.dart';
 
 class Creature {
   int vida;
@@ -15,6 +16,8 @@ class Creature {
   final String filePath = "assets/sprites";
   String name;
 
+  DimensionEnum dimension;
+
   Creature(
     this.vida,
     this.level,
@@ -24,6 +27,7 @@ class Creature {
     this.ataques,
     this.spriteFile,
     this.name,
+    this.dimension
   );
 
   // Retorna o CAMINHO COMPLETO do Sprite
@@ -42,6 +46,7 @@ class Creature {
       'ataques': ataques.map((a) => a.toMap()).toList(), // lista de mapas diretos
       'spriteFile': spriteFile,
       'name': name,
+      'dimension':dimension.index
     };
   }
 
@@ -59,6 +64,7 @@ class Creature {
           .toList(),
       map['spriteFile'] as String,
       map['name'] as String,
+      DimensionEnum.values[map['dimension'] as int]
     );
   }
 }

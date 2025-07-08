@@ -1,8 +1,10 @@
-import '../../../lib/core/models/attack_model.dart';
-import '../../../lib/core/models/creature_model.dart';
-import '../../../lib/core/classes/element_map.dart';
-import '../../../lib/core/enums/elemento_enum.dart';
-import '../../../lib/core/enums/raridade_enum.dart';
+import 'package:game/core/enums/dimension_enum.dart';
+
+import 'package:game/core/models/attack_model.dart';
+import 'package:game/core/models/creature_model.dart';
+import 'package:game/core/classes/element_map.dart';
+import 'package:game/core/enums/elemento_enum.dart';
+import 'package:game/core/enums/raridade_enum.dart';
 import 'package:test/test.dart';
 
 void main()
@@ -21,7 +23,8 @@ void main()
         Attack("Ataque de Lava", 25, [Elemento.fogo])
       ],
       "Null",
-      "Criatura de Fogo"
+      "Criatura de Fogo",
+      DimensionEnum.cu
     );
 
   // Cria uma Criatura de Água
@@ -36,7 +39,8 @@ void main()
         Attack("Espinhos de Terra", 35, [Elemento.terra])  
       ],
       "Null",
-      "Criatura de Água"
+      "Criatura de Água",
+      DimensionEnum.cu
     );
   
   // Fazendo o Teste de Cálculo de Dano

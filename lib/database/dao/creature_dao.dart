@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/attack_model.dart';
@@ -19,7 +20,8 @@ Future<void> insertCreature(Creature creature) async {
     'raridade': creature.raridade.index,
     'ataques': jsonEncode(creature.ataques.map((a) => a.toMap()).toList()), // Mesma coisa
     'spriteFile': creature.spriteFile,
-    'name':creature.name
+    'name':creature.name,
+    'dimension':creature.dimension.index
   };
 
   await db.insert(
@@ -47,7 +49,8 @@ Future<List<Creature>> onLoad() async {
       Raridade.values[map['raridade'] as int],
       ataquesJson.map((a) => Attack.fromMap(a as Map<String, dynamic>)).toList(),
       map['spriteFile'] as String,
-      map['name'] as String
+      map['name'] as String,
+      DimensionEnum.values[map['dimension'] as int]
     );
   }).toList();
 }
@@ -80,5 +83,6 @@ Future<Creature?> getCreatureByName(String name) async {
     ataquesJson.map((a) => Attack.fromMap(a as Map<String, dynamic>)).toList(),
     map['spriteFile'] as String,
     map['name'] as String,
+    DimensionEnum.values[map['dimension'] as int]
   );
 }
