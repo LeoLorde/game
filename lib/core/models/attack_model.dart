@@ -14,17 +14,11 @@ class Attack {
     double total = 0.0; // Inicia a Variável com o Total da Multiplicação com 0
     for (Elemento elemento in elementos) {
       // Adiciona a possibilidade de um ataque ter VÁRIOS elementos
-      int elementosCount =
-          creature_.elementos.length; // Pega o Número de Elementos na Criatura
+      int elementosCount = creature_.elementos.length; // Pega o Número de Elementos na Criatura
       for (Elemento elemento_ in creature_.elementos) {
         // Para CADA Elemento na Criatura:
-        double mult =
-            ElementMap.multiplicadores[elemento]?[elemento_] ??
-            1.0; // Se Existir na Tabela _multiplicadores, pegue o valor, se não, pegue o valor 1.0
-        total +=
-            mult *
-            (1 /
-                elementosCount); // Adiciona ao Total de acordo com a Fórmula no GDD
+        double mult = ElementMap.multiplicadores[elemento]?[elemento_] ?? 1.0; // Se Existir na Tabela _multiplicadores, pegue o valor, se não, pegue o valor 1.0
+        total += mult * (1 / elementosCount); // Adiciona ao Total de acordo com a Fórmula no GDD
       }
     }
 
@@ -33,9 +27,7 @@ class Attack {
 
   // Calcula o Dano Total
   int calcDamage(Creature creature_) {
-    double mult = GetDamageMultiplier(
-      creature_,
-    ); // Multiplica o Dano Base com o Elemental
+    double mult = GetDamageMultiplier(creature_); // Multiplica o Dano Base com o Elemental
     return (base_damage * mult).round(); // Arredonda para Inteiro
   }
 

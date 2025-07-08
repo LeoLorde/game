@@ -37,11 +37,9 @@ class Creature {
       'vida': vida,
       'level': level,
       'xp': xp,
-      'elementos':
-          elementos.map((e) => e.index).toList(), // lista de ints direta
+      'elementos': elementos.map((e) => e.index).toList(), // lista de ints direta
       'raridade': raridade.index,
-      'ataques':
-          ataques.map((a) => a.toMap()).toList(), // lista de mapas diretos
+      'ataques': ataques.map((a) => a.toMap()).toList(), // lista de mapas diretos
       'spriteFile': spriteFile,
       'name': name,
     };
