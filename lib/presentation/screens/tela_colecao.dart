@@ -100,7 +100,50 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         for (var cor in cores)
-                          buildComposicaoCard(img, 24, cor, 'BINTILIN'),
+                          GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext dialogContext) {
+                                  return AlertDialog(
+                                    backgroundColor: cor,
+                                    title: const Text(
+                                      'BINTILIN',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(img, height: 80),
+                                        const SizedBox(height: 8),
+                                        const Text('Nível: 24'),
+                                        const Text('Elemento: Planta'),
+                                        const Text('Raridade: Épica'),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed:
+                                            () =>
+                                                Navigator.of(
+                                                  dialogContext,
+                                                ).pop(),
+                                        child: const Text('Fechar'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: buildComposicaoCard(
+                              img,
+                              24,
+                              cor,
+                              'BINTILIN',
+                            ),
+                          ),
                       ],
                     ),
                   ],
@@ -122,15 +165,65 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
                     final creature = widget.criaturas[index];
                     return GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (context) =>
-                                    DetalheCriaturaScreen(creature: creature),
-                          ),
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext dialogContext) {
+                            return AlertDialog(
+                              backgroundColor: Colors.teal.shade50,
+                              title: Text(
+                                creature.name ?? "Criatura",
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              content: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      creature.getCompletePath(),
+                                      height: 100,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text("Nível: ${creature.level}"),
+                                    Text(
+                                      "Raridade: ${creature.raridade.name.toUpperCase()}",
+                                    ),
+                                    Text("Vida: ${creature.vida}"),
+                                    const SizedBox(height: 12),
+                                    const Text(
+                                      "Ataques:",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    ...creature.ataques.map(
+                                      (atk) => Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "- ${atk.name} (ATK: ${atk.base_damage})",
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed:
+                                      () => Navigator.of(dialogContext).pop(),
+                                  child: const Text(""),
+                                ),
+                              ],
+                            );
+                          },
                         );
                       },
+
                       child: Container(
                         decoration: BoxDecoration(
                           color: corPorRaridade(creature.raridade),
@@ -163,126 +256,6 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
                 ),
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DetalheCriaturaScreen extends StatelessWidget {
-  final Creature creature;
-
-  const DetalheCriaturaScreen({super.key, required this.creature});
-
-  Widget _buildAttackTile(BuildContext context, Attack atk) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder:
-              (_) => AlertDialog(
-                title: Text(atk.name),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("ATK: ${atk.base_damage}"),
-                    const SizedBox(height: 8),
-                    const Text(
-                      "Bônus: Acumula 15% de ataque para o próximo turno",
-                    ),
-                  ],
-                ),
-              ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.blueGrey.shade100,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          children: [
-            Text(atk.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-            Text("ATK: ${atk.base_damage}"),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 4,
-              children:
-                  atk.elementos
-                      .map((e) => Icon(_getIcon(e), size: 16))
-                      .toList(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  IconData _getIcon(Elemento e) {
-    switch (e) {
-      case Elemento.fogo:
-        return Icons.local_fire_department;
-      case Elemento.terra:
-        return Icons.landscape;
-      case Elemento.agua:
-        return Icons.water;
-      case Elemento.planta:
-        return Icons.eco;
-      default:
-        return Icons.blur_on;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.teal.shade50,
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text("Detalhes da Criatura"),
-      ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            color: Colors.teal.shade100,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
-                Text(
-                  "Yang_XuXu",
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Text("Nível: 24"),
-                Text("Cristais: 4876"),
-                Text("Amuletos: 4571"),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Image.asset(creature.getCompletePath(), height: 120),
-          Text(
-            '"NOME DO BICHO"',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            "Nível ${creature.level} - ${creature.raridade.name.toUpperCase()}",
-          ),
-          Text("Vida: ${creature.vida}"),
-          const SizedBox(height: 10),
-          const Text("ATAQUES", style: TextStyle(fontWeight: FontWeight.bold)),
-          Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              children:
-                  creature.ataques
-                      .map((atk) => _buildAttackTile(context, atk))
-                      .toList(),
-            ),
           ),
         ],
       ),
