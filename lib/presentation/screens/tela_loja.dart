@@ -8,58 +8,176 @@ class TelaLoja extends StatefulWidget {
 
 class _TelaLojaState extends State<TelaLoja> {
   Widget buildCard(String imageUrl, String precoCarta, Color cor) {
-    return Container(
-      width: 120,
-      height: 170,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: Colors.black, width: 2),
-        ),
-        color: cor,
-        child: Column(
-          children: [
-            Expanded(child: Image.asset(imageUrl, fit: BoxFit.contain)),
-            const SizedBox(height: 4),
-            Text(
-              precoCarta,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 54, 145, 99),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(color: Colors.black, width: 2),
               ),
-            ),
-            SizedBox(height: 10),
-          ],
+              title: const Text("CONFIRMAR COMPRA"),
+              content: Text(
+                "DESEJA COMPRAR ESTA CARTA POR $precoCarta CRISTAIS?",
+              ),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.black, width: 2),
+                        ),
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("CANCELAR"),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.black, width: 2),
+                        ),
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        // lógica pra realizar a compra da carta
+                        return Navigator.of(context).pop();
+                      },
+                      child: const Text("COMPRAR"),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: Container(
+        width: 120,
+        height: 170,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: Colors.black, width: 2),
+          ),
+          color: cor,
+          child: Column(
+            children: [
+              Expanded(child: Image.asset(imageUrl, fit: BoxFit.contain)),
+              const SizedBox(height: 4),
+              Text(
+                precoCarta,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget buildBauCard(String imageUrl, String precoBau, Color cor) {
-    return SizedBox(
-      width: 120,
-      height: 170,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-          side: BorderSide(color: Colors.black, width: 2),
-        ),
-        color: cor,
-        child: Column(
-          children: [
-            Expanded(child: Image.network(imageUrl, fit: BoxFit.contain)),
-            const SizedBox(height: 7),
-            Text(
-              precoBau,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 54, 145, 99),
+              title: const Text("CONFIRMAR COMPRA"),
+              content: Text("DESEJA COMPRAR ESTE BAÚ POR $precoBau CRISTAIS?"),
+              actions: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.black, width: 2),
+                        ),
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text("CANCELAR"),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 16,
+                          horizontal: 24,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          side: const BorderSide(color: Colors.black, width: 2),
+                        ),
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: () {
+                        // lógica pra realizar a compra do baú
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("COMPRAR"),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
+      child: SizedBox(
+        width: 120,
+        height: 170,
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: Colors.black, width: 2),
+          ),
+          color: cor,
+          child: Column(
+            children: [
+              Expanded(child: Image.network(imageUrl, fit: BoxFit.contain)),
+              const SizedBox(height: 7),
+              Text(
+                precoBau,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
-            ),
-            SizedBox(height: 10),
-          ],
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
