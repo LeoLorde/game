@@ -9,50 +9,60 @@ class TelaInicial extends StatefulWidget {
 
 class _TelaInicialState extends State<TelaInicial> {
   Widget buildTelaInicial(String arena, int trofeus, String tempoBau) {
-    return Column(
+    return ListView(
       children: [
-        const SizedBox(height: 120),
-        Center(child: Image.network('$arena')),
-
-        Text(
-          '$trofeus - 5000',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-        ),
-        SizedBox(height: 15),
-        ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 55, 94, 131),
-            padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 25),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-              side: const BorderSide(color: Colors.black, width: 3),
-            ),
-          ),
-          child: Text(
-            "LUTAR",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-          ),
-        ),
-        SizedBox(height: 35),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Column(
           children: [
-            Image.network(
-              "https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/06/15120701/item_icon_510006.png",
-            ),
+            const SizedBox(height: 120),
+            Center(child: Image.network('$arena')),
+
             Text(
-              " FALTAM $tempoBau\n PARA SEU BAÚ\n DIÁRIO",
+              '$trofeus - 5000',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 15,
                 fontWeight: FontWeight.bold,
+                fontSize: 20,
               ),
-              textAlign: TextAlign.left,
+            ),
+            SizedBox(height: 15),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color.fromARGB(255, 55, 94, 131),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 70,
+                  vertical: 25,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  side: const BorderSide(color: Colors.black, width: 3),
+                ),
+              ),
+              child: Text(
+                "LUTAR",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 35),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.network(
+                  "https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/06/15120701/item_icon_510006.png",
+                ),
+                Text(
+                  " FALTAM $tempoBau\n PARA SEU BAÚ\n DIÁRIO",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ],
             ),
           ],
         ),
