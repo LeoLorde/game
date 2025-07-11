@@ -30,10 +30,20 @@ class _TelaCadastroJogadorState extends State<TelaCadastroJogador> {
 
     await dao.salvarOuAtualizar(novoJogador);
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => TelaPrincipal(jogador: novoJogador)),
-    );
+    // Buscar o jogador salvo com ID preenchido
+    final jogadorSalvo = await dao.buscar();
+
+    if (jogadorSalvo != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => TelaPrincipal(jogador: jogadorSalvo)),
+      );
+    } else {
+      // Caso algo dê errado, mostrar erro
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Erro ao salvar jogador')));
+    }
   }
 
   @override

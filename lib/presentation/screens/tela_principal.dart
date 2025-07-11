@@ -12,7 +12,7 @@ import 'package:game/presentation/screens/tela_inicial.dart';
 class TelaPrincipal extends StatefulWidget {
   final Jogador jogador;
 
-  const TelaPrincipal({required this.jogador, super.key});
+  const TelaPrincipal({Key? key, required this.jogador}) : super(key: key);
 
   @override
   State<TelaPrincipal> createState() => _TelaPrincipalState();
@@ -26,14 +26,17 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     setState(() => _paginaAtual = index);
     _pageController.animateToPage(
       index,
-      duration: const Duration(milliseconds: 300),
+      duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
   }
 
-  PreferredSizeWidget buildAppBar() {
-    final jogador = widget.jogador;
-
+  PreferredSizeWidget buildAppBar(
+    String nickName,
+    int cristais,
+    int level,
+    int amuletos,
+  ) {
     return AppBar(
       toolbarHeight: 80,
       centerTitle: false,
@@ -46,7 +49,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                jogador.nickName,
+                nickName,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -56,7 +59,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               ),
               const SizedBox(height: 14),
               Text(
-                'NÍVEL: ${jogador.level}',
+                'NÍVEL: $level',
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -71,7 +74,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                'CRISTAIS: ${jogador.cristais}',
+                'CRISTAIS: $cristais',
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -81,7 +84,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               ),
               const SizedBox(height: 14),
               Text(
-                'AMULETOS: ${jogador.amuletos}',
+                'AMULETOS: $amuletos',
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 20,
@@ -98,8 +101,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
+    final jogador = widget.jogador; // 👈 acesso correto ao jogador
+
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar(
+        jogador.nickName,
+        jogador.cristais,
+        jogador.level,
+        jogador.amuletos,
+      ),
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) => setState(() => _paginaAtual = index),
@@ -134,15 +144,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               ),
             ],
           ),
-          const TelaInicial(),
-          const TelaLoja(),
+          TelaInicial(),
+          TelaLoja(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaAtual,
         onTap: _mudarPagina,
         backgroundColor: const Color(0xFF1B4732),
-        selectedLabelStyle: const TextStyle(
+        selectedLabelStyle: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 17,
         ),
