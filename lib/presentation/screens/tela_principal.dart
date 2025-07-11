@@ -99,7 +99,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    final Future<Database> dbFuture = openDatabase('meu_banco.db');
+    final Future<Database> dbFuture = openDatabase('game.db');
 
     return FutureBuilder<Database>(
       future: dbFuture,
