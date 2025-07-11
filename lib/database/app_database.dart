@@ -15,14 +15,20 @@ class AppDatabase {
     if (_database != null) {
       return _database!; // Se o Banco já foi inicializado, só retorna o Banco
     }
-    _database = await _initDB('game.db'); // Caso não esteja inicializado, inicializa o Banco
+    _database = await _initDB(
+      'game.db',
+    ); // Caso não esteja inicializado, inicializa o Banco
     return _database!; // Retorna o Banco
   }
 
   // Inicializador do Banco de Dados (Assíncrono)
   Future<Database> _initDB(String fileName) async {
-    final dbPath = await getDatabasesPath(); // Pega o Caminho Padrão do Banco de Dados
-    final path = join(dbPath, fileName); // Mostra o Caminho Completo do Banco (Ou seja, com a instância game.db)
+    final dbPath =
+        await getDatabasesPath(); // Pega o Caminho Padrão do Banco de Dados
+    final path = join(
+      dbPath,
+      fileName,
+    ); // Mostra o Caminho Completo do Banco (Ou seja, com a instância game.db)
 
     return await openDatabase(
       // Abre o Banco de Dados
@@ -61,6 +67,17 @@ class AppDatabase {
         FOREIGN KEY (creatureId) REFERENCES creatures(id)
       );
     ''');
+    await db.execute('''
+    CREATE TABLE jogador (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nickName TEXT NOT NULL,
+      cristais INTEGER NOT NULL,
+      level INTEGER NOT NULL,
+      amuletos INTEGER NOT NULL,
+      cartas INTEGER NOT NULL,
+      xp INTEGER
+    )
+  ''');
   }
 
   Future<void> clearDatabase(List<String> tables) async {
