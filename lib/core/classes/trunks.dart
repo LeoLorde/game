@@ -5,88 +5,98 @@ import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/enums/dimension_enum.dart';
 
-// Lista de criaturas iniciais disponíveis para drop
-final List<Creature> criaturasIniciais = [
-  Creature(
-    50,
-    1,
-    0,
-    [Elemento.agua],
-    Raridade.comum,
-    [Attack("Jatada de Água", 5, [Elemento.agua])],
-    "None",
-    "Criatura Padrão de Água",
-    DimensionEnum.terra,
-  ),
-  Creature(
-    50,
-    1,
-    0,
-    [Elemento.fogo],
-    Raridade.comum,
-    [Attack("Rabetada de Fogo", 5, [Elemento.fogo])],
-    "None",
-    "Criatura Padrão de Fogo",
-    DimensionEnum.terra,
-  ),
-  Creature(
-    50,
-    1,
-    0,
-    [Elemento.terra],
-    Raridade.comum,
-    [Attack("Espinhos de Terra", 5, [Elemento.terra])],
-    "None",
-    "Criatura Padrão de Terra",
-    DimensionEnum.terra,
-  ),
-  Creature(
-    50,
-    1,
-    0,
-    [Elemento.ar],
-    Raridade.comum,
-    [Attack("Corte de Vento", 5, [Elemento.ar])],
-    "None",
-    "Criatura Padrão de Ar",
-    DimensionEnum.terra,
-  ),
-];
+void main() {
+  int dimensao = 6;
+  Random random = Random();
 
-class Trunks {
-  // Tabela que relaciona raridade com quantidade máxima de ouro
-  final Map<int, int> tabelaOuroPorRaridade = {
-    1: 10,
-    2: 100,
-    3: 1000,
+  List<String> tiposDeBaus = ['Midgard', 'Apolo', 'Hel', 'Odin', 'Zeus'];
+
+  //Probabilidades padrão dos baús
+  List<double> todasChances = [0.5, 0.2, 0.15, 0.1, 0.05];
+
+  //Determina os baús permitidos conforme a dimensão
+  List<String> bausPermitidos;
+  List<double> chancesPermitidas;
+
+  if (dimensao <= 3) {
+    bausPermitidos = tiposDeBaus.sublist(0, 3);
+    chancesPermitidas = todasChances.sublist(0, 3);
+  } else if (dimensao <= 5) {
+    bausPermitidos = tiposDeBaus.sublist(0, 4);
+    chancesPermitidas = todasChances.sublist(0, 4);
+  } else {
+    bausPermitidos = tiposDeBaus;
+    chancesPermitidas = todasChances;
+  }
+
+  //Realiza sorteio com base nas probabilidades
+  String bauSorteado = sortearComChances(bausPermitidos, chancesPermitidas);
+  print('Baú sorteado: $bauSorteado');
+
+  //Sorteia raridade da criatura com fator multiplicador por dimensão
+  sortearRaridade(bauSorteado, dimensao);
+
+  //Gera recompensa em dinheiro e talismanes
+  gerarRecompensa(bauSorteado);
+}
+
+String sortearComChances(List<String> opcoes, List<double> chances) {
+  double r = Random().nextDouble();
+  double acumulado = 0.0;
+
+  for (int i = 0; i < opcoes.length; i++) {
+    acumulado += chances[i];
+    if (r <= acumulado) {
+      return opcoes[i];
+    }
+  }
+  return opcoes.last; //Caso extremo de arredondamento
+}
+
+void sortearRaridade(String bau, int dimensao) {
+  Map<String, List<double>> baseChances = {
+    'Midgard':   [80, 15, 3, 1.8, 0.2],
+    'Apolo':     [50, 30, 17, 2.5, 0.5],
+    'Hel':       [30, 35, 20, 12.5, 2.5],
+    'Odin':      [15, 20, 30, 25, 10],
+    'Zeus':      [5, 10, 25, 30, 30],
   };
 
-  // Método principal que simula um drop de ouro aleatório
-  void gerarDropOuro() {
-    final random = Random();
+  List<String> raridades = ['Combatente', 'Místico', 'Herói', 'Semideus', 'Deus'];
 
-    // Sorteia uma raridade
-    final chaveRaridade = tabelaOuroPorRaridade.keys.toList()[random.nextInt(tabelaOuroPorRaridade.length)];
+  //Aplica multiplicador por dimensão
+  List<double> chances = baseChances[bau]!;
+  double fator = pow(1.1, dimensao - 1).toDouble();
+  List<double> ajustadas = chances.map((c) => c * fator).toList();
 
-    // Obtém o valor máximo de ouro associado à raridade
-    final valorMaximo = tabelaOuroPorRaridade[chaveRaridade]!;
+  //Normaliza para somar 1.0
+  double total = ajustadas.reduce((a, b) => a + b);
+  List<double> normalizadas = ajustadas.map((c) => c / total).toList();
 
-    // Gera quantidade aleatória de ouro entre metade e o valor máximo
-    final ouro = gerarValorAleatorio(valorMaximo);
+  String raridadeSorteada = sortearComChances(raridades, normalizadas);
+  print('Raridade sorteada: $raridadeSorteada');
+}
 
-    print('Ouro gerado com raridade $chaveRaridade: $ouro');
-  }
+void gerarRecompensa(String bau) {
+  Map<String, List<int>> dinheiroPorBau = {
+    'Midgard': [1000, 2000],
+    'Apolo':   [2000, 4000],
+    'Hel':     [4000, 6000],
+    'Odin':    [6000, 8000],
+    'Zeus':    [8000, 10000],
+  };
 
-  // Função que retorna valor entre 50% e 100% do valor máximo
-  int gerarValorAleatorio(int valorMaximo) {
-    final random = Random();
-    final minimo = (valorMaximo / 2).round();
-    return minimo + random.nextInt(valorMaximo - minimo + 1);
-  }
+  Map<String, List<int>> talismanesPorBau = {
+    'Midgard': [1, 2],
+    'Apolo':   [2, 4],
+    'Hel':     [4, 6],
+    'Odin':    [6, 8],
+    'Zeus':    [8, 10],
+  };
 
-  // Sorteia uma criatura aleatória da lista de criaturas disponíveis
-  Creature sortearCriatura() {
-    final random = Random();
-    return criaturasIniciais[random.nextInt(criaturasIniciais.length)];
-  }
+  Random r = Random();
+  int dinheiro = dinheiroPorBau[bau]![0] + r.nextInt(dinheiroPorBau[bau]![1] - dinheiroPorBau[bau]![0] + 1);
+  int talismanes = talismanesPorBau[bau]![0] + r.nextInt(talismanesPorBau[bau]![1] - talismanesPorBau[bau]![0] + 1);
+
+  print('Recompensa: \$${dinheiro} e $talismanes talismanes');
 }
