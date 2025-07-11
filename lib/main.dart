@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/presentation/screens/tela_carregamento.dart';
 import 'presentation/screens/tela_principal.dart';
 import 'package:flame/flame.dart';
 
@@ -6,7 +7,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
 
-  runApp(MaterialApp(debugShowCheckedModeBanner: false, home: TelaPrincipal()));
+  runApp(
+    MaterialApp(debugShowCheckedModeBanner: false, home: TelaCarregamento()),
+  );
 }
 
 /*
