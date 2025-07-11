@@ -4,9 +4,12 @@ import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/models/attack_model.dart';
+import 'package:game/core/models/jogador_model.dart';
+import 'package:game/database/dao/jogador_dao.dart';
 import 'package:game/presentation/screens/tela_colecao.dart';
 import 'package:game/presentation/screens/tela_loja.dart';
 import 'package:game/presentation/screens/tela_inicial.dart';
+import 'package:sqflite/sqflite.dart';
 
 class TelaPrincipal extends StatefulWidget {
   @override
@@ -96,62 +99,102 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar('YANG_XUXU', 7688, 24, 2109),
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) => setState(() => _paginaAtual = index),
-        children: [
-          ColecaoScreen(
-            criaturas: [
-              Creature(
-                1500, // vida
-                10, // level
-                200.0, // xp
-                [Elemento.fogo], // elementos
-                Raridade.lendaria, // raridade
-                [
-                  Attack("Chama Infernal", 120, [Elemento.fogo]),
-                ], // ataques
-                "dragao.png", // spriteFile
-                "Dragão Flamejante", // name
-                DimensionEnum.cu
+    final Future<Database> dbFuture = openDatabase('meu_banco.db');
+
+    return FutureBuilder<Database>(
+      future: dbFuture,
+      builder: (context, dbSnapshot) {
+        if (dbSnapshot.connectionState != ConnectionState.done) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        }
+
+        final jogadorDao = JogadorDao(dbSnapshot.data!);
+
+        return FutureBuilder<Jogador?>(
+          future: jogadorDao.buscar(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return Scaffold(
+                body: Center(child: Text('Jogador não encontrado')),
+              );
+            }
+
+            final jogador = snapshot.data!;
+
+            return Scaffold(
+              appBar: buildAppBar(
+                jogador.nickName,
+                jogador.cristais,
+                jogador.level,
+                jogador.amuletos,
               ),
-              Creature(
-                1000,
-                8,
-                150.0,
-                [Elemento.terra],
-                Raridade.rara,
-                [
-                  Attack("Soco de Pedra", 90, [Elemento.terra]),
+              body: PageView(
+                controller: _pageController,
+                onPageChanged: (index) => setState(() => _paginaAtual = index),
+                children: [
+                  ColecaoScreen(
+                    criaturas: [
+                      Creature(
+                        1500,
+                        10,
+                        200.0,
+                        [Elemento.fogo],
+                        Raridade.lendaria,
+                        [
+                          Attack("Chama Infernal", 120, [Elemento.fogo]),
+                        ],
+                        "dragao.png",
+                        "Dragão Flamejante",
+                        DimensionEnum.cu,
+                      ),
+                      Creature(
+                        1000,
+                        8,
+                        150.0,
+                        [Elemento.terra],
+                        Raridade.rara,
+                        [
+                          Attack("Soco de Pedra", 90, [Elemento.terra]),
+                        ],
+                        "golem.png",
+                        "Golem de Pedra",
+                        DimensionEnum.cu,
+                      ),
+                    ],
+                  ),
+                  TelaInicial(),
+                  TelaLoja(),
                 ],
-                "golem.png",
-                "Golem de Pedra",
-                DimensionEnum.cu
               ),
-            ],
-          ),
-          TelaInicial(),
-          TelaLoja(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _paginaAtual,
-        onTap: _mudarPagina,
-        backgroundColor: const Color(0xFF1B4732),
-        selectedLabelStyle: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 17,
-        ),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: SizedBox(height: 0), label: "COLEÇÃO"),
-          BottomNavigationBarItem(icon: SizedBox(height: 0), label: "INÍCIO"),
-          BottomNavigationBarItem(icon: SizedBox(height: 0), label: "LOJA"),
-        ],
-      ),
+              bottomNavigationBar: BottomNavigationBar(
+                currentIndex: _paginaAtual,
+                onTap: _mudarPagina,
+                backgroundColor: const Color(0xFF1B4732),
+                selectedLabelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 17,
+                ),
+                selectedItemColor: Colors.white,
+                unselectedItemColor: Colors.grey,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: SizedBox(height: 0),
+                    label: "COLEÇÃO",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: SizedBox(height: 0),
+                    label: "INÍCIO",
+                  ),
+                  BottomNavigationBarItem(
+                    icon: SizedBox(height: 0),
+                    label: "LOJA",
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }
