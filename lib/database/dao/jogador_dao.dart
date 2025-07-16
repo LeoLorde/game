@@ -1,6 +1,8 @@
 import 'package:sqflite/sqflite.dart';
 import '../../core/models/jogador_model.dart';
-
+/*
+final db = await AppDatabase.instance.getDatabase();
+*/
 class JogadorDao {
   final Database db;
 
@@ -30,6 +32,17 @@ class JogadorDao {
       return null;
     }
   }
+
+  Future<Jogador?> buscarByID(int id) async{
+    final maps = await db.query('jogador', where: 'id=?', whereArgs: [id]);
+
+    if (maps.isNotEmpty) {
+      return Jogador.fromMap(maps.first);
+    } else {
+      return null;
+    }
+  }
+
 
   Future<void> deletar() async {
     await db.delete('jogador');
