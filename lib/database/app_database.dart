@@ -35,8 +35,13 @@ class AppDatabase {
       path,
       version: 1,
       onCreate: _onCreate,
+
+       onConfigure: (db) async {
+      await db.execute('PRAGMA foreign_keys = ON');
+    },
     );
   }
+  
 
   // Quando for Inicializado pela PRIMEIRA VEZ ele roda isso.
   // Caso já foi inicializado, NUNCA MAIS ISSO RODA
@@ -58,16 +63,6 @@ class AppDatabase {
     );
 ''');
     await db.execute('''
-      CREATE TABLE collection_cards (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        creatureId INTEGER,
-        level INTEGER,
-        xp REAL,
-        vida INTEGER,
-        FOREIGN KEY (creatureId) REFERENCES creatures(id)
-      );
-    ''');
-    await db.execute('''
     CREATE TABLE jogador (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       nickName TEXT NOT NULL,
@@ -78,7 +73,24 @@ class AppDatabase {
       xp INTEGER
     )
   ''');
+  await db.execute('''
+      CREATE TABLE collection_creature (
+        player_id INTEGER,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        vida INTEGER,
+        level INTEGER,
+        xp REAL,
+        elementos TEXT,
+        raridade INTEGER,
+        ataques TEXT,
+        spriteFile TEXT,
+        name TEXT,
+        dimension INTEGER,
+        FOREIGN KEY (player_id) REFERENCES jogador(id) ON DELETE CASCADE
+      );
+    ''');
   }
+
 
   Future<void> clearDatabase(List<String> tables) async {
     final db = await getDatabase();

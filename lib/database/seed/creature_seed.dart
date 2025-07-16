@@ -22,7 +22,7 @@ class CreatureSeed {
     await AppDatabase.instance.clearDatabase(["creatures"]);
     for(Creature criatura in all_creatures)
     {
-      await insertCreature(criatura);
+      await insertCreature(criatura, 'creatures');
     }
   }
 }
