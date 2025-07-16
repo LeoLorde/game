@@ -8,7 +8,7 @@ import '../app_database.dart';
 import '../../core/models/creature_model.dart';
 
 // Inserir criatura no banco de dados, convertendo listas para String JSON
-Future<void> insertCreature(Creature creature) async {
+Future<void> insertCreature(Creature creature, String table) async {
   final db = await AppDatabase.instance.getDatabase();
 
   // Converte listas para String JSON antes de inserir
@@ -25,7 +25,7 @@ Future<void> insertCreature(Creature creature) async {
   };
 
   await db.insert(
-    'creatures',
+    table,
     data,
     conflictAlgorithm: ConflictAlgorithm.replace,
   );

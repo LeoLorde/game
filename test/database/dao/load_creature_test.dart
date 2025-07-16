@@ -56,7 +56,7 @@ void main() {
       );
 
       // Insere e carrega
-      await insertCreature(creature);
+      await insertCreature(creature, 'creatures');
       final creatures = await onLoad();
 
       // Verificações 

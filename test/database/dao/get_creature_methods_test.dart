@@ -48,7 +48,7 @@ void main() {
         "Null",
         "Criatura Teste", DimensionEnum.cu);
 
-        await insertCreature(criatura); // Insere para Teste
+        await insertCreature(criatura, 'creatures'); // Insere para Teste
         final Creature? criatura_do_banco = await getCreatureByName("Criatura Teste"); // Pega a Criatura
         
         expect(criatura_do_banco, isNotNull,
@@ -75,8 +75,8 @@ void main() {
         final Creature criatura_2 = criatura;
         criatura_2.level = 15; // Cria uma segunda criatura com nível diferente
 
-        await insertCreature(criatura);
-        await insertCreature(criatura_2); // Insere Ambas (na ordem correta para o teste)
+        await insertCreature(criatura, 'creatures');
+        await insertCreature(criatura_2, 'creatures'); // Insere Ambas (na ordem correta para o teste)
         final Creature? criatura_do_banco = await getCreatureByName("Criatura Teste"); // Pega a Criatura
         
         expect(criatura_do_banco, isNotNull,
