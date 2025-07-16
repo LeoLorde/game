@@ -224,32 +224,25 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
                         );
                       },
 
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: corPorRaridade(creature.raridade),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Image.asset(creature.getCompletePath()),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Image.asset(creature.getCompletePath()),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${creature.name}',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '"NOME DO BICHO"',
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            Text(
-                              'Nv. ${creature.level}',
-                              style: const TextStyle(fontSize: 12),
-                            ),
-                          ],
-                        ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            'Nv. ${creature.level}',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
                       ),
                     );
                   },
