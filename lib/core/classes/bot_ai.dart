@@ -6,9 +6,25 @@ import 'package:game/core/models/creature_model.dart';
 import 'package:game/database/app_database.dart';
 
 class BotAI {
-  final DeckModel? deckPlayer;
+  final DeckModel deck;
 
-  BotAI(this.deckPlayer);
+  BotAI._(this.deck);
+
+  // Cria o Bot com deck
+  static Future<BotAI> criar() async {
+    final deckBot = await createBotDeck();
+    return BotAI._(deckBot);
+  }
+
+  // Ataque do Bot
+  Future<void> atacar() async {
+    // Colocar lógica de ataque do bot aqui
+  }
+
+  // Controle de vida do Bot
+  Future<void> controlarVida() async {
+    // Colocar lógica de controle de vida do bot aqui
+  }
 }
 
 // Pega o deck do jogador
