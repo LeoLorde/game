@@ -47,25 +47,25 @@ Future<void> removeCardFromSingleDeck(int cardId) async {
 }
 
 // Exemplo
-void testarDeckUnico() async {
-  final db = await AppDatabase.instance.getDatabase();
+// void testarDeckUnico() async {
+//   final db = await AppDatabase.instance.getDatabase();
 
-  // Cria ou atualiza o único deck com nome e nenhuma carta
-  final meuDeck = DeckModel(name: 'Deck Único', cardIds: []);
-  await upsertDeck(meuDeck);
+//   Cria ou atualiza o único deck com nome e nenhuma carta
+//   final meuDeck = DeckModel(name: 'Deck Único', cardIds: []);
+//   await upsertDeck(meuDeck);
 
-  // Adiciona 2 cartas
-  await addCardsToSingleDeck([1, 2]);
+//   Adiciona 2 cartas
+//   await addCardsToSingleDeck([1, 2]);
 
-  // Adiciona a terceira carta
-  await addCardsToSingleDeck([3]);
+//   Adiciona a terceira carta
+//   await addCardsToSingleDeck([3]);
 
-  // Tenta remover a carta 2
-  await removeCardFromSingleDeck(2);
+//   Tenta remover a carta 2
+//   await removeCardFromSingleDeck(2);
 
-  // Carrega o deck atualizado
-  final resultado = await db.query('deck');
-  final deckFinal = DeckModel.fromMap(resultado.first);
+//   Carrega o deck atualizado
+//   final resultado = await db.query('deck');
+//   final deckFinal = DeckModel.fromMap(resultado.first);
 
-  debugPrint('Deck final: ${deckFinal.name} -> Cartas: ${deckFinal.cardIds}');
-}
+//   debugPrint('Deck final: ${deckFinal.name} -> Cartas: ${deckFinal.cardIds}');
+// }
