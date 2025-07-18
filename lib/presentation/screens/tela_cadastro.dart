@@ -3,6 +3,7 @@ import 'package:game/core/models/jogador_model.dart';
 import 'package:game/database/app_database.dart';
 import 'package:game/database/dao/jogador_dao.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
+import 'package:game/application/managers/player_manager.dart';
 
 class TelaCadastroJogador extends StatefulWidget {
   @override
@@ -19,19 +20,10 @@ class _TelaCadastroJogadorState extends State<TelaCadastroJogador> {
     final db = await AppDatabase.instance.getDatabase();
     final dao = JogadorDao(db);
 
-    final novoJogador = Jogador(
-      nickName: nome,
-      cristais: 0,
-      level: 1,
-      amuletos: 0,
-      cartas: 0,
-      xp: 0,
-    );
-
-    await dao.salvarOuAtualizar(novoJogador);
+    await CreatePlayer(nome);
 
     // Buscar o jogador salvo com ID preenchido
-    final jogadorSalvo = await dao.buscar();
+    final jogadorSalvo = await dao.buscarByID(player_instance!.id ?? 0);
 
     if (jogadorSalvo != null) {
       Navigator.pushReplacement(

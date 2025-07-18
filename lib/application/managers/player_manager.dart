@@ -12,3 +12,19 @@ Future<void> LoadNewPlayer(int id) async {
   JogadorDao dao = JogadorDao(await AppDatabase.instance.getDatabase());
   player_instance = await dao.buscarByID(id);
 }
+
+Future<void> CreatePlayer(String player_name) async {
+  final db = await AppDatabase.instance.getDatabase();
+  JogadorDao dao = JogadorDao(db);
+
+  final novoJogador = Jogador(
+    nickName: player_name,
+    cristais: 0,
+    level: 1,
+    amuletos: 0,
+    cartas: 0,
+  );
+
+  await dao.salvarOuAtualizar(novoJogador);
+  player_instance = novoJogador;
+}
