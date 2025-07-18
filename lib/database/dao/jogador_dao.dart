@@ -8,20 +8,25 @@ class JogadorDao {
 
   JogadorDao(this.db);
 
-  Future<void> salvarOuAtualizar(Jogador jogador) async {
-    final existente = await buscar();
+  Future<int> salvarOuAtualizar(Jogador jogador) async {
+  final existente = await buscar();
 
-    if (existente == null) {
-      await db.insert('jogador', jogador.toMap());
-    } else {
-      await db.update(
-        'jogador',
-        jogador.toMap(),
-        where: 'id = ?',
-        whereArgs: [existente.id],
-      );
-    }
+  final data = jogador.toMap();
+  data.remove('id');
+
+  if (existente == null) {
+    final id = await db.insert('jogador', data);
+    return id; 
+  } else {
+    await db.update(
+      'jogador',
+      data,
+      where: 'id = ?',
+      whereArgs: [existente.id],
+    );
+    return existente.id!;
   }
+}
 
   Future<Jogador?> buscar() async {
     final maps = await db.query('jogador', limit: 1);

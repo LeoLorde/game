@@ -19,7 +19,6 @@ class Jogador {
 
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
-      'id': id,
       'nickName': nickName,
       'cristais': cristais,
       'level': level,

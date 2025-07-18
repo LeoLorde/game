@@ -24,7 +24,6 @@ class _TelaCadastroJogadorState extends State<TelaCadastroJogador> {
 
     // Buscar o jogador salvo com ID preenchido
     final jogadorSalvo = await dao.buscarByID(player_instance!.id ?? 0);
-
     if (jogadorSalvo != null) {
       Navigator.pushReplacement(
         context,
@@ -34,7 +33,7 @@ class _TelaCadastroJogadorState extends State<TelaCadastroJogador> {
       // Caso algo dê errado, mostrar erro
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Erro ao salvar jogador')));
+      ).showSnackBar(SnackBar(content: Text(jogadorSalvo!.nickName)));
     }
   }
 
