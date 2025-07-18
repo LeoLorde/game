@@ -21,9 +21,9 @@ class BotAI {
     // Colocar lógica de ataque do bot aqui
   }
 
-  // Controle de vida do Bot
+  // Controle de vida das  criaturas do Bot
   Future<void> controlarVida() async {
-    // Colocar lógica de controle de vida do bot aqui
+    // Colocar lógica de controle de vida das criaturas aqui(talvez seja feita no battle.dart)
   }
 }
 
