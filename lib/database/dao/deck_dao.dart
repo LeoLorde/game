@@ -1,7 +1,5 @@
-import 'package:flutter/foundation.dart';
 import 'package:game/core/models/deck_model.dart';
 import 'package:game/database/app_database.dart';
-import 'package:sqflite/sqflite.dart';
 
 // Função para inserir ou atualizar um deck no banco de dados
 Future<void> upsertDeck(DeckModel deck) async {
