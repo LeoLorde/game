@@ -51,3 +51,28 @@ Future<void> insertCreatureInCollection(Creature creature) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<List<Creature>> getCollection(int player_id) async {
+  final db = await AppDatabase.instance.getDatabase();
+  final List<Map<String, dynamic>> result = await db.query(
+    'collection_creature',
+    where: 'player_id = ?',
+    whereArgs: [player_id],
+  );
+  final List<Creature> creatures = result.map((map) => Creature.fromMap(map)).toList();
+  return creatures;
+}
+
+Future<void> removeCreatureFromCollection(Creature creature) async {
+  final db = await AppDatabase.instance.getDatabase();
+
+  await db.delete(
+    'collection_creature',
+    where: 'player_id = ? AND name = ? AND spriteFile = ?',
+    whereArgs: [player_instance!.id, creature.name, creature.spriteFile],
+  );
+}
+
+/* Get random creature in collection:
+List<Creature> criaturas = getCollection(player_instance.id)
+*/
