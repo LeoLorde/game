@@ -12,7 +12,8 @@ class CreatureSeed {
     Creature(50, 1, 0, [Elemento.agua], Raridade.comum, [Attack("Jatada de Água", 5, [Elemento.agua])], "None", "Criatura Padrão de Água", DimensionEnum.terra),
     Creature(50, 1, 0, [Elemento.fogo], Raridade.comum, [Attack("Rabetada de Fogo", 5, [Elemento.fogo])], "None", "Criatura Padrão de Fogo", DimensionEnum.terra),
     Creature(50, 1, 0, [Elemento.terra], Raridade.comum, [Attack("Espinhos de Terra", 5, [Elemento.terra])], "None", "Criatura Padrão de Terra", DimensionEnum.terra),
-    Creature(50, 1, 0, [Elemento.ar], Raridade.comum, [Attack("Corte de Vento", 5, [Elemento.ar])], "None", "Criatura Padrão de Ar", DimensionEnum.terra)
+    Creature(50, 1, 0, [Elemento.ar], Raridade.comum, [Attack("Corte de Vento", 5, [Elemento.ar])], "None", "Criatura Padrão de Ar", DimensionEnum.terra),
+    Creature(50, 1, 0, [Elemento.agua, Elemento.fogo], Raridade.comum, [Attack("Jatada de Água", 10, [Elemento.agua])], "None", "Criatura de Fusão Água e Fogo", DimensionEnum.terra)
   ];
 
   CreatureSeed();
