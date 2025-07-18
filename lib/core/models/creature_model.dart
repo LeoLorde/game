@@ -1,18 +1,19 @@
-import '../enums/elemento_enum.dart';
-import '../enums/raridade_enum.dart';
-import './attack_model.dart';
-import '../enums/dimension_enum.dart';
+import 'package:game/core/enums/dimension_enum.dart';
+import 'package:game/core/enums/elemento_enum.dart';
+import 'package:game/core/enums/raridade_enum.dart';
+import 'package:game/core/models/attack_model.dart';
 
 class Creature {
+  int? id; // ← campo adicionado
   int vida;
   int level;
   double xp;
 
-  List<Elemento> elementos; // Permite Vários Elementos
-  List<Attack> ataques; // Permite Vários Ataques
+  List<Elemento> elementos;
+  List<Attack> ataques;
   Raridade raridade;
 
-  String spriteFile; // Caminho do Sprite: /creature1.png
+  String spriteFile;
   final String filePath = "assets/sprites";
   String name;
 
@@ -27,25 +28,23 @@ class Creature {
     this.ataques,
     this.spriteFile,
     this.name,
-    this.dimension,
-  );
+    this.dimension, {
+    this.id, // ← id como argumento nomeado opcional
+  });
 
-  // Retorna o CAMINHO COMPLETO do Sprite
   String getCompletePath() {
     return filePath + spriteFile;
   }
 
-  // Transforma em um Dicionário (Facilita para uso em JSON)
   Map<String, dynamic> ToMap() {
     return {
+      'id': id, // ← incluído no mapa
       'vida': vida,
       'level': level,
       'xp': xp,
-      'elementos':
-          elementos.map((e) => e.index).toList(), // lista de ints direta
+      'elementos': elementos.map((e) => e.index).toList(),
       'raridade': raridade.index,
-      'ataques':
-          ataques.map((a) => a.toMap()).toList(), // lista de mapas diretos
+      'ataques': ataques.map((a) => a.toMap()).toList(),
       'spriteFile': spriteFile,
       'name': name,
       'dimension': dimension.index,
@@ -67,6 +66,7 @@ class Creature {
       map['spriteFile'] as String,
       map['name'] as String,
       DimensionEnum.values[map['dimension'] as int],
+      id: map['id'] as int?, // ← atribuído aqui
     );
   }
 }
