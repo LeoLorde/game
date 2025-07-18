@@ -101,7 +101,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    final jogador = widget.jogador; // 👈 acesso correto ao jogador
+    final jogador = widget.jogador;
 
     return Scaffold(
       appBar: buildAppBar(

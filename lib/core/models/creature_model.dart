@@ -13,8 +13,8 @@ class Creature {
   List<Attack> ataques;
   Raridade raridade;
 
-  String spriteFile;
-  final String filePath = "assets/sprites";
+  String spriteFile; // Caminho do Sprite: /creature1.png
+  final String filePath = "assets/sprites/";
   String name;
 
   DimensionEnum dimension;
