@@ -36,7 +36,7 @@ class Creature {
     return filePath + spriteFile;
   }
 
-  Map<String, dynamic> ToMap() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id, // ← incluído no mapa
       'vida': vida,

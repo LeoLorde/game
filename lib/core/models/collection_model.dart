@@ -1,15 +1,13 @@
 import 'package:game/core/models/creature_model.dart';
-class Collection{
+
+class Collection {
   int id;
   List<Creature> creatures;
 
   Collection(this.id, this.creatures);
 
-   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'creatures': creatures.map((c) => c.ToMap()).toList(),
-    };
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'creatures': creatures.map((c) => c.toMap()).toList()};
   }
 
   factory Collection.fromMap(Map<String, dynamic> map) {
