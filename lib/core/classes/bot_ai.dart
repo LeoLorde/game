@@ -137,7 +137,7 @@ Future<DeckModel> createBotDeck() async {
 //     for (var id in deckBot.cardIds) {
 //       final criatura = todasCriaturas[id];
 //       debugPrint(
-//         '🧬 Criatura [$id]: ${criatura.name}, lvl ${criatura.level}, raridade: ${criatura.raridade.name}',
+//         'Criatura [$id]: ${criatura.name}, lvl ${criatura.level}, raridade: ${criatura.raridade.name}',
 //       );
 //     }
 //   } catch (e) {
