@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:game/core/enums/raridade_enum.dart';
+import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/deck_model.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/database/app_database.dart';
@@ -17,14 +18,58 @@ class BotAI {
   }
 
   // Ataque do Bot
-  Future<void> atacar() async {
-    // Colocar lógica de ataque do bot aqui
+  Future<void> atacar(Attack ataque) async {
+    final db = await AppDatabase.instance.getDatabase();
+
+    // Carrega todas as criaturas do bot
+    final todasCriaturas = await getTodasCriaturas();
+    final criaturasDoBot =
+        todasCriaturas.where((c) => deck.cardIds.contains(c.id)).toList();
+
+    for (var criatura in criaturasDoBot) {
+      // Calcula dano baseado no elemento e ataque
+      final dano = ataque.calcDamage(criatura);
+
+      // Aplica o dano e limita a vida
+      criatura.vida = (criatura.vida - dano).clamp(0, criatura.vida);
+
+      // Atualiza no banco
+      await db.update(
+        'creatures',
+        criatura.toMap(),
+        where: 'id = ?',
+        whereArgs: [criatura.id],
+      );
+    }
   }
 
   // Controle de vida das criaturas do Bot
-  Future<void> controlarVida() async {
-    // Colocar lógica de controle de vida das criaturas aqui(talvez seja feita no battle.dart)
+  Future<void> controlarVida(Attack ataque) async {
+    final db = await AppDatabase.instance.getDatabase();
+
+    final todasCriaturas = await getTodasCriaturas();
+    final criaturasDoBot =
+        todasCriaturas.where((c) => deck.cardIds.contains(c.id)).toList();
+
+    for (var criatura in criaturasDoBot) {
+      // Calcula dano usando a lógica de elementos
+      final dano = ataque.calcDamage(criatura);
+
+      // Aplica o dano e limita a vida a no mínimo zero
+      criatura.vida = (criatura.vida - dano).clamp(0, criatura.vida);
+
+      // Salva alteração no banco
+      await db.update(
+        'creatures',
+        criatura.toMap(),
+        where: 'id = ?',
+        whereArgs: [criatura.id],
+      );
+    }
   }
+
+  // final ataqueFogo = Attack('Explosão Flamejante', 40, [Elemento.fogo]);
+  // await bot.controlarVida(ataqueFogo);
 }
 
 // Pega o deck do jogador
