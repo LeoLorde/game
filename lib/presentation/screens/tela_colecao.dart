@@ -22,13 +22,13 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
 
   Color corPorRaridade(Raridade raridade) {
     switch (raridade) {
-      case Raridade.comum:
+      case Raridade.combatente:
         return Colors.grey.shade300;
-      case Raridade.rara:
+      case Raridade.mistico:
         return Colors.orange.shade200;
-      case Raridade.epica:
+      case Raridade.heroi:
         return Colors.purple.shade200;
-      case Raridade.lendaria:
+      case Raridade.semideus:
         return Colors.yellow.shade300;
       default:
         return Colors.white;

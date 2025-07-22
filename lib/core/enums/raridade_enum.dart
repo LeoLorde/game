@@ -1,8 +1,8 @@
 enum Raridade{
-  comum,
-  incomum,
-  rara,
-  epica,
-  lendaria,
+  combatente,
+  mistico,
+  heroi,
+  semideus,
+  deus,
   nulo
 }

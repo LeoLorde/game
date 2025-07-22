@@ -121,7 +121,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 10,
                 200.0,
                 [Elemento.fogo],
-                Raridade.lendaria,
+                Raridade.deus,
                 [
                   Attack("Chama Infernal", 120, [Elemento.fogo]),
                 ],
@@ -134,7 +134,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 8,
                 150.0,
                 [Elemento.terra],
-                Raridade.rara,
+                Raridade.heroi,
                 [
                   Attack("Soco de Pedra", 90, [Elemento.terra]),
                 ],

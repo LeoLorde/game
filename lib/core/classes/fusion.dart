@@ -1,56 +1,116 @@
 import 'dart:math';
-
 import 'package:game/core/enums/elemento_enum.dart';
-import '../../core/models/creature_model.dart';
-import 'package:game/database/dao/creature_dao.dart';
-import 'package:game/database/seed/creature_seed.dart';
 import 'package:game/core/enums/raridade_enum.dart';
-import 'dart:math';
+import '../../core/models/creature_model.dart';
+import 'package:game/database/seed/creature_seed.dart';
 
 class Fusion {
-  Creature criatura1 = CreatureSeed.all_creatures[0];//emula uma criatura que o jogador vai fundir
-  Creature criatura2 = CreatureSeed.all_creatures[1];//emula uma criatura que o jogador vai fundir
+  Creature criatura1 = CreatureSeed.all_creatures[0];
+  Creature criatura2 = CreatureSeed.all_creatures[1];
+  final Random _random = Random();
 
-  int get nv_criatura1 => criatura1.level;//pega o nível da primeira criatura
-  int get nv_criatura2 => criatura2.level;//pega o nível da segunda criatura
-  int get nivelMedio => ((nv_criatura1 + nv_criatura2) / 2).round();//faz a media de níveis
-  Raridade get raridade_criatura1 => criatura1.raridade;
-  Raridade get raridade_criatura2 => criatura2.raridade;
+  List<Elemento> get elementosFundidos =>
+      {...?criatura1.elementos, ...?criatura2.elementos}.toList();
 
-  List<Elemento> get ele_criatura1 => criatura1.elementos;//pega os elementos da primeira criatura
-  List<Elemento> get ele_criatura2 => criatura2.elementos;//pega os elementos da segunda criatura
-
-  List<Elemento> get elementosFundidos {//junta os elementos da primeira e da segunda criatura em uma lista só
-    return {...ele_criatura1, ...ele_criatura2}.toList();//transforma em lista mesmo
-  }
-    
-    //Fazer a verificação de raridade (se subiu de raridade aleatoriamente)
-    final Random _random = Random();
-
-  /// Calcula a chance com base em um valor entre 0 e 1000
-  /// Cada ponto representa 0.1% de chance
-  double calcularChance(int valor) {
-    return (valor * 0.1).clamp(0.0, 100.0); // garante entre 0% e 100%
-  }
-
-  /// Retorna true se o evento acontecer com base na chance
-  bool eventoAcontece(int valor) {
-    double chance = calcularChance(valor);
-    double sorteio = _random.nextDouble() * 100; // número entre 0.0 e 100.0
-    return sorteio <= chance;
+  // Cálculo do custo com base na raridade
+  double calcularCustoFusao(Creature criatura) {
+    int nivel = criatura.level;
+    switch (criatura.raridade) {
+      case Raridade.combatente:
+        return nivel.toDouble();
+      case Raridade.mistico:
+        return nivel * 1.5;
+      case Raridade.heroi:
+        return nivel * 2.0;
+      case Raridade.semideus:
+        return nivel * 3.0;
+      case Raridade.deus:
+        return nivel * 5.0;
+      default:
+        return 0.0;
+    }
   }
 
-    //Fazer a média de nível considerando a raridade
+  double get custoTotal =>
+      calcularCustoFusao(criatura1) + calcularCustoFusao(criatura2);
 
-    //Caso a raridade for aumentada o nível médio cai pela metade (nível médio * 0,5)
+  double chancePorRaridade(Raridade raridade) {
+    switch (raridade) {
+      case Raridade.combatente:
+        return 60.0;
+      case Raridade.mistico:
+        return 40.0;
+      case Raridade.heroi:
+        return 25.0;
+      case Raridade.semideus:
+        return 10.0;
+      default:
+        return 0.0;
+    }
+  }
 
-    //Armazenar os elementos das 2 cartas selecionadas dentro de uma lista
+  double get chanceEvolucao {
+    final double nivelMedio =
+        (criatura1.level + criatura2.level) / 2.0;
+    final double chanceNivel = (nivelMedio / 10).clamp(0, 100);
+    final double chanceRaridade =
+        (chancePorRaridade(criatura1.raridade) +
+         chancePorRaridade(criatura2.raridade)) / 2.0;
+    return ((chanceNivel * 0.5) + (chanceRaridade * 0.5)).clamp(0, 100);
+  }
 
-    //Fazer a verificação se essa lista de elementos criados se encontra em uma carta, senão, seleciona a mais próxima
+  bool get ocorreEvolucao =>
+      _random.nextDouble() * 100 <= chanceEvolucao;
 
-    //Cria a nova carta gerada baseada nos elementos e no nível já recebidos acima
+  bool get cartasIguais =>
+      criatura1.name == criatura2.name &&
+      criatura1.raridade == criatura2.raridade;
 
+  Creature fundir() {
+    if (cartasIguais) {
+      int novoNivel = criatura1.level + 1;
+      Raridade novaRaridade = criatura1.raridade;
+
+      if (ocorreEvolucao &&
+          criatura1.raridade.index < Raridade.values.length - 2) {
+        novaRaridade = Raridade.values[criatura1.raridade.index + 1];
+      }
+
+      return Creature(
+        criatura1.vida,
+        novoNivel,
+        0.0, // XP resetada ou recalculada conforme lógica do jogo
+        criatura1.elementos,
+        novaRaridade,
+        criatura1.ataques,
+        criatura1.spriteFile,
+        criatura1.name,
+        criatura1.dimension,
+      );
+    } else {
+      int nivelFinal =
+          ((criatura1.level + criatura2.level) / 2).round();
+      Raridade raridadeFinal = criatura1.raridade.index >
+              criatura2.raridade.index
+          ? criatura1.raridade
+          : criatura2.raridade;
+
+      if (ocorreEvolucao &&
+          raridadeFinal.index < Raridade.values.length - 2) {
+        raridadeFinal = Raridade.values[raridadeFinal.index + 1];
+      }
+
+      return Creature(
+        (criatura1.vida + criatura2.vida) ~/ 2,
+        nivelFinal,
+        0.0,
+        elementosFundidos..shuffle(),
+        raridadeFinal,
+        [...criatura1.ataques, ...criatura2.ataques],
+        criatura1.spriteFile,
+        "Criatura Fundida",
+        criatura1.dimension,
+      );
+    }
+  }
 }
-
-
-
