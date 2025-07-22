@@ -4,6 +4,7 @@ import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/deck_model.dart';
 import 'package:game/core/models/creature_model.dart';
+import 'package:game/core/models/talismans.dart';
 import 'package:game/database/app_database.dart';
 
 class BotAI {
@@ -42,6 +43,18 @@ class BotAI {
       );
     }
   }
+  // final ataqueFogo = Attack('Explosão Flamejante', 40, [Elemento.fogo]);
+  // await bot.controlarVida(ataqueFogo);
+
+  List<Talismans> criarTalismasDoBot() {
+    // Talismãs básicos que o bot pode utilizar
+    final dano = DamageTalismans();
+    final defesa = DefenseTalismans();
+
+    return [dano, defesa];
+  }
+
+  late final List<Talismans> talismas = criarTalismasDoBot();
 
   // Controle de vida das criaturas do Bot
   Future<void> controlarVida(Attack ataque) async {
