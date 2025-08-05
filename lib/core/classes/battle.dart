@@ -1,4 +1,6 @@
+import 'package:game/core/models/attack_model.dart';
 import 'package:game/database/dao/deck_dao.dart';
+import 'package:game/database/dao/creature_dao.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/models/deck_model.dart';
 import 'package:game/core/classes/bot_ai.dart';
@@ -23,19 +25,36 @@ class Battle {
   });
 }
 
-void deckJogador() async {
+Future<Map<Creature, int>> deckJogador() async {
   List<Creature> cards = await getCardsFromDeck(0);
-  // Pega as Cartas do Jogador
+  Map<Creature, int> map = {};
+
+  for (int i = 0; i < cards.length; i++) {
+    map[cards[i]] = cards[i].vida;
+  }
+
+  return map;
 }
 
-void deckBot() async{
-   DeckModel enemy_cards = await createBotDeck();
-   // Pega as Cartas do Inimigo
- }
+Future<Map<Creature, int>> deckBotMap() async {
+  DeckModel enemyDeck = await createBotDeck();
+  Map<Creature, int> map = {};
 
-// void ataque{
-//   Implementação do ataque
-// }
+  for (int id in enemyDeck.cardIds) {
+    Creature? card = await getCreatureById(id);
+    if (card != null) {
+      map[card] = card.vida;
+    }
+  }
+
+  return map;
+}
+
+
+int ataque(Attack attacking_card_attack, Creature defending_card, int health){
+   health -= attacking_card_attack.calcDamage(defending_card);
+   return health;
+}
 
 // void vitoria{
 //   Implementação da vitória

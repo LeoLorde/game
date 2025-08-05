@@ -86,3 +86,13 @@ Future<Creature?> getCreatureByName(String name) async {
     DimensionEnum.values[map['dimension'] as int]
   );
 }
+
+Future<Creature?> getCreatureById(int id) async {
+  final db = await AppDatabase.instance.getDatabase(); // Aguarda o db
+  // Faz a requisição pro Banco de Dados
+  final List<Map<String, dynamic>> maps = await db.query(
+    'creatures', 
+    where: 'id = ?',
+    whereArgs: [id],
+    limit: 1,
+);}
