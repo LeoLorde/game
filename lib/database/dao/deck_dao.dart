@@ -1,3 +1,4 @@
+import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/models/deck_model.dart';
 import 'package:game/database/app_database.dart';
 
@@ -43,6 +44,27 @@ Future<void> removeCardFromSingleDeck(int cardId) async {
   deck.cardIds.remove(cardId);
   await db.update('deck', deck.toMap(), where: 'id = ?', whereArgs: [deck.id]);
 }
+
+Future<List<Creature>> getCardsFromDeck(int playerID) async {
+  final db = await AppDatabase.instance.getDatabase();
+
+  final maps = await db.query('deck');
+  if (maps.isEmpty) throw Exception('Deck ainda não foi criado.');
+
+  final deck = DeckModel.fromMap(maps.first);
+
+  if (deck.cardIds.isEmpty) return [];
+
+  final placeholders = List.filled(deck.cardIds.length, '?').join(',');
+  final cardMaps = await db.query(
+    'creature',
+    where: 'id IN ($placeholders)',
+    whereArgs: deck.cardIds,
+  );
+
+  return cardMaps.map((map) => Creature.fromMap(map)).toList();
+}
+
 
 // Exemplo
 // void testarDeckUnico() async {

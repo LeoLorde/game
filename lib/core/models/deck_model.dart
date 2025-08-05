@@ -2,13 +2,14 @@ import 'dart:convert';
 
 class DeckModel {
   int? id;
+  int? playerID;
   String name;
   List<int> cardIds;
 
-  DeckModel({this.id, required this.name, required this.cardIds});
+  DeckModel({this.id, required this.name, required this.cardIds, required this.playerID});
 
   Map<String, dynamic> toMap() {
-    return {'id': id, 'name': name, 'card_ids': jsonEncode(cardIds)};
+    return {'id': id, 'name': name, 'card_ids': jsonEncode(cardIds), "player_id":playerID};
   }
 
   factory DeckModel.fromMap(Map<String, dynamic> map) {
@@ -16,6 +17,7 @@ class DeckModel {
       id: map['id'] as int,
       name: map['name'] as String,
       cardIds: List<int>.from(jsonDecode(map['card_ids'] as String)),
+      playerID: map['player_id']
     );
   }
 }

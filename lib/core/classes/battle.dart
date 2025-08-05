@@ -1,3 +1,8 @@
+import 'package:game/database/dao/deck_dao.dart';
+import 'package:game/core/models/creature_model.dart';
+import 'package:game/core/models/deck_model.dart';
+import 'package:game/core/classes/bot_ai.dart';
+
 class Battle {
   final String nameJogador;
   final String nameBot;
@@ -18,13 +23,15 @@ class Battle {
   });
 }
 
-// void deckJogador{
-//   Implementação do deck do jogador
-// }
+void deckJogador() async {
+  List<Creature> cards = await getCardsFromDeck(0);
+  // Pega as Cartas do Jogador
+}
 
-// void deckBot{
-//   Implementação do deck do bot
-// }
+void deckBot() async{
+   DeckModel enemy_cards = await createBotDeck();
+   // Pega as Cartas do Inimigo
+ }
 
 // void ataque{
 //   Implementação do ataque
