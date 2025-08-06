@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/database/dao/deck_dao.dart';
 import 'package:game/database/dao/creature_dao.dart';
@@ -56,34 +60,73 @@ int ataque(Attack attacking_card_attack, Creature defending_card, int health){
    return health;
 }
 
-// void vitoria{
-//   Implementação da vitória
-// }
-
 // void calcularDano{
 //   Implementação do cálculo de dano
 // }
 
-// void calcularVida{
-//   Implementação do cálculo de vida
-// }
-
-// void alterarCriatura{
+Future<MapEntry<Creature, int>> alterarCriatura(int index){
 //   Implementação da alteração de criatura
-// }
-
-// void talismanesJogador{
-//   Implementação dos talismanes do jogador
-// }
-
-// void talismanesBot{
-//   Implementação dos talismanes do bot
-// }
-
-// void usarTalismanes{
-//   Implementação do uso de talismanes
-// }
+  return Creature();
+}
 
 // void calcularEfeitoBonus{
 //   Implementação do cálculo de efeito bônus com base na raridade(seguindo o GDD)
 // }
+
+Future<MapEntry<Creature, int>> getRandomPlayerCard() async {
+  Map<Creature, int> deck = await deckJogador();
+  if (deck.isEmpty) throw Exception('Deck vazio');
+  final random = Random();
+  return deck.entries.elementAt(random.nextInt(deck.length));
+}
+
+Future<MapEntry<Creature, int>> getRandomBotCard() async {
+  Map<Creature, int> deck = await deckBotMap();
+  if (deck.isEmpty) throw Exception('Deck vazio');
+  final random = Random();
+  return deck.entries.elementAt(random.nextInt(deck.length));
+}
+
+
+void mainLoop() async {
+//   Implementa o Loop Principal da batalha
+  bool playerTurn;
+  MapEntry<Creature, int> player_creature = await getRandomPlayerCard();
+  MapEntry<Creature, int> bot_creature = await getRandomBotCard();
+
+  final random = Random();
+  int numeroAleatorio = random.nextInt(2);
+
+  if (numeroAleatorio == 0) {
+    playerTurn = true;
+  } else {
+    playerTurn = false;
+  }
+
+  if(playerTurn){
+    int path;
+    // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
+    final random = Random();
+    path = random.nextInt(2); 
+    // ------------------------------------------------
+    if (path == 0){
+      // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
+      final random = Random();
+      int index = random.nextInt(3); 
+      // ----------------------------------------------
+      player_creature = await alterarCriatura(index);
+    }
+    else if (path == 1){
+      // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
+      final random = Random();
+      int size = player_creature.key.ataques.length;
+      Attack attack = player_creature.key.ataques[random.nextInt(size)];
+      // -----------------------------------------------
+      ataque(attack, bot_creature.key, bot_creature.value);
+      playerTurn = false;
+    }
+  }
+  else {
+    // IMPLEMENTAR COM O BOT AI
+  }
+}
