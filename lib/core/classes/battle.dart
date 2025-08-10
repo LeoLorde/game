@@ -8,6 +8,9 @@ import 'package:game/database/dao/creature_dao.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/models/deck_model.dart';
 import 'package:game/core/classes/bot_ai.dart';
+import 'package:game/core/enums/raridade_enum.dart';
+import 'package:game/core/enums/elemento_enum.dart';
+import 'package:game/core/enums/dimension_enum.dart';
 
 class Battle {
   final String nameJogador;
@@ -54,19 +57,31 @@ Future<Map<Creature, int>> deckBotMap() async {
   return map;
 }
 
-
-int ataque(Attack attacking_card_attack, Creature defending_card, int health){
-   health -= attacking_card_attack.calcDamage(defending_card);
-   return health;
+int ataque(Attack attacking_card_attack, Creature defending_card, int health) {
+  health -= attacking_card_attack.calcDamage(defending_card);
+  return health;
 }
 
 // void calcularDano{
 //   Implementação do cálculo de dano
 // }
 
-Future<MapEntry<Creature, int>> alterarCriatura(int index){
-//   Implementação da alteração de criatura
-  return Creature();
+Future<MapEntry<Creature, int>> alterarCriatura(int index) {
+  final criatura = Creature(
+    50,
+    1,
+    0,
+    [Elemento.agua],
+    Raridade.combatente,
+    [
+      Attack("Jatada de Água", 5, [Elemento.agua]),
+    ],
+    "None",
+    "Criatura Padrão de Água",
+    DimensionEnum.terra,
+  );
+
+  return Future.value(MapEntry(criatura, 2));
 }
 
 // void calcularEfeitoBonus{
@@ -87,9 +102,8 @@ Future<MapEntry<Creature, int>> getRandomBotCard() async {
   return deck.entries.elementAt(random.nextInt(deck.length));
 }
 
-
 void mainLoop() async {
-//   Implementa o Loop Principal da batalha
+  //   Implementa o Loop Principal da batalha
   bool playerTurn;
   MapEntry<Creature, int> player_creature = await getRandomPlayerCard();
   MapEntry<Creature, int> bot_creature = await getRandomBotCard();
@@ -103,20 +117,19 @@ void mainLoop() async {
     playerTurn = false;
   }
 
-  if(playerTurn){
+  if (playerTurn) {
     int path;
     // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
     final random = Random();
-    path = random.nextInt(2); 
+    path = random.nextInt(2);
     // ------------------------------------------------
-    if (path == 0){
+    if (path == 0) {
       // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
       final random = Random();
-      int index = random.nextInt(3); 
+      int index = random.nextInt(3);
       // ----------------------------------------------
       player_creature = await alterarCriatura(index);
-    }
-    else if (path == 1){
+    } else if (path == 1) {
       // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
       final random = Random();
       int size = player_creature.key.ataques.length;
@@ -125,8 +138,7 @@ void mainLoop() async {
       ataque(attack, bot_creature.key, bot_creature.value);
       playerTurn = false;
     }
-  }
-  else {
+  } else {
     // IMPLEMENTAR COM O BOT AI
   }
 }

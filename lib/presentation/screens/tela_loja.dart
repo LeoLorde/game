@@ -185,8 +185,8 @@ class _TelaLojaState extends State<TelaLoja> {
 
   @override
   Widget build(BuildContext context) {
-    const imageUrl = 'assets/sprites/bintilin.png';
-    const iconUrl = 'https://cdn-icons-png.flaticon.com/512/9317/9317142.png';
+    const imageUrl = 'assets/sprites/aeros_0.png';
+    const iconUrl = 'assets/sprites/baus/1/1.png';
     const bannerUrl =
         'https://images.vexels.com/media/users/3/137099/isolated/preview/0e0ef8c04e05e38562aeba6544c59e29-banner-de-fita-de-doodle-ondulado.png';
 

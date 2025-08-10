@@ -12,8 +12,6 @@ class ColecaoScreen extends StatefulWidget {
 }
 
 class _ColecaoScreenState extends State<ColecaoScreen> {
-  final String img = 'assets/sprites/bintilin.png';
-
   final List<Color> cores = [
     const Color.fromARGB(255, 42, 134, 24),
     const Color.fromARGB(255, 55, 94, 131),

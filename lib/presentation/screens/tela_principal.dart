@@ -125,8 +125,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 [
                   Attack("Chama Infernal", 120, [Elemento.fogo]),
                 ],
-                "dragao.png",
-                "Dragão Flamejante",
+                "ignarok_0.png",
+                "Ignarok",
                 DimensionEnum.cu,
               ),
               Creature(
@@ -138,8 +138,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                 [
                   Attack("Soco de Pedra", 90, [Elemento.terra]),
                 ],
-                "golem.png",
-                "Golem de Pedra",
+                "aeros_0.png",
+                "Aeros",
                 DimensionEnum.cu,
               ),
             ],

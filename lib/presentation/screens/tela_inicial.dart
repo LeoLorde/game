@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/presentation/screens/tela_batalha.dart';
 
 class TelaInicial extends StatefulWidget {
   const TelaInicial({super.key});
@@ -26,7 +27,12 @@ class _TelaInicialState extends State<TelaInicial> {
             ),
             SizedBox(height: 15),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => TelaBatalha()),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 55, 94, 131),
                 padding: const EdgeInsets.symmetric(
