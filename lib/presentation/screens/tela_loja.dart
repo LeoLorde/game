@@ -6,8 +6,53 @@ class TelaLoja extends StatefulWidget {
   State<TelaLoja> createState() => _TelaLojaState();
 }
 
-class _TelaLojaState extends State<TelaLoja> {
-  Widget buildCard(String imageUrl, String precoCarta, Color cor) {
+class _TelaLojaState extends State<TelaLoja> with TickerProviderStateMixin {
+  void _mostrarAnimacaoBau() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final controller = AnimationController(
+              duration: const Duration(milliseconds: 600),
+              vsync: this,
+            );
+            final animation = IntTween(begin: 1, end: 7).animate(controller);
+
+            controller.forward();
+
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+              controller.dispose();
+            });
+
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: AnimatedBuilder(
+                  animation: animation,
+                  builder: (context, child) {
+                    final frame = animation.value;
+                    return Image.asset(
+                      'assets/sprites/baus/3/$frame.png',
+                      fit: BoxFit.contain,
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget buildCard(String precoCarta, Color cor) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -80,7 +125,12 @@ class _TelaLojaState extends State<TelaLoja> {
           color: cor,
           child: Column(
             children: [
-              Expanded(child: Image.asset(imageUrl, fit: BoxFit.contain)),
+              Expanded(
+                child: Image.asset(
+                  'assets/sprites/aeros_0.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
               const SizedBox(height: 4),
               Text(
                 precoCarta,
@@ -98,7 +148,7 @@ class _TelaLojaState extends State<TelaLoja> {
     );
   }
 
-  Widget buildBauCard(String imageUrl, String precoBau, Color cor) {
+  Widget buildBauCard(String precoBau, Color cor) {
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -142,8 +192,8 @@ class _TelaLojaState extends State<TelaLoja> {
                         foregroundColor: Colors.white,
                       ),
                       onPressed: () {
-                        // lógica pra realizar a compra do baú
                         Navigator.of(context).pop();
+                        _mostrarAnimacaoBau();
                       },
                       child: const Text("COMPRAR"),
                     ),
@@ -165,7 +215,12 @@ class _TelaLojaState extends State<TelaLoja> {
           color: cor,
           child: Column(
             children: [
-              Expanded(child: Image.network(imageUrl, fit: BoxFit.contain)),
+              Expanded(
+                child: Image.asset(
+                  'assets/sprites/baus/3/1.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
               const SizedBox(height: 7),
               Text(
                 precoBau,
@@ -185,8 +240,6 @@ class _TelaLojaState extends State<TelaLoja> {
 
   @override
   Widget build(BuildContext context) {
-    const imageUrl = 'assets/sprites/aeros_0.png';
-    const iconUrl = 'assets/sprites/baus/1/1.png';
     const bannerUrl =
         'https://images.vexels.com/media/users/3/137099/isolated/preview/0e0ef8c04e05e38562aeba6544c59e29-banner-de-fita-de-doodle-ondulado.png';
 
@@ -221,8 +274,8 @@ class _TelaLojaState extends State<TelaLoja> {
             children: List.generate(3, (col) {
               return Column(
                 children: [
-                  buildCard(imageUrl, '5.000', cores[col % cores.length]),
-                  buildCard(imageUrl, '5.000', cores[(col + 1) % cores.length]),
+                  buildCard('5.000', cores[col % cores.length]),
+                  buildCard('5.000', cores[(col + 1) % cores.length]),
                 ],
               );
             }),
@@ -239,9 +292,7 @@ class _TelaLojaState extends State<TelaLoja> {
           const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              for (var cor in cores) buildBauCard(iconUrl, '2.000', cor),
-            ],
+            children: [for (var cor in cores) buildBauCard('2.000', cor)],
           ),
         ],
       ),

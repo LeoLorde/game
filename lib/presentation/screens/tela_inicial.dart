@@ -12,7 +12,53 @@ class TelaInicial extends StatefulWidget {
   State<TelaInicial> createState() => _TelaInicialState();
 }
 
-class _TelaInicialState extends State<TelaInicial> {
+class _TelaInicialState extends State<TelaInicial>
+    with TickerProviderStateMixin {
+  void _mostrarAnimacaoBauDiario() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            final controller = AnimationController(
+              duration: const Duration(milliseconds: 600),
+              vsync: this,
+            );
+            final animation = IntTween(begin: 1, end: 7).animate(controller);
+
+            controller.forward();
+
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop();
+              }
+              controller.dispose();
+            });
+
+            return Dialog(
+              backgroundColor: Colors.transparent,
+              child: SizedBox(
+                width: 200,
+                height: 200,
+                child: AnimatedBuilder(
+                  animation: animation,
+                  builder: (context, child) {
+                    final frame = animation.value;
+                    return Image.asset(
+                      'assets/sprites/baus/1/$frame.png',
+                      fit: BoxFit.contain,
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Widget buildTelaInicial(String arena, int trofeus, String tempoBau) {
     return ListView(
       children: [
@@ -99,8 +145,9 @@ class _TelaInicialState extends State<TelaInicial> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Image.network(
-                  "https://gom-s3-user-avatar.s3.us-west-2.amazonaws.com/wp-content/uploads/2025/06/15120701/item_icon_510006.png",
+                GestureDetector(
+                  onTap: _mostrarAnimacaoBauDiario,
+                  child: Image.asset("assets/sprites/baus/1/1.png"),
                 ),
                 Text(
                   " FALTAM $tempoBau\n PARA SEU BAÚ\n DIÁRIO",

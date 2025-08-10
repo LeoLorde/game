@@ -31,7 +31,11 @@ flutter:
   assets:
       - assets/sprites/
       - assets/sounds/
-      - assets/sprites/baus/
+      - assets/sprites/baus/1/
+      - assets/sprites/baus/2/
+      - assets/sprites/baus/3/
+      - assets/sprites/baus/4/
+      - assets/sprites/baus/5/
       
   # fonts:
   #   - family: Schyler
