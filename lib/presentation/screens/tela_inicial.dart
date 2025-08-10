@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:game/core/enums/dimension_enum.dart';
+import 'package:game/core/enums/elemento_enum.dart';
+import 'package:game/core/enums/raridade_enum.dart';
+import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/tela_batalha.dart';
 
 class TelaInicial extends StatefulWidget {
@@ -30,7 +34,46 @@ class _TelaInicialState extends State<TelaInicial> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => TelaBatalha()),
+                  MaterialPageRoute(
+                    builder:
+                        (context) => TelaBatalha(
+                          criaturas: [
+                            Creature(
+                              100,
+                              1,
+                              10,
+                              [Elemento.fogo],
+                              Raridade.combatente,
+                              [],
+                              'aeros_0.png',
+                              'Aeros',
+                              DimensionEnum.penis,
+                            ),
+                            Creature(
+                              100,
+                              1,
+                              10,
+                              [Elemento.fogo],
+                              Raridade.combatente,
+                              [],
+                              'azuriak_0.png',
+                              'Aeros',
+                              DimensionEnum.penis,
+                            ),
+                            Creature(
+                              100,
+                              1,
+                              10,
+                              [Elemento.fogo],
+                              Raridade.combatente,
+                              [],
+                              'flarox_0.png',
+                              'Aeros',
+                              DimensionEnum.penis,
+                            ),
+                          ],
+                        ),
+                  ),
                 );
               },
               style: ElevatedButton.styleFrom(
