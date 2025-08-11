@@ -8,6 +8,7 @@ import 'package:game/core/models/jogador_model.dart';
 import 'package:game/presentation/screens/tela_colecao.dart';
 import 'package:game/presentation/screens/tela_loja.dart';
 import 'package:game/presentation/screens/tela_inicial.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Jogador jogador;
@@ -19,6 +20,12 @@ class TelaPrincipal extends StatefulWidget {
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
+  @override
+  void initState() {
+    super.initState();
+    AudioManager.tocarMusicaFundo('sounds/som/bg2.mp3');
+  }
+
   final PageController _pageController = PageController(initialPage: 1);
   int _paginaAtual = 1;
 
@@ -136,5 +143,24 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         ],
       ),
     );
+  }
+}
+
+class AudioManager {
+  static final AudioPlayer musicaFundo = AudioPlayer();
+  static final AudioPlayer efeitos = AudioPlayer();
+
+  static Future<void> tocarMusicaFundo(String caminho) async {
+    await musicaFundo.setReleaseMode(ReleaseMode.loop);
+    await musicaFundo.play(AssetSource(caminho));
+  }
+
+  static Future<void> pararMusicaFundo() async {
+    await musicaFundo.stop();
+  }
+
+  static Future<void> tocarEfeito(String caminho) async {
+    await efeitos.setReleaseMode(ReleaseMode.stop);
+    await efeitos.play(AssetSource(caminho));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
+import 'package:game/presentation/screens/tela_principal.dart';
 
 class TelaBatalha extends StatefulWidget {
   final List<Creature> criaturas;
@@ -12,6 +13,10 @@ class TelaBatalha extends StatefulWidget {
 }
 
 class _TelaBatalhaState extends State<TelaBatalha> {
+  void entrarBatalha() {
+    AudioManager.tocarMusicaFundo('sounds/som/battle1.mp3');
+  }
+
   Color corPorRaridade(Raridade raridade) {
     switch (raridade) {
       case Raridade.combatente:
