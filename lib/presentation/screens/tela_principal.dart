@@ -8,6 +8,7 @@ import 'package:game/core/models/jogador_model.dart';
 import 'package:game/presentation/screens/tela_colecao.dart';
 import 'package:game/presentation/screens/tela_loja.dart';
 import 'package:game/presentation/screens/tela_inicial.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Jogador jogador;
@@ -19,6 +20,12 @@ class TelaPrincipal extends StatefulWidget {
 }
 
 class _TelaPrincipalState extends State<TelaPrincipal> {
+  @override
+  void initState() {
+    super.initState();
+    AudioManager.tocarMusicaFundo('sounds/som/bg2.mp3');
+  }
+
   final PageController _pageController = PageController(initialPage: 1);
   int _paginaAtual = 1;
 
@@ -114,36 +121,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         controller: _pageController,
         onPageChanged: (index) => setState(() => _paginaAtual = index),
         children: [
-          ColecaoScreen(
-            criaturas: [
-              Creature(
-                1500,
-                10,
-                200.0,
-                [Elemento.fogo],
-                Raridade.deus,
-                [
-                  Attack("Chama Infernal", 120, [Elemento.fogo]),
-                ],
-                "ignarok_0.png",
-                "Ignarok",
-                DimensionEnum.cu,
-              ),
-              Creature(
-                1000,
-                8,
-                150.0,
-                [Elemento.terra],
-                Raridade.heroi,
-                [
-                  Attack("Soco de Pedra", 90, [Elemento.terra]),
-                ],
-                "aeros_0.png",
-                "Aeros",
-                DimensionEnum.cu,
-              ),
-            ],
-          ),
+          ColecaoScreen(),
           TelaInicial(),
           TelaLoja(),
         ],
@@ -165,5 +143,24 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         ],
       ),
     );
+  }
+}
+
+class AudioManager {
+  static final AudioPlayer musicaFundo = AudioPlayer();
+  static final AudioPlayer efeitos = AudioPlayer();
+
+  static Future<void> tocarMusicaFundo(String caminho) async {
+    await musicaFundo.setReleaseMode(ReleaseMode.loop);
+    await musicaFundo.play(AssetSource(caminho));
+  }
+
+  static Future<void> pararMusicaFundo() async {
+    await musicaFundo.stop();
+  }
+
+  static Future<void> tocarEfeito(String caminho) async {
+    await efeitos.setReleaseMode(ReleaseMode.stop);
+    await efeitos.play(AssetSource(caminho));
   }
 }

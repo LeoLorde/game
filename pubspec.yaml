@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   flame: ^1.30.0
+  audioplayers: ^6.1.0
 
   cupertino_icons: ^1.0.8
   sqflite: ^2.4.1
@@ -36,6 +37,8 @@ flutter:
       - assets/sprites/baus/3/
       - assets/sprites/baus/4/
       - assets/sprites/baus/5/
+      - assets/sounds/som/
+      - assets/sprites/dimensoes/
       
   # fonts:
   #   - family: Schyler

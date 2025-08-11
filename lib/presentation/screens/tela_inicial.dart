@@ -4,6 +4,7 @@ import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/tela_batalha.dart';
+import 'package:game/presentation/screens/tela_principal.dart';
 
 class TelaInicial extends StatefulWidget {
   const TelaInicial({super.key});
@@ -14,6 +15,10 @@ class TelaInicial extends StatefulWidget {
 
 class _TelaInicialState extends State<TelaInicial>
     with TickerProviderStateMixin {
+  void somAbrirBau() {
+    AudioManager.tocarEfeito('sounds/som/bau_abrindo.mp3');
+  }
+
   void _mostrarAnimacaoBauDiario() {
     showDialog(
       context: context,
@@ -59,13 +64,19 @@ class _TelaInicialState extends State<TelaInicial>
     );
   }
 
-  Widget buildTelaInicial(String arena, int trofeus, String tempoBau) {
+  Widget buildTelaInicial(int trofeus, String tempoBau) {
     return ListView(
       children: [
         Column(
           children: [
             const SizedBox(height: 120),
-            Center(child: Image.network('$arena')),
+            Center(
+              child: Image.asset(
+                'assets/sprites/dimensoes/1.png',
+                width: 200,
+                height: 300,
+              ),
+            ),
 
             Text(
               '$trofeus - 5000',
@@ -170,11 +181,7 @@ class _TelaInicialState extends State<TelaInicial>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 41, 94, 67),
-      body: buildTelaInicial(
-        'https://static.wikia.nocookie.net/clashroyale/images/e/ed/Legendary_Arena.png/revision/latest/scale-to-width-down/250?cb=20170505222335',
-        4571,
-        '18H e 23MIN',
-      ),
+      body: buildTelaInicial(4571, '18H e 23MIN'),
     );
   }
 }

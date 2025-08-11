@@ -4,6 +4,8 @@ import 'package:game/core/models/jogador_model.dart';
 import 'package:game/database/dao/jogador_dao.dart';
 import 'package:game/presentation/screens/tela_cadastro.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
+import 'package:game/database/seed/collection_seed.dart';
+import 'package:game/database/seed/creature_seed.dart';
 
 class TelaCarregamento extends StatelessWidget {
   const TelaCarregamento({super.key});
@@ -12,6 +14,9 @@ class TelaCarregamento extends StatelessWidget {
     final db = await AppDatabase.instance.getDatabase();
     final dao = JogadorDao(db);
     final jogador = await dao.buscar();
+
+    await CreatureSeed().loadCreaturesOnDb(); 
+    await CollectionSeed().loadInitialCollection();
 
     if (jogador == null) {
       return TelaCadastroJogador(); // Crie essa tela para o cadastro
