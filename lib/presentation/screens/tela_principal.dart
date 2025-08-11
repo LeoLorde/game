@@ -114,36 +114,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         controller: _pageController,
         onPageChanged: (index) => setState(() => _paginaAtual = index),
         children: [
-          ColecaoScreen(
-            criaturas: [
-              Creature(
-                1500,
-                10,
-                200.0,
-                [Elemento.fogo],
-                Raridade.deus,
-                [
-                  Attack("Chama Infernal", 120, [Elemento.fogo]),
-                ],
-                "ignarok_0.png",
-                "Ignarok",
-                DimensionEnum.cu,
-              ),
-              Creature(
-                1000,
-                8,
-                150.0,
-                [Elemento.terra],
-                Raridade.heroi,
-                [
-                  Attack("Soco de Pedra", 90, [Elemento.terra]),
-                ],
-                "aeros_0.png",
-                "Aeros",
-                DimensionEnum.cu,
-              ),
-            ],
-          ),
+          ColecaoScreen(),
           TelaInicial(),
           TelaLoja(),
         ],
