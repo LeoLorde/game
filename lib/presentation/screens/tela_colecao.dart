@@ -34,7 +34,9 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
   }
 
   Future<void> _carregarColecao() async {
-    final criaturas = await getCollection(0);
+    print("Carregando coleção... ID: ${player_instance.id}");
+    final criaturas = await getCollection(player_instance.id!);
+    print("Coleção carregada: ${criaturas.length} criaturas");
     setState(() {
       _criaturas = criaturas;
       _isLoading = false;
@@ -150,8 +152,11 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
                                     ),
                                     actions: [
                                       TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(dialogContext).pop(),
+                                        onPressed:
+                                            () =>
+                                                Navigator.of(
+                                                  dialogContext,
+                                                ).pop(),
                                         child: const Text('Fechar'),
                                       ),
                                     ],
@@ -236,8 +241,8 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
                               ),
                               actions: [
                                 TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(dialogContext).pop(),
+                                  onPressed:
+                                      () => Navigator.of(dialogContext).pop(),
                                   child: const Text("Fechar"),
                                 ),
                               ],

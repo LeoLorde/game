@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import '../app_database.dart';
 import '../../core/models/collection_model.dart';
@@ -58,14 +59,18 @@ Future<void> insertCreatureInCollection(Creature creature) async {
 }
 
 Future<List<Creature>> getCollection(int player_id) async {
+  debugPrint("Abrindo banco...");
   final db = await AppDatabase.instance.getDatabase();
+  print("Banco aberto, buscando dados...");
   final List<Map<String, dynamic>> result = await db.query(
     'collection_creature',
     where: 'player_id = ?',
     whereArgs: [player_id],
   );
+  debugPrint("Dados brutos: $result");
   final List<Creature> creatures =
       result.map((map) => Creature.fromMap(map)).toList();
+  debugPrint("Mapeados ${creatures.length} creatures");
   return creatures;
 }
 
