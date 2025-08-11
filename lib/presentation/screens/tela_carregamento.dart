@@ -6,24 +6,30 @@ import 'package:game/presentation/screens/tela_cadastro.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
 import 'package:game/database/seed/collection_seed.dart';
 import 'package:game/database/seed/creature_seed.dart';
+import 'package:game/application/managers/player_manager.dart';
 
 class TelaCarregamento extends StatelessWidget {
   const TelaCarregamento({super.key});
 
   Future<Widget> _verificarJogador() async {
-    final db = await AppDatabase.instance.getDatabase();
-    final dao = JogadorDao(db);
-    final jogador = await dao.buscar();
+  final db = await AppDatabase.instance.getDatabase();
+  final dao = JogadorDao(db);
+  final jogador = await dao.buscar();
 
-    await CreatureSeed().loadCreaturesOnDb();
+  await CreatureSeed().loadCreaturesOnDb();
+
+  if (jogador == null) {
+    return TelaCadastroJogador();
+  } else {
+    
+    player_instance = jogador;
+
     await CollectionSeed().loadInitialCollection();
 
-    if (jogador == null) {
-      return TelaCadastroJogador(); // Crie essa tela para o cadastro
-    } else {
-      return TelaPrincipal(jogador: jogador); // Já entra no jogo
-    }
+    return TelaPrincipal(jogador: jogador);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
