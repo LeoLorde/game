@@ -15,7 +15,7 @@ class TelaCarregamento extends StatelessWidget {
     final dao = JogadorDao(db);
     final jogador = await dao.buscar();
 
-    await CreatureSeed().loadCreaturesOnDb(); 
+    await CreatureSeed().loadCreaturesOnDb();
     await CollectionSeed().loadInitialCollection();
 
     if (jogador == null) {
