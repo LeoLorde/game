@@ -66,22 +66,21 @@ int ataque(Attack attacking_card_attack, Creature defending_card, int health) {
 //   Implementação do cálculo de dano
 // }
 
-Future<MapEntry<Creature, int>> alterarCriatura(int index) {
-  final criatura = Creature(
-    50,
-    1,
-    0,
-    [Elemento.agua],
-    Raridade.combatente,
-    [
-      Attack("Jatada de Água", 5, [Elemento.agua]),
-    ],
-    "None",
-    "Criatura Padrão de Água",
-    DimensionEnum.terra,
-  );
+Future<MapEntry<Creature, int>> alterarCriatura(int index) async {
+  // Pega apenas as criaturas do deck do jogador
+  final deck = await deckJogador();
 
-  return Future.value(MapEntry(criatura, 2));
+  if (deck.isEmpty) {
+    throw Exception("Nenhuma criatura no deck do jogador");
+  }
+
+  // Converte o Map para lista para poder acessar pelo índice
+  final listaDeck = deck.entries.toList();
+
+  // Garante que não estoure índice usando o módulo
+  final entry = listaDeck[index % listaDeck.length];
+
+  return MapEntry(entry.key, entry.value);
 }
 
 // void calcularEfeitoBonus{
