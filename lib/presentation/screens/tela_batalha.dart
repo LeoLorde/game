@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:game/core/classes/battle.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
@@ -13,6 +14,13 @@ class TelaBatalha extends StatefulWidget {
 }
 
 class _TelaBatalhaState extends State<TelaBatalha> {
+  @override
+  void initState() {
+    super.initState();
+    deckJogador();
+    entrarBatalha();
+  }
+
   void entrarBatalha() {
     AudioManager.tocarMusicaFundo('sounds/som/battle1.mp3');
   }
