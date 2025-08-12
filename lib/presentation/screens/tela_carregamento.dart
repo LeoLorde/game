@@ -12,24 +12,22 @@ class TelaCarregamento extends StatelessWidget {
   const TelaCarregamento({super.key});
 
   Future<Widget> _verificarJogador() async {
-  final db = await AppDatabase.instance.getDatabase();
-  final dao = JogadorDao(db);
-  final jogador = await dao.buscar();
+    final db = await AppDatabase.instance.getDatabase();
+    final dao = JogadorDao(db);
+    final jogador = await dao.buscar();
 
-  await CreatureSeed().loadCreaturesOnDb();
+    await CreatureSeed().loadCreaturesOnDb();
 
-  if (jogador == null) {
-    return TelaCadastroJogador();
-  } else {
-    
-    player_instance = jogador;
+    if (jogador == null) {
+      return TelaCadastroJogador();
+    } else {
+      player_instance = jogador;
 
-    await CollectionSeed().loadInitialCollection();
+      await CollectionSeed().loadInitialCollection(db);
 
-    return TelaPrincipal(jogador: jogador);
+      return TelaPrincipal(jogador: jogador);
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -44,12 +42,12 @@ class TelaCarregamento extends StatelessWidget {
           return snapshot.data!;
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => TelaCadastroJogador()),
-          );
-        });
-        return const SizedBox.shrink();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => TelaCadastroJogador()),
+            );
+          });
+          return const SizedBox.shrink();
         }
       },
     );

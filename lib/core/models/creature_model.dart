@@ -2,6 +2,7 @@ import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/attack_model.dart';
+import 'dart:convert';
 
 class Creature {
   int? id; // ← campo adicionado
@@ -56,17 +57,17 @@ class Creature {
       map['vida'] as int,
       map['level'] as int,
       (map['xp'] as num).toDouble(),
-      (map['elementos'] as List<dynamic>)
+      (jsonDecode(map['elementos'] as String) as List<dynamic>)
           .map((i) => Elemento.values[i as int])
           .toList(),
       Raridade.values[map['raridade'] as int],
-      (map['ataques'] as List<dynamic>)
+      (jsonDecode(map['ataques'] as String) as List<dynamic>)
           .map((a) => Attack.fromMap(a as Map<String, dynamic>))
           .toList(),
       map['spriteFile'] as String,
       map['name'] as String,
       DimensionEnum.values[map['dimension'] as int],
-      id: map['id'] as int?, // ← atribuído aqui
+      id: map['id'] as int?,
     );
   }
 }

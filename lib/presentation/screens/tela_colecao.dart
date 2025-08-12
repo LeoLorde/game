@@ -34,13 +34,25 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
   }
 
   Future<void> _carregarColecao() async {
-    print("Carregando coleção...");
-    final criaturas = await getCollection();
-    print("Coleção carregada: ${criaturas.length} criaturas");
-    setState(() {
-      _criaturas = criaturas;
-      _isLoading = false;
-    });
+    try {
+      print("Carregando coleção...");
+      final criaturas = await getCollection();
+      print("Coleção carregada: ${criaturas.length} criaturas");
+      setState(() {
+        _criaturas = criaturas;
+      });
+    } catch (e, stack) {
+      debugPrint("Erro ao carregar coleção: $e");
+      debugPrintStack(stackTrace: stack);
+      // Opcional: mostrar mensagem para o usuário
+    } finally {
+      // Garante que o loading sempre pare
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Color corPorRaridade(Raridade raridade) {
@@ -168,7 +180,7 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
                               img,
                               24,
                               cor,
-                              'BINTILIN',
+                              'BINTILIM',
                             ),
                           ),
                       ],
