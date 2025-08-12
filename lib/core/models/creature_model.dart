@@ -34,7 +34,11 @@ class Creature {
   });
 
   String getCompletePath() {
-    return filePath + spriteFile;
+    return filePath + spriteFile + "_0";
+  }
+
+  String getDanagedCompletePath() {
+    return filePath + spriteFile + "_1";
   }
 
   Map<String, dynamic> toMap() {

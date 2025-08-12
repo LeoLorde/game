@@ -17,8 +17,8 @@ class CollectionSeed {
       [
         Attack("Jatada de Água", 5, [Elemento.agua]),
       ],
-      "None",
-      "Criatura Padrão de Água",
+      "azuriak",
+      "Azuriak",
       DimensionEnum.terra,
     ),
     Creature(
@@ -28,10 +28,10 @@ class CollectionSeed {
       [Elemento.fogo],
       Raridade.combatente,
       [
-        Attack("Rabetada de Fogo", 5, [Elemento.fogo]),
+        Attack("Cuspe Fogo", 5, [Elemento.fogo]),
       ],
-      "None",
-      "Criatura Padrão de Fogo",
+      "ignarok",
+      "Ignarok",
       DimensionEnum.terra,
     ),
     Creature(
@@ -43,8 +43,8 @@ class CollectionSeed {
       [
         Attack("Espinhos de Terra", 5, [Elemento.terra]),
       ],
-      "None",
-      "Criatura Padrão de Terra",
+      "pedruna",
+      "Pedruna",
       DimensionEnum.terra,
     ),
   ];
