@@ -43,9 +43,13 @@ class TelaCarregamento extends StatelessWidget {
         } else if (snapshot.hasData) {
           return snapshot.data!;
         } else {
-          return const Scaffold(
-            body: Center(child: Text("Erro ao iniciar o app")),
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => TelaCadastroJogador()),
           );
+        });
+        return const SizedBox.shrink();
         }
       },
     );

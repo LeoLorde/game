@@ -83,8 +83,7 @@ class AppDatabase {
         ataques TEXT,
         spriteFile TEXT,
         name TEXT,
-        dimension INTEGER,
-        FOREIGN KEY (player_id) REFERENCES jogador(id) ON DELETE CASCADE
+        dimension INTEGER
       );
     ''');
     await db.execute('''

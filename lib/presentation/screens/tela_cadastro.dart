@@ -14,28 +14,29 @@ class _TelaCadastroJogadorState extends State<TelaCadastroJogador> {
   final _controller = TextEditingController();
 
   Future<void> _cadastrarJogador() async {
-    final nome = _controller.text.trim();
-    if (nome.isEmpty) return;
+  final nome = _controller.text.trim();
 
-    final db = await AppDatabase.instance.getDatabase();
-    final dao = JogadorDao(db);
+  if (nome.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Digite um nickname antes de continuar")),
+    );
+    return;
+  }
 
+  try {
     await CreatePlayer(nome);
 
-    // Buscar o jogador salvo com ID preenchido
-    final jogadorSalvo = await dao.buscarByID(player_instance!.id ?? 0);
-    if (jogadorSalvo != null) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => TelaPrincipal(jogador: jogadorSalvo)),
-      );
-    } else {
-      // Caso algo dê errado, mostrar erro
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(jogadorSalvo!.nickName)));
-    }
+    // player_instance já tem id preenchido aqui
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => TelaPrincipal(jogador: player_instance)),
+    );
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Erro ao cadastrar jogador: $e")),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

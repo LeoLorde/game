@@ -5,7 +5,8 @@ import 'package:flame/flame.dart';
 import 'database/app_database.dart';
 
 void main() async {
-  AppDatabase.instance.clearDatabase(["collection_creature"]);
+
+
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
 
