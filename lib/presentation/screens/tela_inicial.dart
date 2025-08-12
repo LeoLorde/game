@@ -88,17 +88,18 @@ class _TelaInicialState extends State<TelaInicial>
     });
   }
 
-  Widget buildTelaInicial(int trofeus, String tempoBau) {
+  Widget buildTelaInicial(int trofeus) {
     return ListView(
       children: [
         Column(
           children: [
-            const SizedBox(height: 120),
+            const SizedBox(height: 60),
             Center(
               child: Image.asset(
                 'assets/sprites/dimensoes/1.png',
-                width: 200,
+                width: 300,
                 height: 300,
+                fit: BoxFit.fill,
               ),
             ),
             Text(
@@ -115,7 +116,8 @@ class _TelaInicialState extends State<TelaInicial>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TelaBatalha(
+                    builder:
+                        (context) => TelaBatalha(
                           criaturas: [
                             Creature(
                               100,
@@ -181,12 +183,13 @@ class _TelaInicialState extends State<TelaInicial>
               onPressed: _podeAbrirBau ? _abrirBau : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.brown,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 20,
+                ),
               ),
               child: Text(
-                _podeAbrirBau
-                    ? "Abrir Baú"
-                    : "Aguarde $_tempoRestante s",
+                _podeAbrirBau ? "Abrir Baú" : "Aguarde $_tempoRestante s",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -202,15 +205,6 @@ class _TelaInicialState extends State<TelaInicial>
                   onTap: _mostrarAnimacaoBauDiario,
                   child: Image.asset("assets/sprites/baus/1/1.png"),
                 ),
-                Text(
-                  " FALTAM $tempoBau\n PARA SEU BAÚ\n DIÁRIO",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
               ],
             ),
           ],
@@ -223,7 +217,7 @@ class _TelaInicialState extends State<TelaInicial>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 41, 94, 67),
-      body: buildTelaInicial(4571, '18H e 23MIN'),
+      body: buildTelaInicial(6969),
     );
   }
 }
