@@ -23,7 +23,6 @@ Future<void> insertCollection(Collection collection_model) async {
       'spriteFile': creature.spriteFile,
       'name': creature.name,
       'dimension': creature.dimension.index,
-      'player_id': player_instance.id,
     };
     await db.insert(
       "collection_creature",
@@ -49,7 +48,6 @@ Future<void> insertCreatureInCollection(Creature creature) async {
     'spriteFile': creature.spriteFile,
     'name': creature.name,
     'dimension': creature.dimension.index,
-    'player_id': player_instance.id,
   };
   await db.insert(
     "collection_creature",
@@ -58,14 +56,12 @@ Future<void> insertCreatureInCollection(Creature creature) async {
   );
 }
 
-Future<List<Creature>> getCollection(int player_id) async {
+Future<List<Creature>> getCollection() async {
   debugPrint("Abrindo banco...");
   final db = await AppDatabase.instance.getDatabase();
   print("Banco aberto, buscando dados...");
   final List<Map<String, dynamic>> result = await db.query(
-    'collection_creature',
-    where: 'player_id = ?',
-    whereArgs: [player_id],
+    'collection_creature'
   );
   debugPrint("Dados brutos: $result");
   final List<Creature> creatures =
@@ -79,8 +75,6 @@ Future<void> removeCreatureFromCollection(Creature creature) async {
 
   await db.delete(
     'collection_creature',
-    where: 'player_id = ? AND name = ? AND spriteFile = ?',
-    whereArgs: [player_instance.id, creature.name, creature.spriteFile],
   );
 }
 

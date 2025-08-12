@@ -74,7 +74,6 @@ class AppDatabase {
   ''');
     await db.execute('''
       CREATE TABLE collection_creature (
-        player_id INTEGER,
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         vida INTEGER,
         level INTEGER,
