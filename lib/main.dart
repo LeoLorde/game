@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:game/presentation/screens/tela_carregamento.dart';
 import 'presentation/screens/tela_principal.dart';
 import 'package:flame/flame.dart';
+import 'database/app_database.dart';
 
 void main() async {
+  AppDatabase.instance.clearDatabase(["collection_creature"]);
   WidgetsFlutterBinding.ensureInitialized();
   await Flame.device.fullScreen();
 

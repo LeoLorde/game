@@ -34,8 +34,8 @@ class _ColecaoScreenState extends State<ColecaoScreen> {
   }
 
   Future<void> _carregarColecao() async {
-    print("Carregando coleção... ID: ${player_instance.id}");
-    final criaturas = await getCollection(player_instance.id!);
+    print("Carregando coleção...");
+    final criaturas = await getCollection();
     print("Coleção carregada: ${criaturas.length} criaturas");
     setState(() {
       _criaturas = criaturas;
