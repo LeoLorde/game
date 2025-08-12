@@ -1,17 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:game/presentation/screens/tela_carregamento.dart';
-import 'presentation/screens/tela_principal.dart';
 import 'package:flame/flame.dart';
-import 'database/app_database.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
-void main() async {
+import 'presentation/screens/tela_carregamento.dart';
 
+// Plugin global para notificações
+final FlutterLocalNotificationsPlugin notificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Flame fullscreen
   await Flame.device.fullScreen();
 
+  // Inicializa Timezone (necessário para agendamento de notificações)
+  tz.initializeTimeZones();
+
+  // Configurações de inicialização das notificações
+  var androidSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
+  var iosSettings = const DarwinInitializationSettings();
+  var initSettings = InitializationSettings(
+    android: androidSettings,
+    iOS: iosSettings,
+  );
+
+  await notificationsPlugin.initialize(initSettings);
+
   runApp(
-    MaterialApp(debugShowCheckedModeBanner: false, home: TelaCarregamento()),
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: const TelaCarregamento(),
+    ),
   );
 }
 

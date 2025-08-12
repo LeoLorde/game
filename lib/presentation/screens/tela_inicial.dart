@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/enums/elemento_enum.dart';
@@ -15,6 +16,9 @@ class TelaInicial extends StatefulWidget {
 
 class _TelaInicialState extends State<TelaInicial>
     with TickerProviderStateMixin {
+  bool _podeAbrirBau = true;
+  int _tempoRestante = 0;
+
   void somAbrirBau() {
     AudioManager.tocarEfeito('sounds/som/bau_abrindo.mp3');
   }
@@ -64,6 +68,26 @@ class _TelaInicialState extends State<TelaInicial>
     );
   }
 
+  void _abrirBau() {
+    setState(() {
+      _podeAbrirBau = false;
+      _tempoRestante = 10;
+    });
+
+    somAbrirBau();
+    _mostrarAnimacaoBauDiario();
+
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _tempoRestante--;
+        if (_tempoRestante <= 0) {
+          _podeAbrirBau = true;
+          timer.cancel();
+        }
+      });
+    });
+  }
+
   Widget buildTelaInicial(int trofeus, String tempoBau) {
     return ListView(
       children: [
@@ -77,7 +101,6 @@ class _TelaInicialState extends State<TelaInicial>
                 height: 300,
               ),
             ),
-
             Text(
               '$trofeus - 5000',
               style: TextStyle(
@@ -92,8 +115,7 @@ class _TelaInicialState extends State<TelaInicial>
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder:
-                        (context) => TelaBatalha(
+                    builder: (context) => TelaBatalha(
                           criaturas: [
                             Creature(
                               100,
@@ -152,6 +174,26 @@ class _TelaInicialState extends State<TelaInicial>
                 ),
               ),
             ),
+
+            // 🔹 Botão Abrir Baú adicionado aqui
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _podeAbrirBau ? _abrirBau : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.brown,
+                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+              ),
+              child: Text(
+                _podeAbrirBau
+                    ? "Abrir Baú"
+                    : "Aguarde $_tempoRestante s",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+
             SizedBox(height: 35),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
