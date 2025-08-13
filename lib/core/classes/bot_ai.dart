@@ -203,12 +203,25 @@ List<Creature> filtraCriaturasParaBot(
 
 // Cria o deck do bot
 Future<DeckModel> createBotDeck() async {
+  // Em createBotDeck
   final deckPlayer = await getDeck();
+  final todasCriaturas = await getTodasCriaturas();
+
+  // <-- MUDANÇA AQUI
   if (deckPlayer == null) {
-    throw Exception('Deck do jogador não encontrado.');
+    // Se o deck do jogador não existe, cria um deck de bot padrão
+    // para evitar que o app quebre.
+    print("Aviso: Deck do jogador não encontrado. Criando deck de bot padrão.");
+    final criaturasPadrao = todasCriaturas.take(3).toList();
+    final idsPadrao =
+        criaturasPadrao.map((c) => c.id).whereType<int>().toList();
+    return DeckModel(
+      playerID: 1,
+      name: 'Deck de Bot Padrão',
+      cardIds: idsPadrao,
+    );
   }
 
-  final todasCriaturas = await getTodasCriaturas();
   final criaturasDoJogador = getCriaturasDoJogador(deckPlayer, todasCriaturas);
 
   if (criaturasDoJogador.length < 3) {

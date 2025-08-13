@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:game/database/dao/loja_dao.dart';
+import 'package:game/database/seed/deck_seed.dart';
 import 'package:game/database/seed/store_seed.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -43,6 +44,10 @@ Future<void> main() async {
   );
 
   await notificationsPlugin.initialize(initSettings);
+
+  // DECK JOGADOR
+
+  await criarDeckInicialParaJogador();
 
   // LOJA
 
