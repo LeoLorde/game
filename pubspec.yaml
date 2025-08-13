@@ -15,6 +15,7 @@ dependencies:
   audioplayers: ^6.1.0
 
   cupertino_icons: ^1.0.8
+  flutter_launcher_icons: "^0.13.1"
   sqflite: ^2.4.1
   path:
   sqflite_common_ffi: ^2.3.5
@@ -48,7 +49,13 @@ flutter:
       - assets/sprites/baus/5/
       - assets/sounds/som/
       - assets/sprites/dimensoes/
+      - assets/icon/icon.png
       
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icon/icon.png"
   # fonts:
   #   - family: Schyler
   #     fonts:

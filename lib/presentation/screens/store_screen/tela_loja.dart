@@ -93,7 +93,7 @@ class _TelaLojaState extends State<TelaLoja> {
                     onPressed: () async {
                       Navigator.of(context).pop();
 
-                      comprarItem(item.id!, bloc);
+                      comprarItem(context, item.id!, bloc);
 
                       if (item.tipo == 'bau') {
                         _mostrarAnimacaoBau(context);
@@ -213,7 +213,11 @@ class _TelaLojaState extends State<TelaLoja> {
   }
 }
 
-Future<void> comprarItem(int itemId, LojaBloc bloc) async {
+Future<void> comprarItem(
+  BuildContext context,
+  int itemId,
+  LojaBloc bloc,
+) async {
   final Database db = await database.AppDatabase.instance.getDatabase();
 
   try {
@@ -226,7 +230,34 @@ Future<void> comprarItem(int itemId, LojaBloc bloc) async {
     final jogadorDao = jogador_dao.JogadorDao(db);
     final jogador = await jogadorDao.buscar();
     if (jogador == null || jogador.cristais < item.preco) {
-      throw Exception("Créditos insuficientes.");
+      showDialog(
+        context: context,
+        builder:
+            (ctx) => AlertDialog(
+              title: const Text("Cristais Insuficientes"),
+              backgroundColor: const Color.fromARGB(255, 54, 145, 99),
+              titleTextStyle: const TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+              ),
+              content: const Text(
+                "Você não tem cristais suficientes para comprar este item.",
+              ),
+              contentTextStyle: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                  },
+                  child: const Text("OK"),
+                ),
+              ],
+            ),
+      );
+      return; // Para a execução da função aqui.
     }
 
     // Atualiza os cristais do jogador

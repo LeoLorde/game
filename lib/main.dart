@@ -46,9 +46,11 @@ Future<void> main() async {
 
   // LOJA
 
-  // final Database db = await database.AppDatabase.instance.getDatabase();
+  final Database db = await database.AppDatabase.instance.getDatabase();
 
-  // final lojaDao = LojaDao(db);
+  final lojaDao = LojaDao(db);
+
+  await popularLojaComCartas(lojaDao);
 
   runApp(
     MaterialApp(
