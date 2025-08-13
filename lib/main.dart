@@ -1,46 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flame/flame.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:provider/provider.dart';
+import 'package:game/core/classes/notification_service.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 import 'presentation/screens/tela_carregamento.dart';
 import 'package:game/application/audio/audio_manager.dart';
-
-// Plugin global para notificações
-final FlutterLocalNotificationsPlugin notificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+import 'package:game/core/classes/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Inicializa o aúdio de background do jogo
-  AudioManager.instance.init();
-
-  // Flame fullscreen
+  await AudioManager.instance.init();
   await Flame.device.fullScreen();
-
-  // Inicializa Timezone (necessário para agendamento de notificações)
   tz.initializeTimeZones();
 
-  // Configurações de inicialização das notificações
-  var androidSettings = const AndroidInitializationSettings(
-    '@mipmap/ic_launcher',
-  );
-  var iosSettings = const DarwinInitializationSettings();
-  var initSettings = InitializationSettings(
-    android: androidSettings,
-    iOS: iosSettings,
-  );
-
-  await notificationsPlugin.initialize(initSettings);
+  final notificationService = NotificationService();
+  await notificationService.checkForNotifications();
 
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const TelaCarregamento(),
+    MultiProvider(
+      providers: [
+        Provider<NotificationService>.value(value: notificationService),
+      ],
+      child: MaterialApp(
+        navigatorKey: Routes.navigatorKey,
+        debugShowCheckedModeBanner: false,
+        routes: Routes.list,
+        initialRoute: Routes.initial,
+      ),
     ),
   );
 }
+
 
 /*
 Creature jonnas = Creature(1000, 500, Elemento.agua, Raridade.rara);

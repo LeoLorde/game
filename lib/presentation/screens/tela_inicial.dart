@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:game/core/classes/notification_service.dart';
 import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/tela_batalha.dart';
-import 'package:game/presentation/screens/tela_principal.dart';
+import 'package:provider/provider.dart';
 import 'package:game/application/audio/audio_manager.dart';
 
 class TelaInicial extends StatefulWidget {
@@ -78,12 +79,24 @@ class _TelaInicialState extends State<TelaInicial>
     somAbrirBau();
     _mostrarAnimacaoBauDiario();
 
-    Timer.periodic(Duration(seconds: 1), (timer) {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         _tempoRestante--;
         if (_tempoRestante <= 0) {
           _podeAbrirBau = true;
           timer.cancel();
+
+          // 🔹 Emite a notificação quando o baú pode ser aberto de novo
+          final notificationService =
+              Provider.of<NotificationService>(context, listen: false);
+          notificationService.showNotification(
+            CustomNotification(
+              id: 1,
+              title: "Baú disponível!",
+              body: "Você já pode abrir um novo baú.",
+              payload: "/home",
+            ),
+          );
         }
       });
     });
@@ -105,56 +118,55 @@ class _TelaInicialState extends State<TelaInicial>
             ),
             Text(
               '$trofeus - 5000',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder:
-                        (context) => TelaBatalha(
-                          criaturas: [
-                            Creature(
-                              100,
-                              1,
-                              10,
-                              [Elemento.fogo],
-                              Raridade.combatente,
-                              [],
-                              'aeros_0.png',
-                              'Aeros',
-                              DimensionEnum.penis,
-                            ),
-                            Creature(
-                              100,
-                              1,
-                              10,
-                              [Elemento.fogo],
-                              Raridade.combatente,
-                              [],
-                              'azuriak_0.png',
-                              'Aeros',
-                              DimensionEnum.penis,
-                            ),
-                            Creature(
-                              100,
-                              1,
-                              10,
-                              [Elemento.fogo],
-                              Raridade.combatente,
-                              [],
-                              'flarox_0.png',
-                              'Aeros',
-                              DimensionEnum.penis,
-                            ),
-                          ],
+                    builder: (context) => TelaBatalha(
+                      criaturas: [
+                        Creature(
+                          100,
+                          1,
+                          10,
+                          [Elemento.fogo],
+                          Raridade.combatente,
+                          [],
+                          'aeros_0.png',
+                          'Aeros',
+                          DimensionEnum.penis,
                         ),
+                        Creature(
+                          100,
+                          1,
+                          10,
+                          [Elemento.fogo],
+                          Raridade.combatente,
+                          [],
+                          'azuriak_0.png',
+                          'Aeros',
+                          DimensionEnum.penis,
+                        ),
+                        Creature(
+                          100,
+                          1,
+                          10,
+                          [Elemento.fogo],
+                          Raridade.combatente,
+                          [],
+                          'flarox_0.png',
+                          'Aeros',
+                          DimensionEnum.penis,
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
@@ -169,7 +181,7 @@ class _TelaInicialState extends State<TelaInicial>
                   side: const BorderSide(color: Colors.black, width: 3),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 "LUTAR",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -178,8 +190,7 @@ class _TelaInicialState extends State<TelaInicial>
               ),
             ),
 
-            // 🔹 Botão Abrir Baú adicionado aqui
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _podeAbrirBau ? _abrirBau : null,
               style: ElevatedButton.styleFrom(
@@ -191,14 +202,14 @@ class _TelaInicialState extends State<TelaInicial>
               ),
               child: Text(
                 _podeAbrirBau ? "Abrir Baú" : "Aguarde $_tempoRestante s",
-                style: TextStyle(
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),
             ),
 
-            SizedBox(height: 35),
+            const SizedBox(height: 35),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
