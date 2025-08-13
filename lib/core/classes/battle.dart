@@ -33,7 +33,7 @@ class Battle {
 }
 
 Future<Map<Creature, int>> deckJogador() async {
-  List<Creature> cards = await getCardsFromDeck(0);
+  List<Creature> cards = await getPDeck();
   Map<Creature, int> map = {};
 
   for (int i = 0; i < cards.length; i++) {

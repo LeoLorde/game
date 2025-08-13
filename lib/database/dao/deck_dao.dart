@@ -1,91 +1,59 @@
+import 'dart:convert';
 import 'package:game/core/models/creature_model.dart';
-import 'package:game/core/models/deck_model.dart';
 import 'package:game/database/app_database.dart';
+import 'package:sqflite/sqflite.dart';
 
-// Função para inserir ou atualizar um deck no banco de dados
-Future<void> upsertDeck(DeckModel deck) async {
+/// Insere uma criatura no deck (máximo de 3 criaturas)
+Future<void> insertCreatureInDeck(Creature creature) async {
   final db = await AppDatabase.instance.getDatabase();
 
-  final maps = await db.query('deck');
-  if (maps.isEmpty) {
-    await db.insert('deck', deck.toMap());
-  } else {
-    final id = maps.first['id'] as int;
-    await db.update('deck', deck.toMap(), where: 'id = ?', whereArgs: [id]);
-  }
-}
-
-// Função para adicionar cartas ao deck
-Future<void> addCardsToSingleDeck(List<int> newCards) async {
-  final db = await AppDatabase.instance.getDatabase();
-
-  final maps = await db.query('deck');
-  if (maps.isEmpty) throw Exception('Deck ainda não foi criado.');
-
-  final deck = DeckModel.fromMap(maps.first);
-
-  if (deck.cardIds.length + newCards.length > 3) {
-    throw Exception('O deck pode ter no máximo 3 cartas.');
+  final currentDeck = await db.query('deck');
+  if (currentDeck.length >= 3) {
+    throw Exception('O deck pode ter no máximo 3 criaturas.');
   }
 
-  deck.cardIds.addAll(newCards);
-  await db.update('deck', deck.toMap(), where: 'id = ?', whereArgs: [deck.id]);
-}
+  final Map<String, dynamic> data = {
+    'vida': creature.vida,
+    'level': creature.level,
+    'xp': creature.xp,
+    'elementos': jsonEncode(
+      creature.elementos.map((e) => e.index).toList(),
+    ),
+    'raridade': creature.raridade.index,
+    'ataques': jsonEncode(
+      creature.ataques.map((a) => a.toMap()).toList(),
+    ),
+    'spriteFile': creature.spriteFile,
+    'name': creature.name,
+    'dimension': creature.dimension.index,
+  };
 
-// Função para remover carta do deck
-Future<void> removeCardFromSingleDeck(int cardId) async {
-  final db = await AppDatabase.instance.getDatabase();
-
-  final maps = await db.query('deck');
-  if (maps.isEmpty) throw Exception('Deck ainda não foi criado.');
-
-  final deck = DeckModel.fromMap(maps.first);
-
-  deck.cardIds.remove(cardId);
-  await db.update('deck', deck.toMap(), where: 'id = ?', whereArgs: [deck.id]);
-}
-
-Future<List<Creature>> getCardsFromDeck(int playerID) async {
-  final db = await AppDatabase.instance.getDatabase();
-
-  final maps = await db.query('deck');
-  if (maps.isEmpty) throw Exception('Deck ainda não foi criado.');
-
-  final deck = DeckModel.fromMap(maps.first);
-
-  if (deck.cardIds.isEmpty) return [];
-
-  final placeholders = List.filled(deck.cardIds.length, '?').join(',');
-  final cardMaps = await db.query(
-    'creature',
-    where: 'id IN ($placeholders)',
-    whereArgs: deck.cardIds,
+  await db.insert(
+    'deck',
+    data,
+    conflictAlgorithm: ConflictAlgorithm.replace,
   );
-
-  return cardMaps.map((map) => Creature.fromMap(map)).toList();
 }
 
+/// Retorna todas as criaturas do deck
+Future<List<Creature>> getPDeck() async {
+  final db = await AppDatabase.instance.getDatabase();
+  final List<Map<String, dynamic>> result = await db.query('deck');
+  return result.map((map) => Creature.fromMap(map)).toList();
+}
 
-// Exemplo
-// void testarDeckUnico() async {
-//   final db = await AppDatabase.instance.getDatabase();
+/// Remove uma criatura específica do deck
+Future<void> removeCreatureFromDeck(int id) async {
+  final db = await AppDatabase.instance.getDatabase();
+  await db.delete(
+    'deck',
+    where: 'id = ?',
+    whereArgs: [id],
+  );
+}
 
-//   Cria ou atualiza o único deck com nome e nenhuma carta
-//   final meuDeck = DeckModel(name: 'Deck Único', cardIds: []);
-//   await upsertDeck(meuDeck);
-
-//   Adiciona 2 cartas
-//   await addCardsToSingleDeck([1, 2]);
-
-//   Adiciona a terceira carta
-//   await addCardsToSingleDeck([3]);
-
-//   Tenta remover a carta 2
-//   await removeCardFromSingleDeck(2);
-
-//   Carrega o deck atualizado
-//   final resultado = await db.query('deck');
-//   final deckFinal = DeckModel.fromMap(resultado.first);
-
-//   debugPrint('Deck final: ${deckFinal.name} -> Cartas: ${deckFinal.cardIds}');
-// }
+/// Remove todas as criaturas do deck
+Future<void> clearDeck() async {
+  final db = await AppDatabase.instance.getDatabase();
+  await db.delete('deck');
+}

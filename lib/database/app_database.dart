@@ -1,6 +1,15 @@
+import 'package:game/database/seed/creature_seed.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:game/database/seed/collection_seed.dart';
+import 'package:game/core/enums/elemento_enum.dart';
+import 'package:game/core/enums/raridade_enum.dart';
+import 'package:game/core/models/creature_model.dart';
+import 'package:game/core/models/attack_model.dart';
+import 'package:game/database/app_database.dart';
+import 'package:game/database/dao/creature_dao.dart';
+import 'package:game/core/enums/dimension_enum.dart';
+import 'package:game/database/dao/deck_dao.dart';
 
 class AppDatabase {
   static final AppDatabase instance = AppDatabase._();
@@ -77,8 +86,15 @@ class AppDatabase {
     await db.execute('''
       CREATE TABLE deck (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        card_ids TEXT NOT NULL
+        vida INTEGER,
+        level INTEGER,
+        xp REAL,
+        elementos TEXT,
+        raridade INTEGER,
+        ataques TEXT,
+        spriteFile TEXT,
+        name TEXT,
+        dimension INTEGER
       );
     ''');
 
@@ -95,10 +111,11 @@ class AppDatabase {
       );
     ''');
 
-    // Inserir criaturas iniciais
+    
     try {
       final seed = CollectionSeed();
       await seed.loadInitialCollection(db);
+      
       print("[AppDatabase] Coleção inicial carregada com sucesso!");
     } catch (e, stack) {
       print("[AppDatabase] Erro ao carregar coleção inicial: $e");
