@@ -90,32 +90,32 @@ class ColecaoScreen extends StatelessWidget {
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 41, 94, 67),
         appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: const Text("Coleção"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.star, color: Colors.white),
-            onPressed: () async {
-              await insertCreatureInCollection(
-                Creature(
-                  50,
-                  1,
-                  0,
-                  [Elemento.terra],
-                  Raridade.combatente,
-                  [
-                    Attack("Espinhos de Terra", 5, [Elemento.terra]),
-                  ],
-                  "pedruna",
-                  "Pedruna",
-                  DimensionEnum.terra,
-                ),
-              );
-              context.read<ColecaoBloc>().add(ColecaoOnStart());
-            },
-          ),
-        ],
-      ),
+          backgroundColor: Colors.teal,
+          title: const Text("Coleção"),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.star, color: Colors.white),
+              onPressed: () async {
+                await insertCreatureInCollection(
+                  Creature(
+                    50,
+                    1,
+                    0,
+                    [Elemento.terra],
+                    Raridade.combatente,
+                    [
+                      Attack("Espinhos de Terra", 5, [Elemento.terra]),
+                    ],
+                    "pedruna",
+                    "Pedruna",
+                    DimensionEnum.terra,
+                  ),
+                );
+                context.read<ColecaoBloc>().add(ColecaoOnStart());
+              },
+            ),
+          ],
+        ),
         body: BlocBuilder<ColecaoBloc, ColecaoState>(
           builder: (context, state) {
             if (state is ColecaoOnLoading) {
@@ -186,9 +186,11 @@ class ColecaoScreen extends StatelessWidget {
                                         ),
                                         actions: [
                                           TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(dialogContext)
-                                                    .pop(),
+                                            onPressed:
+                                                () =>
+                                                    Navigator.of(
+                                                      dialogContext,
+                                                    ).pop(),
                                             child: const Text('Fechar'),
                                           ),
                                         ],
@@ -213,11 +215,11 @@ class ColecaoScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(8),
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 0.75,
-                            crossAxisSpacing: 8,
-                            mainAxisSpacing: 8,
-                          ),
+                                crossAxisCount: 3,
+                                childAspectRatio: 0.75,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                              ),
                           itemCount: criaturas.length,
                           itemBuilder: (context, index) {
                             final creature = criaturas[index];
@@ -272,8 +274,11 @@ class ColecaoScreen extends StatelessWidget {
                                       ),
                                       actions: [
                                         TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(dialogContext).pop(),
+                                          onPressed:
+                                              () =>
+                                                  Navigator.of(
+                                                    dialogContext,
+                                                  ).pop(),
                                           child: const Text("Fechar"),
                                         ),
                                       ],
@@ -285,7 +290,8 @@ class ColecaoScreen extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: Image.asset(
-                                        creature.getCompletePath()),
+                                      creature.getCompletePath(),
+                                    ),
                                   ),
                                   const SizedBox(height: 4),
                                   Text(
