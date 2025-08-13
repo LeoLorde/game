@@ -30,15 +30,15 @@ class Creature {
     this.spriteFile,
     this.name,
     this.dimension, {
-    this.id, // ← id como argumento nomeado opcional
+    this.id,
   });
 
   String getCompletePath() {
-    return filePath + spriteFile + "_0";
+    return filePath + spriteFile + "_0.png";
   }
 
   String getDanagedCompletePath() {
-    return filePath + spriteFile + "_1";
+    return filePath + spriteFile + "_1.png";
   }
 
   Map<String, dynamic> toMap() {

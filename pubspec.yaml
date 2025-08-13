@@ -25,6 +25,9 @@ dependencies:
   provider:
   permission_handler: ^12.0.1
 
+  equatable: ^2.0.7
+  flutter_bloc: ^9.1.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
