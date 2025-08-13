@@ -23,14 +23,18 @@ class _TelaBatalhaState extends State<TelaBatalha> {
 
   Creature? playerCreature;
   Creature? botCreature;
-
   @override
   void initState() {
     super.initState();
     deckJogador();
-    bot = BotAI.fromDeck(createDeckBot());
+    inicializarBatalha(); // função async separada
+    _initBot();
     AudioManager.instance.pushBgm('sounds/som/battle1.mp3');
     AudioManager.instance.popBgm();
+  }
+
+  Future<void> _initBot() async {
+    bot = await BotAI.criar();
   }
 
   Future<void> inicializarBatalha() async {
@@ -142,7 +146,30 @@ class _TelaBatalhaState extends State<TelaBatalha> {
                         ),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () async {
+                              if (botCreature != null &&
+                                  playerCreature != null) {
+                                final ataqueEscolhido =
+                                    botCreature!.ataques.first;
+                                final vidaAtual =
+                                    playerDeck[playerCreature] ?? 0;
+                                final novaVida = ataque(
+                                  ataqueEscolhido,
+                                  playerCreature!,
+                                  vidaAtual,
+                                );
+                                playerDeck[playerCreature!] = novaVida.clamp(
+                                  0,
+                                  vidaAtual,
+                                );
+
+                                setState(() {});
+                                Navigator.of(context).pop();
+
+                                // Turno do bot
+                                await turnoDoBot();
+                              }
+                            },
                             child: const Text('JOGAR'),
                           ),
                           TextButton(
