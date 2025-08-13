@@ -58,8 +58,8 @@ Future<Map<Creature, int>> deckBotMap() async {
 }
 
 int ataque(Attack attacking_card_attack, Creature defending_card, int health) {
-  health -= attacking_card_attack.calcDamage(defending_card);
-  return health;
+  final dano = attacking_card_attack.calcDamage(defending_card);
+  return (health - dano).clamp(0, health);
 }
 
 // void calcularDano{
