@@ -51,7 +51,10 @@ class _TelaBatalhaState extends State<TelaBatalha> {
 
   // <-- NOVO: Função central para carregar tudo antes de construir a tela
   Future<void> _setupBattle() async {
-    setState(() => _mensagemStatus = "Preparando arena...");
+    setState(() {
+      _mensagemStatus = "Carregando...";
+      _isLoading = true;
+    });
 
     // Carrega o bot e os decks de forma segura
     bot = await BotAI.criar();
