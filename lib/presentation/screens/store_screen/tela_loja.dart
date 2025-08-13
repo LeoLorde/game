@@ -3,16 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game/application/audio/audio_manager.dart';
 import 'package:game/core/models/jogador_model.dart';
 import 'package:game/core/models/loja_model.dart';
+import 'package:game/database/app_database.dart' as database;
 import 'package:game/database/dao/loja_dao.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_bloc.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_state.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_event.dart';
 import 'package:game/core/models/jogador_model.dart' as jogador_model;
 import 'package:game/database/dao/jogador_dao.dart' as jogador_dao;
+import 'package:sqflite/sqflite.dart';
 
-class TelaLoja extends StatelessWidget {
-  const TelaLoja({super.key});
+class TelaLoja extends StatefulWidget {
+  const TelaLoja({Key? key}) : super(key: key);
 
+  @override
+  _TelaLojaState createState() => _TelaLojaState();
+}
+
+class _TelaLojaState extends State<TelaLoja> {
   void somAbrirBau() {
     AudioManager.instance.playSfx('sounds/som/bau_abrindo.mp3');
   }
@@ -85,6 +92,8 @@ class TelaLoja extends StatelessWidget {
                     ),
                     onPressed: () async {
                       Navigator.of(context).pop();
+
+                      comprarItem(item.id!, bloc);
 
                       if (item.tipo == 'bau') {
                         _mostrarAnimacaoBau(context);
@@ -201,5 +210,34 @@ class TelaLoja extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<void> comprarItem(int itemId, LojaBloc bloc) async {
+  final Database db = await database.AppDatabase.instance.getDatabase();
+
+  try {
+    final lojaDao = LojaDao(db);
+    final item = await lojaDao.buscarPorId(itemId);
+    if (item == null) {
+      throw Exception("Item não encontrado na loja.");
+    }
+
+    final jogadorDao = jogador_dao.JogadorDao(db);
+    final jogador = await jogadorDao.buscar();
+    if (jogador == null || jogador.cristais < item.preco) {
+      throw Exception("Créditos insuficientes.");
+    }
+
+    // Atualiza os cristais do jogador
+    final novosCristais = jogador.cristais - item.preco;
+    await jogador_dao.JogadorDao(db).atualizarCristais(-novosCristais);
+
+    // Remove o item da loja
+    await lojaDao.deletar(item.id!);
+
+    bloc.add(LojaUpdated());
+  } catch (e) {
+    debugPrint('Erro ao comprar item: $e');
   }
 }
