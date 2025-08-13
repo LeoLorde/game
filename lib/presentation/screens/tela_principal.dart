@@ -7,7 +7,7 @@ import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/jogador_model.dart';
 import 'package:game/presentation/screens/collection_screen/tela_colecao.dart';
 import 'package:game/presentation/screens/store_screen/tela_loja.dart';
-import 'package:game/presentation/screens/tela_inicial.dart';
+import 'package:game/presentation/screens/init_page/tela_inicial.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:game/application/audio/audio_manager.dart';
 

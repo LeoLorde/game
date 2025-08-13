@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game/presentation/screens/tela_inicial.dart';
+import 'package:game/presentation/screens/init_page/tela_inicial.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
 
 
