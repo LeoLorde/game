@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -98,6 +99,8 @@ Future<MapEntry<Creature, int>> getRandomBotCard() async {
   return deck.entries.elementAt(random.nextInt(deck.length));
 }
 
+Completer<dynamic>? acaoJogadorCompleter;
+
 void mainLoop() async {
   //   Implementa o Loop Principal da batalha
   bool playerTurn;
@@ -114,43 +117,40 @@ void mainLoop() async {
   }
 
   if (playerTurn) {
-    int path;
-    // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
-    final random = Random();
-    path = random.nextInt(2);
-    // ------------------------------------------------
-    if (path == 0) {
-      // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
-      final random = Random();
-      int index = random.nextInt(3);
-      // ----------------------------------------------
-      player_creature = await alterarCriatura(index);
-    } else if (path == 1) {
-      // DEPOIS IMPLEMENTAR COM O FRONT, REMOVER ABAIXO
-      final random = Random();
-      int size = player_creature.key.ataques.length;
-      Attack attack = player_creature.key.ataques[random.nextInt(size)];
-      // -----------------------------------------------
-      ataque(attack, bot_creature.key, bot_creature.value);
-      playerTurn = false;
+    debugPrint("--- TURNO DO JOGADOR: Aguardando ação da UI... ---");
+
+    acaoJogadorCompleter = Completer<dynamic>();
+
+    final acaoEscolhida = await acaoJogadorCompleter!.future;
+
+    if (acaoEscolhida is Attack) {
+      debugPrint("Jogador escolheu atacar com: ${acaoEscolhida.name}");
+      bot_creature = MapEntry(
+        bot_creature.key,
+        ataque(acaoEscolhida, bot_creature.key, bot_creature.value),
+      );
+      debugPrint("Vida do bot agora é: ${bot_creature.value}");
+    } else if (acaoEscolhida is int) {
+      debugPrint(
+        "Jogador escolheu trocar para a criatura de índice: $acaoEscolhida",
+      );
+      player_creature = await alterarCriatura(acaoEscolhida);
+      debugPrint("Nova criatura do jogador: ${player_creature.key.name}");
     }
+
+    playerTurn = false;
   } else {
     debugPrint('--- TURNO DO BOT ---');
-    // 1. Instancia a IA do Bot
-    // (O ideal é instanciar o BotAI uma vez no início da batalha)
     final botAI = await BotAI.criar();
 
-    // 2. Obtém o estado atual do deck do bot
     final botDeckCompleto = await deckBotMap();
 
-    // 3. A IA decide a melhor ação a ser tomada
     final acaoBot = botAI.decidirAcao(
       bot_creature.key,
       player_creature.key,
       botDeckCompleto,
     );
 
-    // 4. Executa a ação decidida pela IA
     if (acaoBot['action'] == 'attack') {
       final Attack ataqueEscolhido = acaoBot['attack'];
 
@@ -158,7 +158,6 @@ void mainLoop() async {
         'Bot usou ${bot_creature.key.name} para atacar com ${ataqueEscolhido.name}!',
       );
 
-      // Aplica o dano na criatura do jogador
       final novaVidaJogador = ataque(
         ataqueEscolhido,
         player_creature.key,
@@ -172,8 +171,6 @@ void mainLoop() async {
     } else if (acaoBot['action'] == 'switch') {
       final Creature novaCriatura = acaoBot['creature'];
 
-      // Atualiza a criatura ativa do bot
-      // Garante que a vida da nova criatura seja pega do estado atual do deck
       final vidaNovaCriatura =
           botDeckCompleto[novaCriatura] ?? novaCriatura.vida;
       bot_creature = MapEntry(novaCriatura, vidaNovaCriatura);
@@ -183,7 +180,6 @@ void mainLoop() async {
       );
     }
 
-    // Passa o turno para o jogador
     playerTurn = true;
   }
 }
