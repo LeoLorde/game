@@ -1,8 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game/presentation/screens/init_page/bloc/start_bloc.dart';
-import 'package:game/presentation/screens/init_page/bloc/start_event.dart';
-import 'package:game/presentation/screens/init_page/bloc/start_state.dart';
-import 'package:game/presentation/screens/init_page/bloc/player_repository.dart';
+import 'player_repository.dart';
+import 'start_event.dart';
+import 'start_state.dart';
 
 class StartPageBloc extends Bloc<StartEvent, StartState> {
   final PlayerRepository playerRepository;
@@ -10,7 +9,7 @@ class StartPageBloc extends Bloc<StartEvent, StartState> {
   StartPageBloc(this.playerRepository) : super(StartOnLoading()) {
     on<StartOnStart>(_onStart);
     on<StartOnUpdate>(_onUpdate);
-    on<StartAdicionarAmuletos>(_onAdicionarAmuletos); // ✅ registra o novo evento
+    on<StartAdicionarAmuletos>(_onAdicionarAmuletos);
   }
 
   Future<void> _onStart(StartOnStart event, Emitter<StartState> emit) async {

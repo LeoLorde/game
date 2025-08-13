@@ -164,7 +164,7 @@ class _TelaInicialState extends State<TelaInicial>
             const SizedBox(height: 15),
             ElevatedButton(
               onPressed: () {
-                context.read<StartPageBloc>().add(const StartAdicionarAmuletos(500));
+                context.read<StartPageBloc>().add(StartAdicionarAmuletos(500));
                 Navigator.push(
                   context,
                   MaterialPageRoute(
