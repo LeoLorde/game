@@ -83,17 +83,17 @@ class AppDatabase {
     ''');
 
     await db.execute('''
-  CREATE TABLE loja (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo TEXT NOT NULL,
-    preco INTEGER NOT NULL,         
-    item_id INTEGER,                
-    spriteFile TEXT,                  
-    raridade INTEGER,                 
-    quantidade INTEGER DEFAULT 1,     
-    FOREIGN KEY(item_id) REFERENCES creatures(id)
-  );
-''');
+      CREATE TABLE loja (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tipo TEXT NOT NULL,
+        preco INTEGER NOT NULL,         
+        item_id INTEGER,                
+        spriteFile TEXT,                  
+        raridade INTEGER,                 
+        quantidade INTEGER DEFAULT 1,     
+        FOREIGN KEY(item_id) REFERENCES creatures(id)
+      );
+    ''');
 
     // Inserir criaturas iniciais
     try {

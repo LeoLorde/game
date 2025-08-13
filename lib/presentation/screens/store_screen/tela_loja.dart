@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game/application/audio/audio_manager.dart';
+import 'package:game/core/models/jogador_model.dart';
 import 'package:game/core/models/loja_model.dart';
+import 'package:game/database/dao/loja_dao.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_bloc.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_state.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_event.dart';
+import 'package:game/core/models/jogador_model.dart' as jogador_model;
+import 'package:game/database/dao/jogador_dao.dart' as jogador_dao;
 
 class TelaLoja extends StatelessWidget {
   const TelaLoja({super.key});
@@ -24,23 +28,24 @@ class TelaLoja extends StatelessWidget {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: SizedBox(
-          width: 200,
-          height: 200,
-          child: AnimatedBuilder(
-            animation: animation,
-            builder: (context, child) {
-              final frame = animation.value;
-              return Image.asset(
-                'assets/sprites/baus/3/$frame.png',
-                fit: BoxFit.contain,
-              );
-            },
+      builder:
+          (_) => Dialog(
+            backgroundColor: Colors.transparent,
+            child: SizedBox(
+              width: 200,
+              height: 200,
+              child: AnimatedBuilder(
+                animation: animation,
+                builder: (context, child) {
+                  final frame = animation.value;
+                  return Image.asset(
+                    'assets/sprites/baus/3/$frame.png',
+                    fit: BoxFit.contain,
+                  );
+                },
+              ),
+            ),
           ),
-        ),
-      ),
     );
 
     Future.delayed(const Duration(milliseconds: 800), () {
@@ -57,38 +62,39 @@ class TelaLoja extends StatelessWidget {
       onTap: () {
         showDialog(
           context: context,
-          builder: (_) => AlertDialog(
-            backgroundColor: const Color.fromARGB(255, 54, 145, 99),
-            title: const Text("CONFIRMAR COMPRA"),
-            content: Text(
-              "DESEJA COMPRAR ESTE ITEM POR ${item.preco} CRISTAIS?",
-            ),
-            actions: [
-              TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
+          builder:
+              (_) => AlertDialog(
+                backgroundColor: const Color.fromARGB(255, 54, 145, 99),
+                title: const Text("CONFIRMAR COMPRA"),
+                content: Text(
+                  "DESEJA COMPRAR ESTE ITEM POR ${item.preco} CRISTAIS?",
                 ),
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text("CANCELAR"),
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text("CANCELAR"),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+
+                      if (item.tipo == 'bau') {
+                        _mostrarAnimacaoBau(context);
+                        somAbrirBau();
+                      }
+                    },
+                    child: const Text("COMPRAR"),
+                  ),
+                ],
               ),
-              TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  foregroundColor: Colors.white,
-                ),
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  await bloc.comprarItem(item.id!);
-                  if (item.tipo == 'bau') {
-                    _mostrarAnimacaoBau(context);
-                    somAbrirBau();
-                  }
-                },
-                child: const Text("COMPRAR"),
-              ),
-            ],
-          ),
         );
       },
       child: SizedBox(
@@ -148,18 +154,19 @@ class TelaLoja extends StatelessWidget {
               return const Center(child: CircularProgressIndicator());
             } else if (state is LojaError) {
               return Center(
-                  child: Text(
-                'Erro: ${state.message}',
-                style: const TextStyle(color: Colors.white),
-              ));
+                child: Text(
+                  'Erro: ${state.message}',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
             } else if (state is LojaSuccess) {
               final itens = state.itens;
               return ListView(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 children: [
                   Center(
-                      child:
-                          Image.network(bannerUrl, height: 200, width: 200)),
+                    child: Image.network(bannerUrl, height: 200, width: 200),
+                  ),
                   const SizedBox(height: 16),
                   if (itens.isEmpty)
                     const Center(
@@ -180,7 +187,10 @@ class TelaLoja extends StatelessWidget {
                       children: List.generate(itens.length, (index) {
                         final item = itens[index];
                         return buildItemCard(
-                            context, item, cores[index % cores.length]);
+                          context,
+                          item,
+                          cores[index % cores.length],
+                        );
                       }),
                     ),
                 ],
