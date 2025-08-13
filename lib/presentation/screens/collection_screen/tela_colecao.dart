@@ -56,29 +56,30 @@ class ColecaoScreen extends StatelessWidget {
           side: const BorderSide(color: Colors.black, width: 2),
         ),
         color: cor,
-        child: Column(
-          children: [
-            Text(
-              nome,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+        child:
+          Column(
+            children: [
+              Text(
+                nome,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
               ),
-            ),
-            Expanded(child: Image.asset(imageUrl)),
-            const SizedBox(height: 7),
-            Text(
-              'Nv. $level',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+              Expanded(child: Image.asset(imageUrl)),
+              const SizedBox(height: 7),
+              Text(
+                'Nv. $level',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                ),
               ),
-            ),
-            const SizedBox(height: 10),
-          ],
-        ),
+              const SizedBox(height: 10),
+              ],
+          ),
       ),
     );
   }
