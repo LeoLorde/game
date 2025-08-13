@@ -4,7 +4,7 @@
 
 
     <application
-        android:label="game"
+        android:label="Creature Card Game"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
