@@ -187,8 +187,11 @@ class ColecaoScreen extends StatelessWidget {
                                       TextButton(
                                         onPressed: ()async {
                                           Navigator.of(dialogContext).pop();
+                                      
                                           await removeCreatureFromDeck(creature.id!);
                                           await insertCreatureInCollection(creature);
+                                          context.read<ColecaoBloc>().add(ColecaoOnUpdate());
+                                          context.read<DeckBloc>().add(DeckOnUpdate());
                                         },
                                         child: const Text("Remover")
                                       )
@@ -303,6 +306,8 @@ class ColecaoScreen extends StatelessWidget {
                                         await insertCreatureInDeck(creature);
                                         await removeCreatureFromCollection(creature);
                                         Navigator.of(dialogContext).pop();
+                                        context.read<ColecaoBloc>().add(ColecaoOnUpdate());
+                                        context.read<DeckBloc>().add(DeckOnUpdate());
                                       },
                                       child: const Text("Adicionar no Deck"),
                                     )

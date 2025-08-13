@@ -72,9 +72,11 @@ Future<List<Creature>> getCollection() async {
 
 Future<void> removeCreatureFromCollection(Creature creature) async {
   final db = await AppDatabase.instance.getDatabase();
-
+  int id = creature.id!;
   await db.delete(
     'collection_creature',
+    where: 'id = ?',
+    whereArgs: [id],
   );
 }
 
