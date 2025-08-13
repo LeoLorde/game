@@ -175,7 +175,11 @@ Future<DeckModel> createBotDeck() async {
   final idsSelecionados =
       criaturasSelecionadas.map((c) => c.id).whereType<int>().toList();
 
-  return DeckModel(name: 'Deck do Bot', cardIds: idsSelecionados, playerID: null);
+  return DeckModel(
+    name: 'Deck do Bot',
+    cardIds: idsSelecionados,
+    playerID: null,
+  );
 }
 
 // EXEMPLO (que eu não testei, possivelmente errado e não funfa)

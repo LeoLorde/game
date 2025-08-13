@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game/core/classes/battle.dart';
+import 'package:game/core/classes/bot_ai.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
@@ -15,12 +16,46 @@ class TelaBatalha extends StatefulWidget {
 }
 
 class _TelaBatalhaState extends State<TelaBatalha> {
+  late BotAI bot;
+
+  Map<Creature, int> playerDeck = {};
+  Map<Creature, int> botDeck = {};
+
+  Creature? playerCreature;
+  Creature? botCreature;
+
   @override
   void initState() {
     super.initState();
     deckJogador();
+    bot = BotAI.fromDeck(createDeckBot());
     AudioManager.instance.pushBgm('sounds/som/battle1.mp3');
     AudioManager.instance.popBgm();
+  }
+
+  Future<void> inicializarBatalha() async {
+    playerDeck = await deckJogador();
+    botDeck = await deckBotMap();
+
+    if (playerDeck.isNotEmpty) {
+      playerCreature = playerDeck.keys.first;
+    }
+    if (botDeck.isNotEmpty) {
+      botCreature = botDeck.keys.first;
+    }
+
+    setState(() {});
+  }
+
+  Future<void> turnoDoBot() async {
+    if (botCreature != null && playerCreature != null) {
+      final ataqueBot = botCreature!.ataques.first;
+      final vidaAtual = playerDeck[playerCreature] ?? 0;
+      final novaVida = ataque(ataqueBot, playerCreature!, vidaAtual);
+      playerDeck[playerCreature!] = novaVida.clamp(0, vidaAtual);
+
+      setState(() {});
+    }
   }
 
   Color corPorRaridade(Raridade raridade) {
@@ -75,7 +110,7 @@ class _TelaBatalhaState extends State<TelaBatalha> {
                 ),
               ),
               Text(
-                'Nv. ${creature.level}',
+                'Nv. ${creature.level} | HP: ${(playerDeck[creature] ?? botDeck[creature] ?? creature.vida)}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -142,9 +177,32 @@ class _TelaBatalhaState extends State<TelaBatalha> {
                         ),
                         actions: [
                           TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
+                            onPressed: () async {
+                              if (playerCreature != null &&
+                                  botCreature != null) {
+                                final ataqueEscolhido =
+                                    playerCreature!.ataques.first;
+                                final vidaAtual = botDeck[botCreature] ?? 0;
+                                final novaVida = ataque(
+                                  ataqueEscolhido,
+                                  botCreature!,
+                                  vidaAtual,
+                                );
+                                botDeck[botCreature!] = novaVida.clamp(
+                                  0,
+                                  vidaAtual,
+                                );
+
+                                setState(() {});
+                                Navigator.of(context).pop();
+
+                                // Turno do bot
+                                await turnoDoBot();
+                              }
+                            },
                             child: const Text('JOGAR'),
                           ),
+
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(),
                             child: const Text('CANCELAR'),
