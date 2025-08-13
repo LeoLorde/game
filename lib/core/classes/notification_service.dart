@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:game/core/classes/routes.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:permission_handler/permission_handler.dart';
 
 class CustomNotification {
   final int id;
@@ -30,13 +32,21 @@ class NotificationService {
 
   _setupNotifications() async {
     await _setupTimezone();
+    await _requestPermissions(); // ← pede permissão antes de inicializar
     await _initializeNotifications();
   }
 
   Future<void> _setupTimezone() async {
     tz.initializeTimeZones();
-    final String timeZoneName = await FlutterNativeTimezone.getLocalTimezone();
+    final String timeZoneName = await FlutterTimezone.getLocalTimezone();
     tz.setLocalLocation(tz.getLocation(timeZoneName));
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isAndroid) {
+      final status = await Permission.notification.request();
+      if (!status.isGranted) return;
+    }
   }
 
   _initializeNotifications() async {
@@ -84,5 +94,28 @@ class NotificationService {
         details.notificationResponse?.payload != null) {
       _onSelectNotification(details.notificationResponse!.payload);
     }
+  }
+
+  Future<void> scheduleNotification(CustomNotification customNotification, Duration duration) async {
+    androidDetails = const AndroidNotificationDetails(
+      'lembretes_notifications',
+      'Baus',
+      channelDescription: 'Canal do bau diario',
+      importance: Importance.max,
+      priority: Priority.max,
+      enableVibration: true,
+    );
+
+    await localNotificationsPlugin.zonedSchedule(
+      customNotification.id,
+      customNotification.title,
+      customNotification.body,
+      tz.TZDateTime.now(tz.local).add(duration),
+      NotificationDetails(android: androidDetails),
+      androidAllowWhileIdle: true,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      payload: customNotification.payload,
+    );
   }
 }

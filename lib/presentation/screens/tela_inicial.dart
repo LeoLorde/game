@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:game/core/classes/notification_service.dart';
+import 'package:game/core/classes/notification_service.dart';
 import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/enums/elemento_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/tela_batalha.dart';
-import 'package:provider/provider.dart';
 import 'package:game/application/audio/audio_manager.dart';
+import 'package:provider/provider.dart';
 
 class TelaInicial extends StatefulWidget {
   const TelaInicial({super.key});
@@ -18,8 +19,15 @@ class TelaInicial extends StatefulWidget {
 
 class _TelaInicialState extends State<TelaInicial>
     with TickerProviderStateMixin {
-  bool _podeAbrirBau = true;
-  int _tempoRestante = 0;
+  bool bauDisponivel = true;
+  int tempoRestante = 0;
+  late NotificationService notificationService;
+
+  @override
+  void initState() {
+    super.initState();
+    notificationService = NotificationService();
+  }
 
   void somAbrirBau() async {
     await AudioManager.instance.duckAndPlaySfx('sounds/som/bau_abrindo.mp3');
@@ -31,7 +39,7 @@ class _TelaInicialState extends State<TelaInicial>
       barrierDismissible: false,
       builder: (context) {
         return StatefulBuilder(
-          builder: (context, setState) {
+          builder: (context, setStateDialog) {
             final controller = AnimationController(
               duration: const Duration(milliseconds: 600),
               vsync: this,
@@ -72,8 +80,8 @@ class _TelaInicialState extends State<TelaInicial>
 
   void _abrirBau() {
     setState(() {
-      _podeAbrirBau = false;
-      _tempoRestante = 10;
+      bauDisponivel = false;
+      tempoRestante = 10;
     });
 
     somAbrirBau();
@@ -81,21 +89,20 @@ class _TelaInicialState extends State<TelaInicial>
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        _tempoRestante--;
-        if (_tempoRestante <= 0) {
-          _podeAbrirBau = true;
+        tempoRestante--;
+        if (tempoRestante <= 0) {
+          bauDisponivel = true;
           timer.cancel();
 
-          // 🔹 Emite a notificação quando o baú pode ser aberto de novo
-          final notificationService =
-              Provider.of<NotificationService>(context, listen: false);
-          notificationService.showNotification(
+          // 🔹 Emite notificação quando o baú pode ser aberto de novo
+          notificationService.scheduleNotification(
             CustomNotification(
               id: 1,
               title: "Baú disponível!",
               body: "Você já pode abrir um novo baú.",
               payload: "/home",
             ),
+            const Duration(seconds: 1), // notifica imediatamente
           );
         }
       });
@@ -192,7 +199,7 @@ class _TelaInicialState extends State<TelaInicial>
 
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _podeAbrirBau ? _abrirBau : null,
+              onPressed: bauDisponivel ? _abrirBau : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.brown,
                 padding: const EdgeInsets.symmetric(
@@ -201,7 +208,7 @@ class _TelaInicialState extends State<TelaInicial>
                 ),
               ),
               child: Text(
-                _podeAbrirBau ? "Abrir Baú" : "Aguarde $_tempoRestante s",
+                bauDisponivel ? "Abrir Baú" : "Aguarde $tempoRestante s",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
