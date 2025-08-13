@@ -117,5 +117,6 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       payload: customNotification.payload,
     );
+
   }
 }
