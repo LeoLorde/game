@@ -86,9 +86,6 @@ class AppDatabase {
     try {
       final seed = CollectionSeed();
       await seed.loadInitialCollection(db);
-      await seed.loadInitialCollection(db);
-      await seed.loadInitialCollection(db);
-      await seed.loadInitialCollection(db);
       print("[AppDatabase] Coleção inicial carregada com sucesso!");
     } catch (e, stack) {
       print("[AppDatabase] Erro ao carregar coleção inicial: $e");

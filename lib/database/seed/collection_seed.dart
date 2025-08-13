@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart'; // <- Faltava isso
+import 'package:sqflite/sqflite.dart'; 
 
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/enums/dimension_enum.dart';
