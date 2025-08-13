@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
+import 'package:game/application/audio/audio_manager.dart';
 
 class TelaLoja extends StatefulWidget {
   const TelaLoja({super.key});
@@ -9,7 +10,7 @@ class TelaLoja extends StatefulWidget {
 
 class _TelaLojaState extends State<TelaLoja> with TickerProviderStateMixin {
   void somAbrirBau() {
-    AudioManager.tocarEfeito('sounds/som/bau_abrindo.mp3');
+    AudioManager.instance.playSfx('sounds/som/bau_abrindo.mp3');
   }
 
   void _mostrarAnimacaoBau() {

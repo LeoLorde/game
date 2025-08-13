@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'presentation/screens/tela_carregamento.dart';
+import 'package:game/application/audio/audio_manager.dart';
 
 // Plugin global para notificações
 final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -12,6 +13,9 @@ final FlutterLocalNotificationsPlugin notificationsPlugin =
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Inicializa o aúdio de background do jogo
+  AudioManager.instance.init();
+
   // Flame fullscreen
   await Flame.device.fullScreen();
 
@@ -19,7 +23,9 @@ Future<void> main() async {
   tz.initializeTimeZones();
 
   // Configurações de inicialização das notificações
-  var androidSettings = const AndroidInitializationSettings('@mipmap/ic_launcher');
+  var androidSettings = const AndroidInitializationSettings(
+    '@mipmap/ic_launcher',
+  );
   var iosSettings = const DarwinInitializationSettings();
   var initSettings = InitializationSettings(
     android: androidSettings,

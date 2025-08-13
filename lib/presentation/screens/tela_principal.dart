@@ -9,6 +9,7 @@ import 'package:game/presentation/screens/tela_colecao.dart';
 import 'package:game/presentation/screens/tela_loja.dart';
 import 'package:game/presentation/screens/tela_inicial.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:game/application/audio/audio_manager.dart';
 
 class TelaPrincipal extends StatefulWidget {
   final Jogador jogador;
@@ -23,7 +24,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   @override
   void initState() {
     super.initState();
-    AudioManager.tocarMusicaFundo('sounds/som/bg2.mp3');
+    AudioManager.instance.init();
+    AudioManager.instance.playBgm('sounds/som/bg2.mp3');
   }
 
   final PageController _pageController = PageController(initialPage: 1);
@@ -120,11 +122,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) => setState(() => _paginaAtual = index),
-        children: [
-          ColecaoScreen(),
-          TelaInicial(),
-          TelaLoja(),
-        ],
+        children: [ColecaoScreen(), TelaInicial(), TelaLoja()],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaAtual,
@@ -143,24 +141,5 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         ],
       ),
     );
-  }
-}
-
-class AudioManager {
-  static final AudioPlayer musicaFundo = AudioPlayer();
-  static final AudioPlayer efeitos = AudioPlayer();
-
-  static Future<void> tocarMusicaFundo(String caminho) async {
-    await musicaFundo.setReleaseMode(ReleaseMode.loop);
-    await musicaFundo.play(AssetSource(caminho));
-  }
-
-  static Future<void> pararMusicaFundo() async {
-    await musicaFundo.stop();
-  }
-
-  static Future<void> tocarEfeito(String caminho) async {
-    await efeitos.setReleaseMode(ReleaseMode.stop);
-    await efeitos.play(AssetSource(caminho));
   }
 }

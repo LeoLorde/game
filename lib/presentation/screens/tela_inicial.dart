@@ -6,6 +6,7 @@ import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/tela_batalha.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
+import 'package:game/application/audio/audio_manager.dart';
 
 class TelaInicial extends StatefulWidget {
   const TelaInicial({super.key});
@@ -19,8 +20,8 @@ class _TelaInicialState extends State<TelaInicial>
   bool _podeAbrirBau = true;
   int _tempoRestante = 0;
 
-  void somAbrirBau() {
-    AudioManager.tocarEfeito('sounds/som/bau_abrindo.mp3');
+  void somAbrirBau() async {
+    await AudioManager.instance.duckAndPlaySfx('sounds/som/bau_abrindo.mp3');
   }
 
   void _mostrarAnimacaoBauDiario() {
