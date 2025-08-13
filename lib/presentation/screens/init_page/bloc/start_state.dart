@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:game/presentation/screens/init_page/bloc/player_repository.dart';
 import 'package:game/core/models/creature_model.dart';
+
 
 abstract class StartState extends Equatable {
   const StartState();
@@ -28,4 +30,3 @@ class StartOnSuccess extends StartState {
   @override
   List<Object?> get props => [];
 }
-

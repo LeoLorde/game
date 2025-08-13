@@ -27,13 +27,14 @@ class PlayerRepository {
   }
 
   Future<void> adicionarAmuletos(int quantidade) async {
-    final db = await AppDatabase.instance.getDatabase();
-    final dao = JogadorDao(db);
-    final jogador = await dao.buscar(); // aguarda a consulta
-    if (jogador == null) throw Exception("Nenhum jogador encontrado");
-    final int amuletosatuais = jogador.amuletos;
-    await dao.atualizarAmuletos(quantidade + amuletosatuais);
-  }
+  final db = await AppDatabase.instance.getDatabase();
+  final dao = JogadorDao(db);
+  final jogador = await dao.buscar();
+  if (jogador == null) throw Exception("Nenhum jogador encontrado");
+  final int amuletosatuais = jogador.amuletos;
+  await dao.atualizarAmuletos(quantidade + amuletosatuais);
+}
+
 
   Future<void> updateLevel(int level) async {
     final db = await AppDatabase.instance.getDatabase();
