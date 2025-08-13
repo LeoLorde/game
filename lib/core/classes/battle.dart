@@ -2,15 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:game/core/classes/bot_ai.dart';
 import 'package:game/core/models/attack_model.dart';
 import 'package:game/database/dao/deck_dao.dart';
 import 'package:game/database/dao/creature_dao.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/models/deck_model.dart';
-import 'package:game/core/classes/bot_ai.dart';
-import 'package:game/core/enums/raridade_enum.dart';
-import 'package:game/core/enums/elemento_enum.dart';
-import 'package:game/core/enums/dimension_enum.dart';
 
 class Battle {
   final String nameJogador;
@@ -138,6 +135,55 @@ void mainLoop() async {
       playerTurn = false;
     }
   } else {
-    // IMPLEMENTAR COM O BOT AI
+    debugPrint('--- TURNO DO BOT ---');
+    // 1. Instancia a IA do Bot
+    // (O ideal é instanciar o BotAI uma vez no início da batalha)
+    final botAI = await BotAI.criar();
+
+    // 2. Obtém o estado atual do deck do bot
+    final botDeckCompleto = await deckBotMap();
+
+    // 3. A IA decide a melhor ação a ser tomada
+    final acaoBot = botAI.decidirAcao(
+      bot_creature.key,
+      player_creature.key,
+      botDeckCompleto,
+    );
+
+    // 4. Executa a ação decidida pela IA
+    if (acaoBot['action'] == 'attack') {
+      final Attack ataqueEscolhido = acaoBot['attack'];
+
+      debugPrint(
+        'Bot usou ${bot_creature.key.name} para atacar com ${ataqueEscolhido.name}!',
+      );
+
+      // Aplica o dano na criatura do jogador
+      final novaVidaJogador = ataque(
+        ataqueEscolhido,
+        player_creature.key,
+        player_creature.value,
+      );
+      player_creature = MapEntry(player_creature.key, novaVidaJogador);
+
+      debugPrint(
+        'Vida de ${player_creature.key.name} agora é ${player_creature.value}.',
+      );
+    } else if (acaoBot['action'] == 'switch') {
+      final Creature novaCriatura = acaoBot['creature'];
+
+      // Atualiza a criatura ativa do bot
+      // Garante que a vida da nova criatura seja pega do estado atual do deck
+      final vidaNovaCriatura =
+          botDeckCompleto[novaCriatura] ?? novaCriatura.vida;
+      bot_creature = MapEntry(novaCriatura, vidaNovaCriatura);
+
+      debugPrint(
+        'Bot trocou para ${bot_creature.key.name} com ${bot_creature.value} de vida.',
+      );
+    }
+
+    // Passa o turno para o jogador
+    playerTurn = true;
   }
 }

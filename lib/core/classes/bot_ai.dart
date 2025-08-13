@@ -83,6 +83,66 @@ class BotAI {
 
   // final ataqueFogo = Attack('Explosão Flamejante', 40, [Elemento.fogo]);
   // await bot.controlarVida(ataqueFogo);
+
+  // NÃOSEIIII
+
+  Map<String, dynamic> decidirAcao(
+    Creature botCreatureAtiva,
+    Creature playerCreatureAtiva,
+    Map<Creature, int> botDeck,
+  ) {
+    // --- Lógica de Decisão Simples ---
+
+    // 1. Avalia o melhor ataque possível com a criatura atual
+    Attack? melhorAtaque;
+    int maxDano = -1;
+
+    for (var ataque in botCreatureAtiva.ataques) {
+      final danoPotencial = ataque.calcDamage(playerCreatureAtiva);
+      if (danoPotencial > maxDano) {
+        maxDano = danoPotencial;
+        melhorAtaque = ataque;
+      }
+    }
+
+    // Garante que haja um ataque para usar
+    melhorAtaque ??= botCreatureAtiva.ataques.first;
+
+    // 2. Decide se vale a pena trocar de criatura
+    final vidaAtual = botDeck[botCreatureAtiva] ?? botCreatureAtiva.vida;
+    final vidaMaxima = botCreatureAtiva.vida;
+    final vidaPercentual = vidaAtual / vidaMaxima;
+
+    // Condição para trocar: vida abaixo de 35% E existe uma criatura melhor no deck
+    if (vidaPercentual < 0.35) {
+      // Procura por uma criatura com mais vida no deck para trocar
+      final criaturasDisponiveis =
+          botDeck.entries
+              .where(
+                (entry) =>
+                    entry.key.id != botCreatureAtiva.id &&
+                    entry.value > vidaAtual,
+              )
+              .toList();
+
+      if (criaturasDisponiveis.isNotEmpty) {
+        // Ordena para pegar a criatura com mais vida
+        criaturasDisponiveis.sort((a, b) => b.value.compareTo(a.value));
+        final novaCriatura = criaturasDisponiveis.first.key;
+
+        debugPrint(
+          'Bot AI: Vida baixa (${(vidaPercentual * 100).toStringAsFixed(0)}%). Trocando para ${novaCriatura.name}.',
+        );
+        return {'action': 'switch', 'creature': novaCriatura};
+      }
+    }
+
+    // 3. Se não trocou, a decisão é atacar com o melhor ataque encontrado
+    debugPrint(
+      'Bot AI: Decidiu atacar com ${melhorAtaque.name}, dano potencial: $maxDano',
+    );
+    return {'action': 'attack', 'attack': melhorAtaque};
+  }
 }
 
 // Pega o deck do jogador
