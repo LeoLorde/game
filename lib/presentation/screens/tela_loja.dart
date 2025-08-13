@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:game/database/dao/loja_dao.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
 import 'package:game/application/audio/audio_manager.dart';
+import 'package:game/database/dao/loja_dao.dart';
+import 'package:game/core/models/loja_model.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
 
 class TelaLoja extends StatefulWidget {
   const TelaLoja({super.key});
@@ -9,17 +14,43 @@ class TelaLoja extends StatefulWidget {
 }
 
 class _TelaLojaState extends State<TelaLoja> with TickerProviderStateMixin {
+  LojaDao? lojaDao;
+  List<Loja> itens = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _initDb();
+  }
+
+  Future<void> _initDb() async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, 'meujogo.db');
+    final db = await openDatabase(path);
+    lojaDao = LojaDao(db);
+    await _carregarItens();
+  }
+
+  Future<void> _carregarItens() async {
+    if (lojaDao != null) {
+      final lista = await lojaDao!.buscarTodos();
+      setState(() {
+        itens = lista;
+      });
+    }
+  }
+
   void somAbrirBau() {
     AudioManager.instance.playSfx('sounds/som/bau_abrindo.mp3');
   }
 
   void _mostrarAnimacaoBau() {
     showDialog(
-      context: context,
+      context: this.context,
       barrierDismissible: false,
-      builder: (context) {
+      builder: (BuildContext dialogContext) {
         return StatefulBuilder(
-          builder: (context, setState) {
+          builder: (BuildContext context, StateSetter setState) {
             final controller = AnimationController(
               duration: const Duration(milliseconds: 600),
               vsync: this,
@@ -29,8 +60,8 @@ class _TelaLojaState extends State<TelaLoja> with TickerProviderStateMixin {
             controller.forward();
 
             Future.delayed(const Duration(milliseconds: 800), () {
-              if (Navigator.of(context).canPop()) {
-                Navigator.of(context).pop();
+              if (Navigator.of(dialogContext).canPop()) {
+                Navigator.of(dialogContext).pop();
               }
               controller.dispose();
             });
@@ -58,153 +89,52 @@ class _TelaLojaState extends State<TelaLoja> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildCard(String precoCarta, Color cor) {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              backgroundColor: const Color.fromARGB(255, 54, 145, 99),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: Colors.black, width: 2),
-              ),
-              title: const Text("CONFIRMAR COMPRA"),
-              content: Text(
-                "DESEJA COMPRAR ESTA CARTA POR $precoCarta CRISTAIS?",
-              ),
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 24,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: const BorderSide(color: Colors.black, width: 2),
-                        ),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text("CANCELAR"),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 24,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: const BorderSide(color: Colors.black, width: 2),
-                        ),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        // lógica pra realizar a compra da carta
-                        return Navigator.of(context).pop();
-                      },
-                      child: const Text("COMPRAR"),
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
-        );
-      },
-      child: Container(
-        width: 120,
-        height: 170,
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-            side: const BorderSide(color: Colors.black, width: 2),
-          ),
-          color: cor,
-          child: Column(
-            children: [
-              Expanded(
-                child: Image.asset(
-                  'assets/sprites/aeros_0.png',
-                  fit: BoxFit.contain,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                precoCarta,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ),
-      ),
-    );
+  Future<void> _comprarItem(int id, String tipo) async {
+    try {
+      await lojaDao?.comprarItem(id);
+      if (tipo == 'bau') {
+        _mostrarAnimacaoBau();
+        somAbrirBau();
+      }
+      await _carregarItens();
+    } catch (e) {
+      ScaffoldMessenger.of(
+        this.context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
-  Widget buildBauCard(String precoBau, Color cor) {
+  Widget buildItemCard(Loja item, Color cor) {
     return GestureDetector(
       onTap: () {
         showDialog(
-          context: context,
+          context: this.context,
           builder: (BuildContext context) {
             return AlertDialog(
               backgroundColor: const Color.fromARGB(255, 54, 145, 99),
               title: const Text("CONFIRMAR COMPRA"),
-              content: Text("DESEJA COMPRAR ESTE BAÚ POR $precoBau CRISTAIS?"),
+              content: Text(
+                "DESEJA COMPRAR ESTE ITEM POR ${item.preco} CRISTAIS?",
+              ),
               actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 24,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: const BorderSide(color: Colors.black, width: 2),
-                        ),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: const Text("CANCELAR"),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 16,
-                          horizontal: 24,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: const BorderSide(color: Colors.black, width: 2),
-                        ),
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        _mostrarAnimacaoBau();
-                        somAbrirBau();
-                      },
-                      child: const Text("COMPRAR"),
-                    ),
-                  ],
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text("CANCELAR"),
+                ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _comprarItem(item.id!, item.tipo);
+                  },
+                  child: const Text("COMPRAR"),
                 ),
               ],
             );
@@ -224,13 +154,15 @@ class _TelaLojaState extends State<TelaLoja> with TickerProviderStateMixin {
             children: [
               Expanded(
                 child: Image.asset(
-                  'assets/sprites/baus/3/1.png',
+                  item.tipo == 'bau'
+                      ? 'assets/sprites/baus/3/1.png'
+                      : 'assets/sprites/aeros_0.png',
                   fit: BoxFit.contain,
                 ),
               ),
               const SizedBox(height: 7),
               Text(
-                precoBau,
+                '${item.preco}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -261,46 +193,20 @@ class _TelaLojaState extends State<TelaLoja> with TickerProviderStateMixin {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 16),
         children: [
-          Center(
-            child: Image.network(
-              bannerUrl,
-              height: 200,
-              width: 200,
-              color: Colors.red,
-            ),
-          ),
-          Center(
-            child: Text(
-              'NOVAS CARTAS EM 18H E 21MIN',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
+          Center(child: Image.network(bannerUrl, height: 200, width: 200)),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(3, (col) {
-              return Column(
-                children: [
-                  buildCard('5.000', cores[col % cores.length]),
-                  buildCard('5.000', cores[(col + 1) % cores.length]),
-                ],
-              );
-            }),
-          ),
-          const SizedBox(height: 24),
-          Center(
-            child: Image.network(
-              bannerUrl,
-              height: 200,
-              width: 200,
-              color: Colors.red,
+          if (itens.isEmpty)
+            const Center(child: CircularProgressIndicator())
+          else
+            Wrap(
+              spacing: 12,
+              runSpacing: 12,
+              alignment: WrapAlignment.center,
+              children: List.generate(itens.length, (index) {
+                final item = itens[index];
+                return buildItemCard(item, cores[index % cores.length]);
+              }),
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [for (var cor in cores) buildBauCard('2.000', cor)],
-          ),
         ],
       ),
     );
