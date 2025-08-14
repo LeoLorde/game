@@ -45,10 +45,6 @@ Future<void> main() async {
 
   await notificationsPlugin.initialize(initSettings);
 
-  // DECK JOGADOR
-
-  await criarDeckInicialParaJogador();
-
   // LOJA
 
   final Database db = await database.AppDatabase.instance.getDatabase();
