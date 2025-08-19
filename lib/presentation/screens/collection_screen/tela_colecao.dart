@@ -15,7 +15,6 @@ import 'bloc/deck_bloc.dart';
 import 'bloc/deck_event.dart';
 import 'bloc/deck_state.dart';
 
-
 class ColecaoScreen extends StatelessWidget {
   const ColecaoScreen({super.key});
 
@@ -85,34 +84,7 @@ class ColecaoScreen extends StatelessWidget {
       ],
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 41, 94, 67),
-        appBar: AppBar(
-          backgroundColor: Colors.teal,
-          title: const Text("Coleção"),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.star, color: Colors.white),
-              onPressed: () async {
-                await insertCreatureInCollection(
-                  Creature(
-                    50,
-                    1,
-                    0,
-                    [Elemento.terra],
-                    Raridade.combatente,
-                    [
-                      Attack("Espinhos de Terra", 5, [Elemento.terra]),
-                    ],
-                    "pedruna",
-                    "Pedruna",
-                    DimensionEnum.terra,
-                  ),
-                );
-                context.read<ColecaoBloc>().add(ColecaoOnStart());
-              },
-            ),
-          ],
-        ),
-        body: ListView(
+        body: Column(
           children: [
             // ====== Deck (parte de cima) ======
             BlocBuilder<DeckBloc, DeckState>(
@@ -140,8 +112,10 @@ class ColecaoScreen extends StatelessWidget {
                 if (deckState is DeckOnSuccess) {
                   final deck = deckState.criaturas;
                   return Container(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 15,
+                    ),
                     color: Colors.blueGrey,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -153,8 +127,9 @@ class ColecaoScreen extends StatelessWidget {
                                 context: context,
                                 builder: (BuildContext dialogContext) {
                                   return AlertDialog(
-                                    backgroundColor:
-                                        corPorRaridade(creature.raridade),
+                                    backgroundColor: corPorRaridade(
+                                      creature.raridade,
+                                    ),
                                     title: Text(
                                       creature.name ?? '',
                                       style: const TextStyle(
@@ -180,21 +155,32 @@ class ColecaoScreen extends StatelessWidget {
                                     ),
                                     actions: [
                                       TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(dialogContext).pop(),
+                                        onPressed:
+                                            () =>
+                                                Navigator.of(
+                                                  dialogContext,
+                                                ).pop(),
                                         child: const Text('Fechar'),
                                       ),
                                       TextButton(
-                                        onPressed: ()async {
+                                        onPressed: () async {
                                           Navigator.of(dialogContext).pop();
-                                      
-                                          await removeCreatureFromDeck(creature.id!);
-                                          await insertCreatureInCollection(creature);
-                                          context.read<ColecaoBloc>().add(ColecaoOnUpdate());
-                                          context.read<DeckBloc>().add(DeckOnUpdate());
+
+                                          await removeCreatureFromDeck(
+                                            creature.id!,
+                                          );
+                                          await insertCreatureInCollection(
+                                            creature,
+                                          );
+                                          context.read<ColecaoBloc>().add(
+                                            ColecaoOnUpdate(),
+                                          );
+                                          context.read<DeckBloc>().add(
+                                            DeckOnUpdate(),
+                                          );
                                         },
-                                        child: const Text("Remover")
-                                      )
+                                        child: const Text("Remover"),
+                                      ),
                                     ],
                                   );
                                 },
@@ -219,13 +205,14 @@ class ColecaoScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             // ====== Coleção (parte de baixo) ======
-            SizedBox(
-              height: 400,
+            Expanded(
               child: BlocBuilder<ColecaoBloc, ColecaoState>(
                 builder: (context, state) {
                   if (state is ColecaoOnLoading) {
                     return const Center(
-                      child: CircularProgressIndicator(color: Colors.tealAccent),
+                      child: CircularProgressIndicator(
+                        color: Colors.tealAccent,
+                      ),
                     );
                   }
 
@@ -245,11 +232,11 @@ class ColecaoScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 8,
-                      ),
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.75,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
+                          ),
                       itemCount: criaturas.length,
                       itemBuilder: (context, index) {
                         final creature = criaturas[index];
@@ -259,7 +246,9 @@ class ColecaoScreen extends StatelessWidget {
                               context: context,
                               builder: (BuildContext dialogContext) {
                                 return AlertDialog(
-                                  backgroundColor: Colors.teal.shade50,
+                                  backgroundColor: corPorRaridade(
+                                    creature.raridade,
+                                  ),
                                   title: Text(
                                     creature.name ?? "Criatura",
                                     style: const TextStyle(
@@ -290,53 +279,45 @@ class ColecaoScreen extends StatelessWidget {
                                         const SizedBox(height: 6),
                                         ...creature.ataques.map(
                                           (atk) => Text(
-                                              "- ${atk.name} (ATK: ${atk.base_damage})"),
+                                            "- ${atk.name} (ATK: ${atk.base_damage})",
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   actions: [
                                     TextButton(
-                                      onPressed: () =>
-                                          Navigator.of(dialogContext).pop(),
+                                      onPressed:
+                                          () =>
+                                              Navigator.of(dialogContext).pop(),
                                       child: const Text("Fechar"),
                                     ),
                                     TextButton(
                                       onPressed: () async {
                                         await insertCreatureInDeck(creature);
-                                        await removeCreatureFromCollection(creature);
+                                        await removeCreatureFromCollection(
+                                          creature,
+                                        );
                                         Navigator.of(dialogContext).pop();
-                                        context.read<ColecaoBloc>().add(ColecaoOnUpdate());
-                                        context.read<DeckBloc>().add(DeckOnUpdate());
+                                        context.read<ColecaoBloc>().add(
+                                          ColecaoOnUpdate(),
+                                        );
+                                        context.read<DeckBloc>().add(
+                                          DeckOnUpdate(),
+                                        );
                                       },
                                       child: const Text("Adicionar no Deck"),
-                                    )
+                                    ),
                                   ],
                                 );
                               },
                             );
                           },
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Image.asset(
-                                  creature.getCompletePath(),
-                                ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                creature.name ?? '',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              Text(
-                                'Nv. ${creature.level}',
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ],
+                          child: buildComposicaoCard(
+                            creature.getCompletePath(),
+                            creature.level,
+                            corPorRaridade(creature.raridade),
+                            creature.name ?? '',
                           ),
                         );
                       },
