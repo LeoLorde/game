@@ -8,3 +8,14 @@ abstract class BattleEvent extends Equatable {
 class BattleStarted extends BattleEvent {}
 
 class BattleUpdated extends BattleEvent {}
+
+class PlayerActionEvent extends BattleEvent {
+  final dynamic action;
+
+  PlayerActionEvent(this.action);
+
+  @override
+  List<Object?> get props => [action];
+}
+
+class BattleEndend extends BattleEvent {}

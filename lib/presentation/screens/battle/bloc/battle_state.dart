@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:game/core/classes/battle.dart';
 import 'package:game/core/models/creature_model.dart';
 
 abstract class BattleState extends Equatable {
@@ -34,4 +35,13 @@ class BattleStartState extends BattleState {
 
   @override
   List<Object?> get props => [player_creatures, bot_creatures];
+}
+
+class BattleEndend extends BattleState 
+{
+  final bool player_won;
+  BattleEndend(this.player_won);
+
+  @override
+  List<Object?> get props => [player_won];
 }
