@@ -117,82 +117,95 @@ class ColecaoScreen extends StatelessWidget {
                       horizontal: 15,
                     ),
                     color: Colors.blueGrey,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    height: 250,
+                    child: Column(
                       children: [
-                        for (final creature in deck)
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext dialogContext) {
-                                  return AlertDialog(
-                                    backgroundColor: corPorRaridade(
-                                      creature.raridade,
-                                    ),
-                                    title: Text(
-                                      creature.name ?? '',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Image.asset(
-                                          creature.getCompletePath(),
-                                          height: 80,
+                        Text(
+                          'DECK DE BATALHA',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            for (final creature in deck)
+                              GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext dialogContext) {
+                                      return AlertDialog(
+                                        backgroundColor: corPorRaridade(
+                                          creature.raridade,
                                         ),
-                                        const SizedBox(height: 8),
-                                        Text('Nível: ${creature.level}'),
-                                        Text(
-                                          'Elemento: ${creature.elementos.map((e) => e.name).join(", ")}',
+                                        title: Text(
+                                          creature.name ?? '',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                        Text(
-                                          'Raridade: ${creature.raridade.name}',
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Image.asset(
+                                              creature.getCompletePath(),
+                                              height: 80,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text('Nível: ${creature.level}'),
+                                            Text(
+                                              'Elemento: ${creature.elementos.map((e) => e.name).join(", ")}',
+                                            ),
+                                            Text(
+                                              'Raridade: ${creature.raridade.name}',
+                                            ),
+                                          ],
                                         ),
-                                      ],
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed:
-                                            () =>
-                                                Navigator.of(
-                                                  dialogContext,
-                                                ).pop(),
-                                        child: const Text('Fechar'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () async {
-                                          Navigator.of(dialogContext).pop();
+                                        actions: [
+                                          TextButton(
+                                            onPressed:
+                                                () =>
+                                                    Navigator.of(
+                                                      dialogContext,
+                                                    ).pop(),
+                                            child: const Text('Fechar'),
+                                          ),
+                                          TextButton(
+                                            onPressed: () async {
+                                              Navigator.of(dialogContext).pop();
 
-                                          await removeCreatureFromDeck(
-                                            creature.id!,
-                                          );
-                                          await insertCreatureInCollection(
-                                            creature,
-                                          );
-                                          context.read<ColecaoBloc>().add(
-                                            ColecaoOnUpdate(),
-                                          );
-                                          context.read<DeckBloc>().add(
-                                            DeckOnUpdate(),
-                                          );
-                                        },
-                                        child: const Text("Remover"),
-                                      ),
-                                    ],
+                                              await removeCreatureFromDeck(
+                                                creature.id!,
+                                              );
+                                              await insertCreatureInCollection(
+                                                creature,
+                                              );
+                                              context.read<ColecaoBloc>().add(
+                                                ColecaoOnUpdate(),
+                                              );
+                                              context.read<DeckBloc>().add(
+                                                DeckOnUpdate(),
+                                              );
+                                            },
+                                            child: const Text("Remover"),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
                                 },
-                              );
-                            },
-                            child: buildComposicaoCard(
-                              creature.getCompletePath(),
-                              creature.level,
-                              corPorRaridade(creature.raridade),
-                              creature.name ?? '',
-                            ),
-                          ),
+                                child: buildComposicaoCard(
+                                  creature.getCompletePath(),
+                                  creature.level,
+                                  corPorRaridade(creature.raridade),
+                                  creature.name ?? '',
+                                ),
+                              ),
+                          ],
+                        ),
                       ],
                     ),
                   );
