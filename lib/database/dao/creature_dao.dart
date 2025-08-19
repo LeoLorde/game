@@ -88,11 +88,17 @@ Future<Creature?> getCreatureByName(String name) async {
 }
 
 Future<Creature?> getCreatureById(int id) async {
-  final db = await AppDatabase.instance.getDatabase(); // Aguarda o db
-  // Faz a requisição pro Banco de Dados
-  final List<Map<String, dynamic>> maps = await db.query(
-    'creatures', 
+  final db = await AppDatabase.instance.getDatabase();
+
+  final List<Map<String, dynamic>> result = await db.query(
+    'creatures',
     where: 'id = ?',
     whereArgs: [id],
     limit: 1,
-);}
+  );
+
+  if (result.isNotEmpty) {
+    return Creature.fromMap(result.first);
+  }
+  return null;
+}
