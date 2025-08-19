@@ -162,88 +162,38 @@ class _TelaInicialState extends State<TelaInicial>
             ),
             Text("$amuletos - 5000"),
             const SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () {
-                context.read<StartPageBloc>().add(StartAdicionarAmuletos(500));
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TelaBatalha(
-                      criaturas: [
-                        Creature(
-                          100,
-                          1,
-                          10,
-                          [Elemento.fogo],
-                          Raridade.combatente,
-                          [],
-                          'aeros_0.png',
-                          'Aeros',
-                          DimensionEnum.penis,
-                        ),
-                        Creature(
-                          100,
-                          1,
-                          10,
-                          [Elemento.fogo],
-                          Raridade.combatente,
-                          [],
-                          'azuriak_0.png',
-                          'Aeros',
-                          DimensionEnum.penis,
-                        ),
-                        Creature(
-                          100,
-                          1,
-                          10,
-                          [Elemento.fogo],
-                          Raridade.combatente,
-                          [],
-                          'flarox_0.png',
-                          'Aeros',
-                          DimensionEnum.penis,
-                        ),
-                      ],
+            Builder(
+              builder: (context) {
+                return ElevatedButton(
+                  onPressed: () {
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const TelaBatalha(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 55, 94, 131),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 70,
+                      vertical: 25,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      side: const BorderSide(color: Colors.black, width: 3),
+                    ),
+                  ),
+                  child: const Text(
+                    "LUTAR",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
                   ),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 55, 94, 131),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 70,
-                  vertical: 25,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  side: const BorderSide(color: Colors.black, width: 3),
-                ),
-              ),
-              child: const Text(
-                "LUTAR",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: bauDisponivel ? _abrirBau : null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 20,
-                ),
-              ),
-              child: Text(
-                bauDisponivel ? "Abrir Baú" : "Aguarde $tempoRestante s",
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
             ),
             const SizedBox(height: 35),
             Row(

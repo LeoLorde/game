@@ -12,7 +12,7 @@ import 'package:game/application/audio/audio_manager.dart';
 
 class TelaBatalha extends StatefulWidget {
   // A lista de criaturas recebida não é mais necessária, pois o deck é carregado do banco
-  const TelaBatalha({super.key, required List<Creature> criaturas});
+  const TelaBatalha();
 
   @override
   State<TelaBatalha> createState() => _TelaBatalhaState();
