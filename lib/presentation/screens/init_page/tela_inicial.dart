@@ -9,7 +9,7 @@ import 'package:game/core/models/creature_model.dart';
 import 'package:game/presentation/screens/init_page/bloc/start_bloc.dart';
 import 'package:game/presentation/screens/init_page/bloc/start_event.dart';
 import 'package:game/presentation/screens/init_page/bloc/start_state.dart';
-import 'package:game/presentation/screens/tela_batalha.dart';
+import 'package:game/presentation/screens/battle/tela_batalha.dart';
 import 'package:game/application/audio/audio_manager.dart';
 import 'package:game/presentation/screens/init_page/bloc/player_repository.dart';
 
