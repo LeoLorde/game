@@ -19,8 +19,8 @@ class CreatureSeed {
       [
         Attack("Jatada de Água", 5, [Elemento.agua]),
       ],
-      "None",
-      "Criatura Padrão de Água",
+      "azuriak",
+      "Azuriak",
       DimensionEnum.terra,
     ),
     Creature(
@@ -32,8 +32,8 @@ class CreatureSeed {
       [
         Attack("Rabetada de Fogo", 5, [Elemento.fogo]),
       ],
-      "None",
-      "Criatura Padrão de Fogo",
+      "ignarok",
+      "Ignarok",
       DimensionEnum.terra,
     ),
     Creature(
@@ -45,8 +45,8 @@ class CreatureSeed {
       [
         Attack("Espinhos de Terra", 5, [Elemento.terra]),
       ],
-      "None",
-      "Criatura Padrão de Terra",
+      "pedruna",
+      "Pedruna",
       DimensionEnum.terra,
     ),
     Creature(
@@ -58,21 +58,63 @@ class CreatureSeed {
       [
         Attack("Corte de Vento", 5, [Elemento.ar]),
       ],
-      "None",
-      "Criatura Padrão de Ar",
+      "aeros",
+      "Aeros",
+      DimensionEnum.terra,
+    ),
+    Creature(
+      100,
+      1,
+      0,
+      [Elemento.terra, Elemento.fogo],
+      Raridade.heroi,
+      [
+        Attack("Rajada de Lava", 15, [Elemento.terra, Elemento.fogo]),
+        Attack("Terremoto de Magma", 20, [Elemento.fogo])
+      ],
+      "flarox",
+      "Flarox",
+      DimensionEnum.terra,
+    ),
+    Creature(
+      100,
+      1,
+      0,
+      [Elemento.ar, Elemento.fogo],
+      Raridade.heroi,
+      [
+        Attack("Tornado de Fogo", 15, [Elemento.ar, Elemento.fogo]),
+        Attack("Corte de Vento", 20, [Elemento.ar])
+      ],
+      "pyroair",
+      "Pyroair",
+      DimensionEnum.terra,
+    ),
+    Creature(
+      75,
+      1,
+      0,
+      [Elemento.terra],
+      Raridade.combatente,
+      [
+        Attack("Pedrada de Terra", 15, [Elemento.terra]),
+        Attack("Terrada de Pedra", 20, [Elemento.terra])
+      ],
+      "rhyno",
+      "Rhyno",
       DimensionEnum.terra,
     ),
     Creature(
       50,
       1,
       0,
-      [Elemento.agua, Elemento.fogo],
+      [Elemento.planta],
       Raridade.combatente,
       [
-        Attack("Jatada de Água", 10, [Elemento.agua]),
+        Attack("Flores de Hiroshima", 25, [Elemento.planta]),
       ],
-      "None",
-      "Criatura de Fusão Água e Fogo",
+      "verdalisk",
+      "Verdalisk",
       DimensionEnum.terra,
     ),
   ];
