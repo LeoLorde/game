@@ -42,36 +42,39 @@ class Creature {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id, // ← incluído no mapa
-      'vida': vida,
-      'level': level,
-      'xp': xp,
-      'elementos': elementos.map((e) => e.index).toList(),
-      'raridade': raridade.index,
-      'ataques': ataques.map((a) => a.toMap()).toList(),
-      'spriteFile': spriteFile,
-      'name': name,
-      'dimension': dimension.index,
-    };
-  }
+  return {
+    'id': id,
+    'vida': vida,
+    'level': level,
+    'xp': xp,
+    'elementos': jsonEncode(elementos.map((e) => e.index).toList()), // <-- agora é String
+    'raridade': raridade.index,
+    'ataques': jsonEncode(ataques.map((a) => a.toMap()).toList()),   // <-- agora é String
+    'spriteFile': spriteFile,
+    'name': name,
+    'dimension': dimension.index,
+  };
+}
 
+
+  
   factory Creature.fromMap(Map<String, dynamic> map) {
-    return Creature(
-      map['vida'] as int,
-      map['level'] as int,
-      (map['xp'] as num).toDouble(),
-      (jsonDecode(map['elementos'] as String) as List<dynamic>)
-          .map((i) => Elemento.values[i as int])
-          .toList(),
-      Raridade.values[map['raridade'] as int],
-      (jsonDecode(map['ataques'] as String) as List<dynamic>)
-          .map((a) => Attack.fromMap(a as Map<String, dynamic>))
-          .toList(),
-      map['spriteFile'] as String,
-      map['name'] as String,
-      DimensionEnum.values[map['dimension'] as int],
-      id: map['id'] as int?,
-    );
-  }
+  return Creature(
+    map['vida'] as int,
+    map['level'] as int,
+    (map['xp'] as num).toDouble(),
+    (jsonDecode(map['elementos'] as String) as List<dynamic>)
+        .map((i) => Elemento.values[i as int])
+        .toList(),
+    Raridade.values[map['raridade'] as int],
+    (jsonDecode(map['ataques'] as String) as List<dynamic>)
+        .map((a) => Attack.fromMap(a as Map<String, dynamic>))
+        .toList(),
+    map['spriteFile'] as String,
+    map['name'] as String,
+    DimensionEnum.values[map['dimension'] as int],
+    id: map['id'] as int?,
+  );
+}
+
 }

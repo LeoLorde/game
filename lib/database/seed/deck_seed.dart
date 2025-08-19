@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:game/database/app_database.dart';
-import 'package:game/core/models/deck_model.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:game/core/models/creature_model.dart';
+import 'package:game/database/dao/deck_dao.dart';
 
-/// Verifica se o jogador tem um deck; se não tiver, cria um deck inicial.
+/// Cria o deck inicial do jogador, inserindo cada criatura individualmente
 Future<void> criarDeckInicialParaJogador() async {
   final db = await AppDatabase.instance.getDatabase();
 
-  // Verifica se já existe algum deck na tabela
-  final decksExistentes = await db.query('deck', limit: 1);
-  if (decksExistentes.isNotEmpty) {
+  // Verifica se já existe alguma criatura no deck
+  final deckExistente = await db.query('deck', limit: 1);
+  if (deckExistente.isNotEmpty) {
     debugPrint("Deck do jogador já existe. Nenhuma ação necessária.");
-    return; // Sai da função se o deck já foi criado
+    return;
   }
 
-  // Se não existe, pega as 3 primeiras criaturas do banco
+  // Pega as 3 primeiras criaturas do banco
   debugPrint("Nenhum deck encontrado. Criando deck inicial para o jogador...");
   final criaturasIniciais = await db.query('creatures', limit: 3);
 
@@ -25,19 +25,15 @@ Future<void> criarDeckInicialParaJogador() async {
     return;
   }
 
-  // Pega os IDs das criaturas
-  final idsDasCriaturas = criaturasIniciais.map((c) => c['id'] as int).toList();
+  // Converte os mapas para objetos Creature
+  List<Creature> criaturas = criaturasIniciais.map((c) => Creature.fromMap(c)).toList();
 
-  // Cria o modelo do novo deck
-  final novoDeck = DeckModel(
-    name: 'Meu Primeiro Deck',
-    cardIds: idsDasCriaturas,
-    playerID: 1, // ID do jogador, se você tiver um
-  );
+  // Insere cada criatura no deck usando a função insertCreatureInDeck
+  for (Creature creature in criaturas) {
+    await insertCreatureInDeck(creature);
+  }
 
-  // Salva o novo deck no banco de dados
-  await db.insert('deck', novoDeck.toMap());
   debugPrint(
-    "Deck inicial criado com sucesso com as criaturas de IDs: $idsDasCriaturas",
+    "Deck inicial criado com sucesso com as criaturas: ${criaturas.map((c) => c.name).toList()}",
   );
 }

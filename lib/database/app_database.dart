@@ -1,45 +1,59 @@
-import 'package:game/database/seed/creature_seed.dart';
-import 'package:sqflite/sqflite.dart';
+import 'package:game/database/dao/loja_dao.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
-import 'package:game/database/seed/collection_seed.dart';
-import 'package:game/core/enums/elemento_enum.dart';
-import 'package:game/core/enums/raridade_enum.dart';
-import 'package:game/core/models/creature_model.dart';
-import 'package:game/core/models/attack_model.dart';
-import 'package:game/database/app_database.dart';
-import 'package:game/database/dao/creature_dao.dart';
-import 'package:game/core/enums/dimension_enum.dart';
-import 'package:game/database/dao/deck_dao.dart';
+import 'package:sqflite/sqflite.dart';
+
+// importa os seeds
+import 'seed/creature_seed.dart';
+import 'seed/deck_seed.dart';
+import 'seed/collection_seed.dart';
+import 'seed/store_seed.dart';
 
 class AppDatabase {
-  static final AppDatabase instance = AppDatabase._();
+  static final AppDatabase instance = AppDatabase._init();
+
   static Database? _database;
 
-  AppDatabase._();
+  AppDatabase._init();
 
-  Future<Database> getDatabase() async {
-    if (_database != null) {
-      return _database!;
-    }
-    _database = await _initDB('game.db');
-    return _database!;
-  }
+Future<Database> getDatabase() async {
+  if (_database != null) return _database!;
 
-  Future<Database> _initDB(String fileName) async {
+  _database = await _initDB('app.db');
+
+  // Depois que o DB estiver pronto, popula os seeds
+  await _populateInitialData(_database!);
+
+  return _database!;
+}
+
+Future<void> _populateInitialData(Database db) async {
+  debugPrint("Iniciando seeds...");
+    debugPrint("0/4 - Carregando Criaturas");
+    await CreatureSeed().loadCreaturesOnDb();
+    debugPrint("1/4 - Carregando Deck");
+    await criarDeckInicialParaJogador();
+    debugPrint("2/4 - Carregando Coleção");
+    await CollectionSeed().loadInitialCollection(db);
+    debugPrint("3/4 - Populando Loja");
+    await popularLojaComCartas(LojaDao(db));
+    debugPrint("4/4 - Banco Carregado");
+  debugPrint("Seeds carregadas!");
+}
+
+
+  Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
-    final path = join(dbPath, fileName);
+    final path = join(dbPath, filePath);
 
     return await openDatabase(
       path,
       version: 1,
-      onCreate: _onCreate,
-      onConfigure: (db) async {
-        await db.execute('PRAGMA foreign_keys = ON');
-      },
+      onCreate: _createDB,
     );
   }
 
-  Future<void> _onCreate(Database db, int version) async {
+  Future _createDB(Database db, int version) async {
     // Criação das tabelas
     await db.execute('''
       CREATE TABLE creatures (
@@ -110,30 +124,17 @@ class AppDatabase {
         FOREIGN KEY(item_id) REFERENCES creatures(id)
       );
     ''');
+  }
 
-    
-    try {
-      final seed = CollectionSeed();
-      await seed.loadInitialCollection(db);
-      
-      print("[AppDatabase] Coleção inicial carregada com sucesso!");
-    } catch (e, stack) {
-      print("[AppDatabase] Erro ao carregar coleção inicial: $e");
-      print(stack);
-    }
+  Future close() async {
+    final db = await instance.getDatabase();
+    db.close();
   }
 
   Future<void> clearDatabase(List<String> tables) async {
     final db = await getDatabase();
-    for (var table in tables) {
+    for (String table in tables) {
       await db.delete(table);
-    }
-  }
-
-  Future<void> close() async {
-    if (_database != null) {
-      await _database!.close();
-      _database = null;
     }
   }
 }

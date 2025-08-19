@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:game/core/models/loja_model.dart';
 import 'package:game/database/dao/loja_dao.dart';
-import 'package:sqflite/sqflite.dart';
 
 Future<void> popularLojaComCartas(LojaDao lojaDao) async {
   final aeros = Loja(

@@ -81,7 +81,6 @@ class CreatureSeed {
 
   // Adiciona todas as Criaturas ao Banco de Dados
   Future<void> loadCreaturesOnDb() async {
-    await AppDatabase.instance.clearDatabase(["creatures"]);
     for (Creature criatura in all_creatures) {
       await insertCreature(criatura, 'creatures');
     }
