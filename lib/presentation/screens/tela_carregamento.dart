@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:game/database/app_database.dart';
-import 'package:game/core/models/jogador_model.dart';
 import 'package:game/database/dao/jogador_dao.dart';
 import 'package:game/presentation/screens/tela_cadastro.dart';
 import 'package:game/presentation/screens/tela_principal.dart';
-import 'package:game/database/seed/collection_seed.dart';
-import 'package:game/database/seed/creature_seed.dart';
 import 'package:game/application/managers/player_manager.dart';
 
 class TelaCarregamento extends StatelessWidget {
