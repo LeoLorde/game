@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flame/flame.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:game/database/dao/loja_dao.dart';
-import 'package:game/database/seed/store_seed.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'presentation/screens/tela_carregamento.dart';
 import 'package:game/application/audio/audio_manager.dart';
-import 'package:game/database/app_database.dart' as database;
 
 // Plugin global para notificações
 final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -43,14 +38,6 @@ Future<void> main() async {
   );
 
   await notificationsPlugin.initialize(initSettings);
-
-  // LOJA
-
-  final Database db = await database.AppDatabase.instance.getDatabase();
-
-  final lojaDao = LojaDao(db);
-
-  await popularLojaComCartas(lojaDao);
 
   runApp(
     MaterialApp(
