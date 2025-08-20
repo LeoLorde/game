@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game/core/enums/dimension_enum.dart';
 import 'package:game/core/enums/raridade_enum.dart';
-import 'package:game/core/enums/elemento_enum.dart';
-import 'package:game/core/models/attack_model.dart';
-import 'package:game/core/models/creature_model.dart';
 import 'package:game/database/dao/collection_dao.dart';
-import 'package:game/database/dao/deck_dao.dart'; // ajuste caminho
+import 'package:game/database/dao/deck_dao.dart';
 import 'bloc/collection_bloc.dart';
 import 'bloc/collection_event.dart';
 import 'bloc/collection_state.dart';
