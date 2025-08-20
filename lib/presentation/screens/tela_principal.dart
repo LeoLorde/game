@@ -63,6 +63,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   color: Colors.white,
                   fontSize: 20,
                   fontFamily: 'PressStart2P',
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 14),
