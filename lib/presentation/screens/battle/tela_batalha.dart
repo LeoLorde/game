@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:game/database/dao/deck_dao.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'bloc/battle_bloc.dart';
@@ -9,6 +8,9 @@ import 'bloc/battle_state.dart';
 import 'bloc/deck_bloc.dart';
 import 'bloc/deck_event.dart';
 import 'bloc/deck_state.dart';
+import 'bloc/bot_bloc.dart';
+import 'bloc/bot_event.dart';
+import 'bloc/bot_state.dart';
 
 class TelaBatalha extends StatelessWidget {
   const TelaBatalha({super.key});
@@ -76,55 +78,109 @@ class TelaBatalha extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => BattleBloc()..add(BattleStarted())),
         BlocProvider(create: (_) => DeckBloc()..add(DeckOnStart())),
+        BlocProvider(create: (_) => BotBloc()..add(BotOnStart())), // <- Bot aqui
       ],
       child: Scaffold(
         appBar: AppBar(title: const Text('Batalha')),
-        body: BlocBuilder<DeckBloc, DeckState>(
-          builder: (context, state) {
-            if (state is DeckOnLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // ==== CARTAS DO BOT ====
+            BlocBuilder<BotBloc, BotState>(
+              builder: (context, state) {
+                if (state is BotOnLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  );
+                }
 
-            if (state is DeckOnError) {
-              return Center(
-                child: Text('Erro ao carregar deck: ${state.message}'),
-              );
-            }
+                if (state is BotOnError) {
+                  return Text('Erro ao carregar bot: ${state.message}');
+                }
 
-            if (state is DeckOnSuccess) {
-              final deck = state.criaturas;
+                if (state is BotOnSuccess) {
+                  final deckBot = state.criaturas;
 
-              return Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Suas Cartas",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // As 3 cartas do deck
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  return Column(
                     children: [
-                      for (final creature in deck.take(3))
-                        buildComposicaoCard(
-                          creature.getCompletePath(),
-                          creature.level,
-                          corPorRaridade(creature.raridade),
-                          creature.name ?? '',
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Cartas do Bot",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (final creature in deckBot.take(3))
+                            buildComposicaoCard(
+                              creature.getCompletePath(),
+                              creature.level,
+                              corPorRaridade(creature.raridade),
+                              creature.name ?? '',
+                            ),
+                        ],
+                      ),
                     ],
-                  ),
-                ],
-              );
-            }
+                  );
+                }
 
-            return const SizedBox.shrink();
-          },
+                return const SizedBox.shrink();
+              },
+            ),
+
+            // ==== CARTAS DO JOGADOR ====
+            BlocBuilder<DeckBloc, DeckState>(
+              builder: (context, state) {
+                if (state is DeckOnLoading) {
+                  return const Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (state is DeckOnError) {
+                  return Text('Erro ao carregar deck: ${state.message}');
+                }
+
+                if (state is DeckOnSuccess) {
+                  final deck = state.criaturas;
+
+                  return Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Suas Cartas",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (final creature in deck.take(3))
+                            buildComposicaoCard(
+                              creature.getCompletePath(),
+                              creature.level,
+                              corPorRaridade(creature.raridade),
+                              creature.name ?? '',
+                            ),
+                        ],
+                      ),
+                    ],
+                  );
+                }
+
+                return const SizedBox.shrink();
+              },
+            ),
+          ],
         ),
       ),
     );

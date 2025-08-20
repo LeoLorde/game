@@ -204,14 +204,16 @@ List<Creature> filtraCriaturasParaBot(
 // Cria o deck do bot
 Future<DeckModel> createBotDeck() async {
   // Em createBotDeck
+  debugPrint("0.1/1 - Pegando Deck do Player");
   final deckPlayer = await getDeck();
+  debugPrint("0.2/1 - Pegando Todas as Critaturas");
   final todasCriaturas = await getTodasCriaturas();
 
   // <-- MUDANÇA AQUI
   if (deckPlayer == null) {
     // Se o deck do jogador não existe, cria um deck de bot padrão
     // para evitar que o app quebre.
-    print("Aviso: Deck do jogador não encontrado. Criando deck de bot padrão.");
+    debugPrint("0.25/1 - DECK DO PLAYER NÃO EXISTE!");
     final criaturasPadrao = todasCriaturas.take(3).toList();
     final idsPadrao =
         criaturasPadrao.map((c) => c.id).whereType<int>().toList();
@@ -222,15 +224,18 @@ Future<DeckModel> createBotDeck() async {
     );
   }
 
+  debugPrint("0.4/1 - Pegando Criaturas do Jogador");
   final criaturasDoJogador = getCriaturasDoJogador(deckPlayer, todasCriaturas);
 
   if (criaturasDoJogador.length < 3) {
     throw Exception('Deck do jogador não possui 3 criaturas.');
   }
 
+  debugPrint("0.5/1 - Calculando Faixa de Nível");
   final raridadesAlvo = criaturasDoJogador.map((c) => c.raridade).toList();
   final faixa = calculaFaixaNivel(criaturasDoJogador);
 
+  debugPrint("0.6/1 - Filtrando Criaturas");
   final criaturasBot = filtraCriaturasParaBot(
     todasCriaturas,
     raridadesAlvo,
@@ -238,6 +243,7 @@ Future<DeckModel> createBotDeck() async {
     faixa['maxNivel'],
   );
 
+  debugPrint("0.7/1 - Randomizando");
   criaturasBot.shuffle(Random());
   final criaturasSelecionadas = criaturasBot.take(3).toList();
 
