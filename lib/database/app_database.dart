@@ -16,19 +16,16 @@ class AppDatabase {
 
   AppDatabase._init();
 
-Future<Database> getDatabase() async {
-  if (_database != null) return _database!;
+  Future<Database> getDatabase() async {
+    if (_database != null) return _database!;
 
-  _database = await _initDB('app.db');
+    _database = await _initDB('app.db');
 
-  // Depois que o DB estiver pronto, popula os seeds
-  await _populateInitialData(_database!);
+    return _database!;
+  }
 
-  return _database!;
-}
-
-Future<void> _populateInitialData(Database db) async {
-  debugPrint("Iniciando seeds...");
+  Future<void> _populateInitialData(Database db) async {
+    debugPrint("Iniciando seeds...");
     debugPrint("0/4 - Carregando Criaturas");
     await CreatureSeed().loadCreaturesOnDb();
     debugPrint("1/4 - Carregando Deck");
@@ -36,21 +33,16 @@ Future<void> _populateInitialData(Database db) async {
     debugPrint("2/4 - Carregando Coleção");
     await CollectionSeed().loadInitialCollection(db);
     debugPrint("3/4 - Populando Loja");
-    await popularLojaComCartas(LojaDao(db));
+    await popularLoja(LojaDao(db));
     debugPrint("4/4 - Banco Carregado");
-  debugPrint("Seeds carregadas!");
-}
-
+    debugPrint("Seeds carregadas!");
+  }
 
   Future<Database> _initDB(String filePath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(
-      path,
-      version: 1,
-      onCreate: _createDB,
-    );
+    return await openDatabase(path, version: 2, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -116,14 +108,15 @@ Future<void> _populateInitialData(Database db) async {
       CREATE TABLE loja (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         tipo TEXT NOT NULL,
-        preco INTEGER NOT NULL,         
-        item_id INTEGER,                
-        spriteFile TEXT,                  
-        raridade INTEGER,                 
-        quantidade INTEGER DEFAULT 1,     
-        FOREIGN KEY(item_id) REFERENCES creatures(id)
+        preco INTEGER NOT NULL,
+        item_id INTEGER,
+        spriteFile TEXT,
+        raridade INTEGER,
+        quantidade INTEGER DEFAULT 1
       );
     ''');
+
+    await _populateInitialData(db);
   }
 
   Future close() async {

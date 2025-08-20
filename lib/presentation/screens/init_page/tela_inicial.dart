@@ -238,7 +238,12 @@ class _TelaInicialState extends State<TelaInicial>
               children: [
                 GestureDetector(
                   onTap: _mostrarAnimacaoBauDiario,
-                  child: Image.asset("assets/sprites/baus/1/1.png"),
+                  child: Image.asset(
+                    "assets/sprites/baus/1/1.png",
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ],
             ),

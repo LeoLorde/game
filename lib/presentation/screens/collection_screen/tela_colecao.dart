@@ -123,7 +123,7 @@ class ColecaoScreen extends StatelessWidget {
                         vertical: 20,
                         horizontal: 15,
                       ),
-                      color: Colors.blueGrey,
+                      color: Colors.grey,
                       height: 250,
                       child: Column(
                         children: [
