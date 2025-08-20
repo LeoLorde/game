@@ -32,6 +32,7 @@ class TelaBatalha extends StatelessWidget {
   }
 
   Widget buildComposicaoCard(
+    Key? key,
     String imageUrl,
     int level,
     Color cor,
@@ -39,6 +40,7 @@ class TelaBatalha extends StatelessWidget {
     bool selecionada = false,
   }) {
     return SizedBox(
+      key: key,
       width: 120,
       height: 170,
       child: Card(
@@ -123,6 +125,7 @@ class TelaBatalha extends StatelessWidget {
                         children: [
                           for (final creature in deckBot.take(3))
                             buildComposicaoCard(
+                              ValueKey(creature.id),
                               creature.getCompletePath(),
                               creature.level,
                               corPorRaridade(creature.raridade),
@@ -236,6 +239,7 @@ class TelaBatalha extends StatelessWidget {
                                                     );
                                                 Navigator.of(dialogContext).pop();
                                                 debugPrint("1/1 - Creature Selected: ${creature.name}");
+                                                debugPrint("Complete Creature Selected: ${creature}");
                                                 context.read<BattleBloc>().add(BattleStarted());
 
                                                 Navigator.of(context).push(
@@ -255,6 +259,7 @@ class TelaBatalha extends StatelessWidget {
                                     );
                                   },
                                   child: buildComposicaoCard(
+                                    ValueKey(creature.id),
                                     creature.getCompletePath(),
                                     creature.level,
                                     corPorRaridade(creature.raridade),

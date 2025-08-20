@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'battle_bloc.dart';
+import 'battle_event.dart';
 import 'battle_state.dart';
 import 'package:game/core/enums/raridade_enum.dart';
 import 'package:game/core/models/creature_model.dart';
@@ -23,8 +24,9 @@ class BattleScreen extends StatelessWidget {
     }
   }
 
-  Widget buildComposicaoCard(Creature creature) {
+  Widget buildComposicaoCard(Creature creature, {Key? key}) {
     return SizedBox(
+      key: key, // <-- Key única aqui
       width: 140,
       height: 200,
       child: Card(
@@ -42,6 +44,7 @@ class BattleScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
+              textAlign: TextAlign.center,
             ),
             Expanded(
               child: Image.asset(
@@ -72,6 +75,54 @@ class BattleScreen extends StatelessWidget {
     );
   }
 
+  void _showTrocarCriaturaDialog(
+    BuildContext context,
+    List<Creature> creatures,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text("Escolha sua nova criatura"),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: GridView.builder(
+              shrinkWrap: true,
+              itemCount: creatures.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemBuilder: (context, index) {
+                final creature = creatures[index];
+                return GestureDetector(
+                  onTap: () {
+                    context.read<BattleBloc>().add(
+                          PlayerChangeCreature(creature),
+                        );
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: buildComposicaoCard(
+                    creature,
+                    key: ValueKey(creature.id), // Key aqui também
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text("Cancelar"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,26 +138,37 @@ class BattleScreen extends StatelessWidget {
           }
 
           if (state is BattleSuccess) {
-            final playerCreature = state.player_selected; 
+            final playerCreature = state.player_selected;
+            final playerCreatures = state.player_creatures
+                .where((c) => c.vida > 0 && c.id != playerCreature.id)
+                .toList();
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 16),
                 Center(
-                  child: buildComposicaoCard(playerCreature),
+                  child: buildComposicaoCard(
+                    playerCreature,
+                    key: ValueKey(playerCreature.id), // <-- Key única
+                  ),
                 ),
-
                 const Divider(),
-
                 Expanded(
                   child: ListView(
-                    children: const [
+                    children: [
                       ListTile(
-                        leading: Icon(Icons.cached),
-                        title: Text("Trocar Criatura"),
-                        subtitle: Text("Substituir a criatura atual"),
+                        leading: const Icon(Icons.cached),
+                        title: const Text("Trocar Criatura"),
+                        subtitle: const Text("Substituir a criatura atual"),
+                        onTap: playerCreatures.isEmpty
+                            ? null
+                            : () => _showTrocarCriaturaDialog(
+                                  context,
+                                  playerCreatures,
+                                ),
                       ),
-                      ListTile(
+                      const ListTile(
                         leading: Icon(Icons.flash_on),
                         title: Text("Atacar"),
                         subtitle: Text("Usar um dos ataques disponíveis"),
@@ -118,7 +180,11 @@ class BattleScreen extends StatelessWidget {
             );
           }
 
-          return const Center(child: Text("Esperando iniciar batalha..."));
+          // Retry automático
+          Future.microtask(() {
+            context.read<BattleBloc>().add(BattleStarted());
+          });
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
