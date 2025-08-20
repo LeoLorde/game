@@ -42,7 +42,12 @@ class AppDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 3, onCreate: _createDB);
+    return await openDatabase(
+      path,
+      version: 4,
+      onCreate: _createDB,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   Future _createDB(Database db, int version) async {
@@ -126,6 +131,22 @@ class AppDatabase {
     final db = await getDatabase();
     for (String table in tables) {
       await db.delete(table);
+    }
+  }
+
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 3) {
+      await db.execute('''
+      CREATE TABLE loja (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        tipo TEXT NOT NULL,
+        preco INTEGER NOT NULL,
+        item_id INTEGER,
+        spriteFile TEXT,
+        raridade INTEGER,
+        quantidade INTEGER DEFAULT 1
+      );
+    ''');
     }
   }
 }

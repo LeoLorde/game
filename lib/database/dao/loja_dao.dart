@@ -21,7 +21,7 @@ class LojaDao {
     }
   }
 
-  /// Busca todos os itens disponíveis na loja
+  //  Busca todos os itens disponíveis na loja
   Future<List<Loja>> buscarTodos() async {
     final maps = await db.query('loja');
     return maps.map((map) => Loja.fromMap(map)).toList();

@@ -1,10 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:game/database/dao/loja_dao.dart';
-import 'package:game/core/models/loja_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
-import 'package:game/presentation/screens/store_screen/bloc/store_bloc.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_state.dart';
 import 'package:game/presentation/screens/store_screen/bloc/store_event.dart';
 
