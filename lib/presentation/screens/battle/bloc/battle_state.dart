@@ -12,8 +12,9 @@ class BattleLoading extends BattleState {}
 class BattleSuccess extends BattleState {
   final List<Creature> player_creatures;
   final List<Creature> bot_creatures;
+  final Creature player_selected;
 
-  BattleSuccess(this.player_creatures, this.bot_creatures);
+  BattleSuccess(this.player_creatures, this.bot_creatures, this.player_selected);
 
   @override
   List<Object?> get props => [player_creatures, bot_creatures];

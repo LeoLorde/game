@@ -5,6 +5,7 @@ import 'package:game/core/models/attack_model.dart';
 import 'package:game/core/models/deck_model.dart';
 import 'package:game/core/models/creature_model.dart';
 import 'package:game/core/models/talismans.dart';
+import 'package:game/database/dao/deck_dao.dart';
 import 'package:game/database/app_database.dart';
 
 class BotAI {
@@ -146,14 +147,8 @@ class BotAI {
 }
 
 // Pega o deck do jogador
-Future<DeckModel?> getDeck() async {
-  final db = await AppDatabase.instance.getDatabase();
-  final resultado = await db.query('deck', limit: 1);
-
-  if (resultado.isNotEmpty) {
-    return DeckModel.fromMap(resultado.first);
-  }
-  return null;
+Future<List<Creature>> getDeck() async {
+  return getPDeck();
 }
 
 // Pega todas as criaturas salvas no banco
@@ -165,10 +160,10 @@ Future<List<Creature>> getTodasCriaturas() async {
 
 // Pega as criaturas que estão no deck do jogador
 List<Creature> getCriaturasDoJogador(
-  DeckModel deckPlayer,
+  List<Creature> deckPlayer,
   List<Creature> criaturas,
 ) {
-  return criaturas.where((c) => deckPlayer.cardIds.contains(c.id)).toList();
+  return deckPlayer;
 }
 
 // Calcula o nível médio e a faixa alvo

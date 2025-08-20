@@ -49,12 +49,13 @@ class BattleBloc extends Bloc<BattleEvent, BattleState> {
     emit(BattleSuccess(
       playerDeck.keys.toList(),
       botDeck.keys.toList(),
+      playerCreature.key, 
     ));
   }
 
   Future<void> _onPlayerAction(
       PlayerActionEvent event, Emitter<BattleState> emit) async {
-    if (!playerTurn) return; 
+    if (!playerTurn) return;
 
     if (event.action is Attack) {
       final ataqueEscolhido = event.action as Attack;
@@ -67,7 +68,11 @@ class BattleBloc extends Bloc<BattleEvent, BattleState> {
     }
 
     if (botCreature.value <= 0) {
-      emit(BattleSuccess(playerDeck.keys.toList(), botDeck.keys.toList()));
+      emit(BattleSuccess(
+        playerDeck.keys.toList(),
+        botDeck.keys.toList(),
+        playerCreature.key,
+      ));
       return;
     }
 
@@ -101,6 +106,7 @@ class BattleBloc extends Bloc<BattleEvent, BattleState> {
     emit(BattleSuccess(
       playerDeck.keys.toList(),
       botDeck.keys.toList(),
+      playerCreature.key,
     ));
   }
 }

@@ -78,7 +78,7 @@ class TelaBatalha extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => BattleBloc()..add(BattleStarted())),
         BlocProvider(create: (_) => DeckBloc()..add(DeckOnStart())),
-        BlocProvider(create: (_) => BotBloc()..add(BotOnStart())), // <- Bot aqui
+        BlocProvider(create: (_) => BotBloc()..add(BotOnStart())),
       ],
       child: Scaffold(
         appBar: AppBar(title: const Text('Batalha')),
@@ -165,11 +165,74 @@ class TelaBatalha extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           for (final creature in deck.take(3))
-                            buildComposicaoCard(
-                              creature.getCompletePath(),
-                              creature.level,
-                              corPorRaridade(creature.raridade),
-                              creature.name ?? '',
+                            GestureDetector(
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext dialogContext) {
+                                    return AlertDialog(
+                                      backgroundColor:
+                                          corPorRaridade(creature.raridade),
+                                      title: Text(
+                                        creature.name ?? "Criatura",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      content: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Image.asset(
+                                              creature.getCompletePath(),
+                                              height: 100,
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Text("Nível: ${creature.level}"),
+                                            Text(
+                                              "Raridade: ${creature.raridade.name.toUpperCase()}",
+                                            ),
+                                            Text("Vida: ${creature.vida}"),
+                                            const SizedBox(height: 12),
+                                            const Text(
+                                              "Ataques:",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 6),
+                                            ...creature.ataques.map(
+                                              (atk) => Text(
+                                                "- ${atk.name} (ATK: ${atk.base_damage})",
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(dialogContext).pop(),
+                                          child: const Text("Fechar"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            
+                                            Navigator.of(dialogContext).pop();
+                                          },
+                                          child: const Text("Jogar Criatura"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              child: buildComposicaoCard(
+                                creature.getCompletePath(),
+                                creature.level,
+                                corPorRaridade(creature.raridade),
+                                creature.name ?? '',
+                              ),
                             ),
                         ],
                       ),
