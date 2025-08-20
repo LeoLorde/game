@@ -11,6 +11,7 @@ import 'bloc/deck_state.dart';
 import 'bloc/bot_bloc.dart';
 import 'bloc/bot_event.dart';
 import 'bloc/bot_state.dart';
+import 'bloc/inbattle_screen.dart';
 
 class TelaBatalha extends StatelessWidget {
   const TelaBatalha({super.key});
@@ -34,15 +35,19 @@ class TelaBatalha extends StatelessWidget {
     String imageUrl,
     int level,
     Color cor,
-    String nome,
-  ) {
+    String nome, {
+    bool selecionada = false,
+  }) {
     return SizedBox(
       width: 120,
       height: 170,
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: Colors.black, width: 2),
+          side: BorderSide(
+            color: selecionada ? Colors.greenAccent : Colors.black,
+            width: selecionada ? 4 : 2,
+          ),
         ),
         color: cor,
         child: Column(
@@ -150,93 +155,118 @@ class TelaBatalha extends StatelessWidget {
                 if (state is DeckOnSuccess) {
                   final deck = state.criaturas;
 
-                  return Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Suas Cartas",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                  return BlocBuilder<BattleBloc, BattleState>(
+                    builder: (context, battleState) {
+                      Creature? selecionada;
+                      if (battleState is BattleSuccess) {
+                        selecionada = battleState.player_selected;
+                      }
+
+                      return Column(
                         children: [
-                          for (final creature in deck.take(3))
-                            GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext dialogContext) {
-                                    return AlertDialog(
-                                      backgroundColor:
-                                          corPorRaridade(creature.raridade),
-                                      title: Text(
-                                        creature.name ?? "Criatura",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      content: SingleChildScrollView(
-                                        child: Column(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Image.asset(
-                                              creature.getCompletePath(),
-                                              height: 100,
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Suas Cartas",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              for (final creature in deck.take(3))
+                                GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext dialogContext) {
+                                        return AlertDialog(
+                                          backgroundColor:
+                                              corPorRaridade(creature.raridade),
+                                          title: Text(
+                                            creature.name ?? "Criatura",
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            const SizedBox(height: 8),
-                                            Text("Nível: ${creature.level}"),
-                                            Text(
-                                              "Raridade: ${creature.raridade.name.toUpperCase()}",
+                                          ),
+                                          content: SingleChildScrollView(
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Image.asset(
+                                                  creature.getCompletePath(),
+                                                  height: 100,
+                                                ),
+                                                const SizedBox(height: 8),
+                                                Text("Nível: ${creature.level}"),
+                                                Text(
+                                                  "Raridade: ${creature.raridade.name.toUpperCase()}",
+                                                ),
+                                                Text("Vida: ${creature.vida}"),
+                                                const SizedBox(height: 12),
+                                                const Text(
+                                                  "Ataques:",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 6),
+                                                ...creature.ataques.map(
+                                                  (atk) => Text(
+                                                    "- ${atk.name} (ATK: ${atk.base_damage})",
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Text("Vida: ${creature.vida}"),
-                                            const SizedBox(height: 12),
-                                            const Text(
-                                              "Ataques:",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.of(dialogContext).pop(),
+                                              child: const Text("Fechar"),
                                             ),
-                                            const SizedBox(height: 6),
-                                            ...creature.ataques.map(
-                                              (atk) => Text(
-                                                "- ${atk.name} (ATK: ${atk.base_damage})",
-                                              ),
+                                            TextButton(
+                                              onPressed: () {
+                                                debugPrint("0/1 - Creature Selecting");
+                                                context.read<BattleBloc>().add(
+                                                      PlayerActionEvent(
+                                                          deck.indexOf(creature)),
+                                                    );
+                                                Navigator.of(dialogContext).pop();
+                                                debugPrint("1/1 - Creature Selected: ${creature.name}");
+                                                context.read<BattleBloc>().add(BattleStarted());
+
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(builder: (_) {
+                                                    return BlocProvider.value(
+                                                      value: context.read<BattleBloc>(),
+                                                      child: const BattleScreen(),
+                                                    );
+                                                  }),
+                                                );
+                                              },
+                                              child: const Text("Jogar Criatura"),
                                             ),
                                           ],
-                                        ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(dialogContext).pop(),
-                                          child: const Text("Fechar"),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            
-                                            Navigator.of(dialogContext).pop();
-                                          },
-                                          child: const Text("Jogar Criatura"),
-                                        ),
-                                      ],
+                                        );
+                                      },
                                     );
                                   },
-                                );
-                              },
-                              child: buildComposicaoCard(
-                                creature.getCompletePath(),
-                                creature.level,
-                                corPorRaridade(creature.raridade),
-                                creature.name ?? '',
-                              ),
-                            ),
+                                  child: buildComposicaoCard(
+                                    creature.getCompletePath(),
+                                    creature.level,
+                                    corPorRaridade(creature.raridade),
+                                    creature.name ?? '',
+                                    selecionada: selecionada == creature,
+                                  ),
+                                ),
+                            ],
+                          ),
                         ],
-                      ),
-                    ],
+                      );
+                    },
                   );
                 }
 
