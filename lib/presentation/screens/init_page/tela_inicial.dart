@@ -157,7 +157,14 @@ class _TelaInicialState extends State<TelaInicial>
                 fit: BoxFit.fill,
               ),
             ),
-            Text("$amuletos - 5000"),
+            Text(
+              "$amuletos - 5000",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: Colors.white,
+              ),
+            ),
             const SizedBox(height: 15),
             Builder(
               builder: (context) {
@@ -204,13 +211,13 @@ class _TelaInicialState extends State<TelaInicial>
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 55, 94, 131),
+                    backgroundColor: const Color(0xFFC9A400),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 70,
                       vertical: 25,
                     ),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(20),
                       side: const BorderSide(color: Colors.black, width: 3),
                     ),
                   ),
@@ -219,6 +226,7 @@ class _TelaInicialState extends State<TelaInicial>
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
+                      fontSize: 22,
                     ),
                   ),
                 );
@@ -244,9 +252,14 @@ class _TelaInicialState extends State<TelaInicial>
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => StartPageBloc(PlayerRepository())..add(StartOnStart()),
-      child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 41, 94, 67),
-        body: BlocBuilder<StartPageBloc, StartState>(
+      child: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/sprites/fundo.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: BlocBuilder<StartPageBloc, StartState>(
           builder: (context, state) {
             if (state is StartOnLoading) {
               return const Center(child: CircularProgressIndicator());

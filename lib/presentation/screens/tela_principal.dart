@@ -49,7 +49,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
     return AppBar(
       toolbarHeight: 80,
       centerTitle: false,
-      backgroundColor: const Color(0xFF1B4732),
+      backgroundColor: const Color(0xFF2C5282),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -63,17 +63,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   color: Colors.white,
                   fontSize: 20,
                   fontFamily: 'PressStart2P',
-                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 14),
               Text(
                 'NÍVEL: $level',
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 20,
                   fontFamily: 'PressStart2P',
-                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -85,20 +83,18 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
               Text(
                 'CRISTAIS: $cristais',
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 20,
                   fontFamily: 'PressStart2P',
-                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 14),
               Text(
                 'AMULETOS: $amuletos',
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 20,
                   fontFamily: 'PressStart2P',
-                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
@@ -127,8 +123,8 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _paginaAtual,
         onTap: _mudarPagina,
-        backgroundColor: const Color(0xFF1B4732),
-        selectedLabelStyle: TextStyle(
+        backgroundColor: const Color(0xFF2C5282),
+        selectedLabelStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 17,
         ),
