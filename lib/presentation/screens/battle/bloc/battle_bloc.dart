@@ -18,6 +18,7 @@ class BattleBloc extends Bloc<BattleEvent, BattleState> {
     on<BattleStarted>(_onBattleStarted);
     on<BattleUpdated>(_onBattleUpdated);
     on<PlayerActionEvent>(_onPlayerAction);
+    on<PlayerChangeCreature>(_onPlayerChangeCreature); // novo
   }
 
   Future<void> _onBattleStarted(
@@ -49,7 +50,7 @@ class BattleBloc extends Bloc<BattleEvent, BattleState> {
     emit(BattleSuccess(
       playerDeck.keys.toList(),
       botDeck.keys.toList(),
-      playerCreature.key, 
+      playerCreature.key..vida = playerCreature.value,
     ));
   }
 
@@ -71,13 +72,26 @@ class BattleBloc extends Bloc<BattleEvent, BattleState> {
       emit(BattleSuccess(
         playerDeck.keys.toList(),
         botDeck.keys.toList(),
-        playerCreature.key,
+        playerCreature.key..vida = playerCreature.value,
       ));
       return;
     }
 
     playerTurn = false;
     await _botTurn(emit);
+  }
+
+  Future<void> _onPlayerChangeCreature(
+      PlayerChangeCreature event, Emitter<BattleState> emit) async {
+    final vidaAtual = playerDeck[event.newCreature] ?? event.newCreature.vida;
+
+    playerCreature = MapEntry(event.newCreature, vidaAtual);
+
+    emit(BattleSuccess(
+      playerDeck.keys.toList(),
+      botDeck.keys.toList(),
+      playerCreature.key..vida = playerCreature.value,
+    ));
   }
 
   Future<void> _botTurn(Emitter<BattleState> emit) async {
@@ -106,7 +120,7 @@ class BattleBloc extends Bloc<BattleEvent, BattleState> {
     emit(BattleSuccess(
       playerDeck.keys.toList(),
       botDeck.keys.toList(),
-      playerCreature.key,
+      playerCreature.key..vida = playerCreature.value,
     ));
   }
 }

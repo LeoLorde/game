@@ -124,9 +124,9 @@ class CreatureSeed {
       [Elemento.planta, Elemento.agua],
       Raridade.mistico,
       [
-        Attack("Ervas Venenosas", 35, [Elemento.planta]),
-        Attack("Tiro de Água", 35, [Elemento.agua]),
-        Attack("Raízes Marinhas", 25, [Elemento.planta, Elemento.agua])
+        Attack("500 Nordestinos", 35, [Elemento.planta]),
+        Attack("Fazueli", 35, [Elemento.agua]),
+        Attack("Twitadas poderosas", 25, [Elemento.planta, Elemento.agua])
       ],
       "danimar",
       "Danimar",

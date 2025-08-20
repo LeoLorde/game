@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-
+import 'package:game/core/models/creature_model.dart';
 abstract class BattleEvent extends Equatable {
   @override
   List<Object?> get props => [];
@@ -19,3 +19,12 @@ class PlayerActionEvent extends BattleEvent {
 }
 
 class BattleEndend extends BattleEvent {}
+
+class PlayerChangeCreature extends BattleEvent {
+  final Creature newCreature;
+
+  PlayerChangeCreature(this.newCreature);
+
+  @override
+  List<Object?> get props => [newCreature];
+}
