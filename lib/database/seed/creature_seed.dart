@@ -117,6 +117,74 @@ class CreatureSeed {
       "Verdalisk",
       DimensionEnum.terra,
     ),
+    Creature(
+      250,
+      1,
+      0,
+      [Elemento.planta, Elemento.agua],
+      Raridade.mistico,
+      [
+        Attack("Ervas Venenosas", 35, [Elemento.planta]),
+        Attack("Tiro de Água", 35, [Elemento.agua]),
+        Attack("Raízes Marinhas", 25, [Elemento.planta, Elemento.agua])
+      ],
+      "danimar",
+      "Danimar",
+      DimensionEnum.terra,
+    ),
+    Creature(
+      40,
+      1,
+      0,
+      [Elemento.planta, Elemento.planta],
+      Raridade.heroi,
+      [
+        Attack("Ervas Venenosas", 35, [Elemento.planta]),
+        Attack("Flores de Banana", 25, [Elemento.planta, Elemento.planta]),
+      ],
+      "flora",
+      "Flora",
+      DimensionEnum.terra,
+    ),
+    Creature(
+      50,
+      1,
+      0,
+      [Elemento.fogo],
+      Raridade.combatente,
+      [
+        Attack("Raba pegando Fogo", 35, [Elemento.fogo]),
+      ],
+      "ignis",
+      "Ignis",
+      DimensionEnum.terra,
+    ),
+    Creature(
+      50,
+      1,
+      0,
+      [Elemento.terra],
+      Raridade.combatente,
+      [
+        Attack("Espinho Cilíndrico", 35, [Elemento.terra]),
+      ],
+      "laranjariak",
+      "Laranjariak",
+      DimensionEnum.terra,
+    ),
+    Creature(
+      50,
+      1,
+      0,
+      [Elemento.planta],
+      Raridade.combatente,
+      [
+        Attack("Primavera", 35, [Elemento.planta]),
+      ],
+      "leafy",
+      "Leafy",
+      DimensionEnum.terra,
+    ),
   ];
 
   CreatureSeed();
