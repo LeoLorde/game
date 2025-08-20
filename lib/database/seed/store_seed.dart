@@ -3,8 +3,6 @@ import 'package:game/core/models/loja_model.dart';
 import 'package:game/database/dao/loja_dao.dart';
 
 Future<void> popularLoja(LojaDao lojaDao) async {
-  await lojaDao.limparLoja();
-
   final aeros = Loja(
     tipo: 'carta',
     preco: 200,

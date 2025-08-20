@@ -42,7 +42,7 @@ class AppDatabase {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
-    return await openDatabase(path, version: 2, onCreate: _createDB);
+    return await openDatabase(path, version: 3, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
@@ -115,8 +115,6 @@ class AppDatabase {
         quantidade INTEGER DEFAULT 1
       );
     ''');
-
-    await _populateInitialData(db);
   }
 
   Future close() async {
