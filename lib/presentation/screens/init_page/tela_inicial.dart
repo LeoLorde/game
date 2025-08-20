@@ -12,21 +12,18 @@ import 'package:game/presentation/screens/init_page/bloc/start_state.dart';
 import 'package:game/presentation/screens/battle/tela_batalha.dart';
 import 'package:game/application/audio/audio_manager.dart';
 import 'package:game/presentation/screens/init_page/bloc/player_repository.dart';
+import 'package:game/database/dao/deck_dao.dart';
 
 String getDimensaoImagem(int amuletos) {
   if (amuletos >= 4500) {
     return 'assets/sprites/dimensoes/9.png';
-  }
-  else if (amuletos >= 4000) {
+  } else if (amuletos >= 4000) {
     return 'assets/sprites/dimensoes/8.png';
-  }
-  else if (amuletos >= 3500) {
+  } else if (amuletos >= 3500) {
     return 'assets/sprites/dimensoes/7.png';
-  }
-  else if (amuletos >= 3000) {
+  } else if (amuletos >= 3000) {
     return 'assets/sprites/dimensoes/6.png';
-  }
-  else if (amuletos >= 2500) {
+  } else if (amuletos >= 2500) {
     return 'assets/sprites/dimensoes/5.png';
   } else if (amuletos >= 2000) {
     return 'assets/sprites/dimensoes/4.png';
@@ -165,14 +162,46 @@ class _TelaInicialState extends State<TelaInicial>
             Builder(
               builder: (context) {
                 return ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    final deck = await getPDeck();
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const TelaBatalha(),
-                      ),
-                    );
+                    if (deck.length < 3) {
+                      // Se não tiver 3 cartas no deck, mostra alerta
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            backgroundColor: const Color.fromARGB(
+                              255,
+                              188,
+                              196,
+                              196,
+                            ),
+                            title: const Text("DECK DE BATALHA INCOMPLETO"),
+                            content: const Text(
+                              "Você precisa de 3 cartas no deck para lutar!",
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text(
+                                  "OK",
+                                  style: TextStyle(color: Colors.black),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      // Deck válido -> vai pra batalha
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TelaBatalha(),
+                        ),
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 55, 94, 131),
